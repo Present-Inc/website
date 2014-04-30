@@ -1,0 +1,176 @@
+
+#profile {
+  margin: 0px auto 0px auto;
+  padding: 200px 20px;
+  width: $large-width - 40px;
+  color: $main-grey;
+
+  @media(max-width: $break-large) {
+    width: 100%;
+    padding: 0px;
+    margin: 100px 0px;
+  }
+}
+
+#profileFeed {
+    width: 480px;
+    margin: 0px 0px 0px 440px;
+    padding: 0px 0px 40px 0px;
+
+    @media (max-width: $break-large) {
+      margin: $center;
+    }
+
+    @media (max-width: $break-small) {
+      margin: 0px 0px;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+#profileFeed {
+  .presentWrapper {
+    margin: 0px auto 120px auto;
+    width: 480px;
+    height: 480px;
+    @media (max-width: $break-small) {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .videoContainer {
+    margin: 0 auto;
+    height: $video-height;
+    width: $video-width;
+    @media (max-width: $break-small) {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+
+#profile {
+
+  .user {
+    float: left;
+    position: fixed;
+    width: 400px;
+    height: 480px;
+    padding: 10px;
+    color: $main-grey;
+    border-right: solid 1px $light-gray;
+
+    @media (max-width: $break-large) {
+      width: 480px;
+      height: auto;
+      position: relative;
+      float: none;
+      margin: $center;
+      border-right: none;
+      text-align: center;
+    }
+
+    @media (max-width: $break-small) {
+      width: 100%;
+      height: auto;
+      margin: 0px 0px;
+      padding: 0px 0px;
+    }
+  }
+
+  .user {
+    .profilePicture {
+      display: block;
+      float: left;
+      height: 100px;
+      width: 100px;
+      margin: 0px 20px 0px 0px;
+      @include border-radius(60px);
+
+      @media (max-width: $break-large) {
+        float: none;
+        margin: 0px auto 10px auto;
+      }
+    }
+
+    .name {
+      display: block;
+      vertical-align: top;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .username {
+      display: block;
+      color: $main-blue;
+      font-size: 20px;
+      height: 32px;
+    }
+
+    .followers {
+      text-transform: uppercase;
+      color: #cccccc;
+    }
+
+
+    .blockData {
+      margin: 40px 0px;
+      clear: both;
+      text-align: center;
+    }
+
+    .blockData span {
+      display: block;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .blockData label {
+      color: #cccccc;
+      text-transform: uppercase;
+    }
+
+    .block{
+      vertical-align: top;
+      display: inline-block;
+      height: 80px;
+      width: 100px;
+      text-align: center;
+    }
+
+    .demands {@extend .block}
+    .videos {@extend  .block}
+    .views {@extend  .block}
+
+    .description {
+      width: 340px;
+      margin: 0px auto;
+      
+      @media (max-width: $break-small) {
+          width: 100%;
+      }
+    }
+  }
+
+  .refreshFeed {
+    margin: 0px auto;
+    padding: 10px 0px;
+    font-weight: bold;
+    color: $white;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    width: 180px;
+    background-color: $light-gray;
+  }
+
+  .refreshFeed:hover {
+    color: $main-blue;
+    cursor: pointer;
+  }
+
+}
+
+

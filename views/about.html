@@ -1,0 +1,54 @@
+
+<div id="about" class="slideInUp">
+
+    <div class="content">
+        <h1 class="aboutTitle">Our Vision</h1>
+    </div>
+
+    <div class="extend">
+        <div class="content">
+            <div class="vision">
+                <h2>Make the most of the present</h2>
+                <p>
+                    What if you could see what anyone else was seeing, anywhere in the world, right now? Now you can.
+                </p>
+                <p>
+                    Post live videos– called “Presents” –of what you’re seeing so your friends and family can share
+                    the experience. Follow friends with a single button tap, and you’ll be pushed a notification when
+                    they are posting Presents!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <h1 class="aboutTitle">The Team</h1>
+
+        <!-- Desktop About -->
+
+        <div id="interactiveTeam">
+        <div the-team class="theTeam">
+            <div overlay></div>
+            <div class="memberWrapper" ng-repeat="member in team">
+                <div member
+                     id="{{member.id}}"
+                     class="member">
+                    <img class="a-fade-fast" ng-show="active" ng-src="{{member.image}}">
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Mobile About -->
+        <div id="mobileAbout">
+            <div class="mobileMemberWrapper" ng-repeat="member in team">
+                <h2>{{member.name}}</h2>
+                <img ng-src="http://placehold.it/200x200" />
+                <p><strong>{{member.title}}</strong></p>
+                <p>{{member.description}}</p>
+            </div>
+        </div>
+
+    </div>
+</div>

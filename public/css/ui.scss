@@ -1,0 +1,55 @@
+
+
+body{
+  color: $main-grey;
+  font-family: $font-primary;
+  font-size: $font-size-small;
+}
+
+/* HEADINGS */
+
+h1  {
+  font-family: $font-secondary;
+  font-weight: $font-weight-super-light;
+}
+
+/* LINKS */
+a {
+  text-decoration: none;
+  color: $white;
+}
+
+a:hover {
+  cursor: pointer;
+  color: $main-blue;
+  text-decoration: none;
+}
+
+/*
+ * FORM CONTROL
+ */
+
+.form-textbox {
+  width: 80%;
+  margin: 10px;
+  padding: 5px 10px;
+  height: 25px;
+
+  border: solid 1px $light-gray;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.form-readonly {
+  background-color: #F2F2F2;
+}
+
+.form-btn {
+  margin: 10px auto;
+  padding: 6px 20px;
+  font-size: 20px;
+  color: $white;
+  background-color: lighten($main-blue, 15);
+  @include border-radius(2px);
+  border: none;
+}

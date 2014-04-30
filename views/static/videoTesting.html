@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://jwpsrv.com/library/VLJzhpFREeOBbyIACi0I_Q.js" ></script>
+    <style>
+        #videoContainer {
+            height: 480px;
+            width: 480px;
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="videoContainer">
+
+    </div>
+    <script>
+
+        var player = jwplayer('videoContainer').setup({
+            file: 'http://replays.present.tv/6x5stMaZ18/replay.m3u8',
+            image: 'http://replays.present.tv/6x5stMaZ18/still.png',
+            title: 'on way in to tl',
+            width: '100%',
+            aspectratio: '1:1',
+            skin: 'five',
+            autostart: 'true',
+            controls: 'true',
+            stretching: 'exactfit',
+            hdButton: false,
+            logo: {
+                file: '/assets/webPlayer/images/watermark.png',
+                link: 'http://present.tv',
+                hide: 'true',
+                position: 'top-right',
+                margin: '10'
+            }
+        });
+
+    </script>
+</body>
+</html>

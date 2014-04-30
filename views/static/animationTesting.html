@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animation Testing</title>
+    <style>
+
+        .container {
+            width: 600px;
+            margin: 200px auto;
+            font-size: 32px;
+        }
+
+
+        .animated {
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: none;
+        }
+
+        @-webkit-keyframes fadeOutRight {
+        0% {
+            opacity: 1;
+            -webkit-transform: translateX(0);
+            -ms-transform: translateX(0);
+            transform: translateX(0);
+        }
+
+        100% {
+            opacity: 0;
+            -webkit-transform: translateX(1000px);
+            -ms-transform: translateX(1000px);
+            transform: translateX(1000px);
+        }
+
+        }
+
+        h1 {
+            font-family: sans-serif;
+            -webkit-animation: fadeOutRight;
+            -webkit-animation-duration: 1s;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Animation Testing</h1>
+    </div>
+</body>
+</html>

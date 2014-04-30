@@ -1,0 +1,15 @@
+
+<div id="discoverFeed" present-feed>
+    <div class="presentWrapper" ng-repeat="present in feedManager.presents">
+        <present-user></present-user>
+        <present-video></present-video>
+    </div>
+    <div class="loading" ng-show="feedManager.isLoading">
+        <img src="/assets/img/loader-white.gif" />
+    </div>
+    <div class="refreshFeed"
+         ng-show="!feedManager.isLoading"
+         ng-click="refreshFeed()">
+        Load More Videos
+    </div>
+</div>

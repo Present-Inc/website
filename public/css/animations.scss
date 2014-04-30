@@ -1,0 +1,138 @@
+/* CUSTOM CSS ANIMATIONS
+   ============================ */
+
+/*FADE*/
+.a-fade {
+  &.dl-enter {
+    @include  _animation(fadeIn, 1s, 0s);
+  }
+
+  &.dl-leave {
+    @include _animation(fadeOut, 1s, 0s);
+  }
+
+  &.enter {
+    @include  _animation(fadeIn, 1s, 0s);
+  }
+
+  &.leave {
+    @include _animation(fadeOut, 1s, 0s);
+  }
+
+  &.ng-hide-add {
+    display: block!important;
+    @include  _animation(fadeOut, 1s, 0s);
+  }
+
+  &.ng-hide-remove{
+    @include  _animation(fadeIn, 1s, 0s);
+  }
+}
+
+.a-fade-fast{
+  &.dl-enter {
+    @include  _animation(fadeIn, .8s, 0s);
+  }
+
+  &.dl-leave {
+    @include _animation(fadeOut, .8s, 0s);
+  }
+
+  &.ng-hide-add {
+    display: block!important;
+    @include  _animation(fadeOut, 1s, 0s);
+  }
+
+  &.ng-hide-remove{
+    @include  _animation(fadeIn, 1s, 0s);
+  }
+}
+
+.a-slide {
+  &.dl-enter {
+      @include  _animation(slideInUp, 1s, 0s);
+   }
+
+  &.dl-leave {
+     @include  _animation(fadeOut, 1s, 0s);
+  }
+
+  &.ng-hide-remove {
+    @include  _animation(slideInDown, 1s, 0s);
+  }
+}
+
+@include _keyframes (fadeIn) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@include _keyframes(fadeOut) {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@include _keyframes(slideInUp) {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(1000px);
+    transform: translateY(1000px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+
+}
+
+@include _keyframes(slideInDown) {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
+
+@include _keyframes(slideOutUp) {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+  }
+}
+
+@include _keyframes(slideOutDown) {
+
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(1000px);
+    transform: translateY(1000px);
+  }
+}

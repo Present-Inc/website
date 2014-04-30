@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Present</title>
+    <link href="../../css/main.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <div id="discover">
+    <header>
+        <section>
+            <a href="../../index.html">
+                <img src="../../assets/img/logo-small.png" alt="Present" />
+            </a>
+            <div class="search">
+                <input type="text" placeholder="{find users}"/>
+                <span>&#8594;</span>
+            </div>
+        </section>
+    </header>
+    <div class="feed">
+        <div class="present">
+           <div class="user">
+               <img src="../../assets/img/reubstock_icon.png" />
+               <p>reubstock</p>
+           </div>
+           <div class="videoContainer">
+
+           </div>
+           <div class="info">
+                <span class="title">
+                    <img src="../../assets/img/comment.png" class="icon"/>
+                    <a href="#">reubstock</a> hanging out at tigerlabs
+                </span>
+                <span class="likes">
+                    <img src="../../assets/img/heart.png" class="icon" "/> 3
+                </span>
+                <div class="comments">
+                    <ul>
+                        <li><a href="#">ddluc32</a> we are having fun</li>
+                        <li><a href="#">herb</a> yo what's up?</li>
+                    </ul>
+                </div>
+           </div>
+        </div>
+        <div class="present">
+            <div class="user">
+                <img src="../../assets/img/dan_icon.png" />
+                <p>dan</p>
+            </div>
+            <div class="videoContainer">
+
+            </div>
+            <div class="info">
+                <span class="title">
+                    <img src="../../assets/img/comment.png" class="icon"/>
+                    <a href="#">dan</a> i'm sooo cool
+                </span>
+                <span class="likes">
+                    <img src="../../assets/img/heart.png" class="icon" "/> 3
+                </span>
+                <div class="comments">
+                    <ul>
+                        <li><a href="#">ddluc32</a> we are having fun</li>
+                        <li><a href="#">justin</a> yo what's up?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var $discover = $('#discover');
+
+        $discover.fadeIn(400);
+    });
+</script>
+
+</body>
+</html>

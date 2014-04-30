@@ -1,0 +1,19 @@
+<div class="presentVideo">
+    <div jwplayer
+         videoid="{{present._id}}"
+         media="present.mediaUrl"
+         class="videoContainer"
+         >
+    </div>
+    <div class="info">
+        <div>
+            <span class="likes">
+                <img src="assets/img/heart.png" class="likesIcon" /> {{present.likes}}
+            </span>
+            <span class="title">
+                <img src="assets/img/comment.png" class="commentsIcon"/>
+                <a>{{present.creator.username}}</a> {{present.title}}
+            </span>
+        </div>
+     </div>
+</div>

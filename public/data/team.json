@@ -1,0 +1,49 @@
+{
+    "team" : [
+        {
+            "id": "kyle",
+            "name": "Kyle Weisel",
+            "title": "Android Developer",
+            "description": "This is an example description. We need to write small descriptions for ourselves",
+            "image": "/assets/img/about_kyle.png",
+            "overlayStyle": {"left": "20%", "align": "left"}
+        },
+
+        {
+            "id": "herb",
+            "name": "Herb Adis",
+            "title": "Community Relations",
+            "description": "It\"s yo boy Herb. I\"m thug as shit. and. I listen to Jackson 5 ",
+            "image": "/assets/img/about_herb.png",
+            "overlayStyle": {"left": "40%", "align": "left"}
+        },
+
+        {
+            "id": "dan",
+            "name": "Dan Scanlon",
+            "title": "CTO / Developer / Designer",
+            "description": "This is an example description. We need to write small descriptions for ourselves",
+            "image": "/assets/img/about_dan.png",
+            "overlayStyle": {"left": "0%", "align": "right"}
+        },
+
+        {
+            "id": "justin",
+            "name": "Justin Makaila",
+            "title": "CTO / iOS Developer",
+            "description": "This is an example description. We need to write small descriptions for ourselves",
+            "image": "/assets/img/about_justin.png",
+            "overlayStyle": {"left": "20%", "align": "right"}
+
+        },
+
+        {
+            "id": "luc",
+            "name": "Daniel Lucas",
+            "title": "Web Developer / Designer",
+            "description": "This is an example description. We need to write small descriptions for ourselves",
+            "image": "/assets/img/about_luc.png",
+            "overlayStyle": {"left": "40%", "align": "right"}
+        }
+    ]
+}

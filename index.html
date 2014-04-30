@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Present</title>
+    <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
+</head>
+<body ng-controller="mainCtrl" class="fullscreen">
+
+    <header id="header" class="fixed">
+            <section>
+                <div class="logo">
+                    <a ui-sref="home"><img src="../assets/img/logo-small.png" alt="Present" /></a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a ui-sref="discover">Discover</a></li>
+                        <li><a ui-sref="download">Download</a></li>
+                        <li><a href="http://blog.present.tv">Blog</a></li>
+                    </ul>
+                </nav>
+            </section>
+    </header>
+
+    <div class="loadingContainer a-slide" ng-show="!app.isReady">
+        <div class="loading">
+            <img src="/assets/img/loader-white.gif" />
+        </div>
+    </div>
+    <div ui-view
+         view-container
+         id="main"
+         ng-class="app.viewAnimation">
+        <!--INJECTED TEMPLATES GO HERE -->
+    </div>
+
+
+    <script src="//jwpsrv.com/library/VLJzhpFREeOBbyIACi0I_Q.js" ></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="/js/lib/waypoints/waypoints.min.js"></script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="/js/lib/angular/angular-animate.min.js"></script>
+    <script src="/js/lib/ui-router/ui-router.min.js"></script>
+
+    <!-- Production
+    <script src="/js/core/dist/present-web-app.min.js"></script> -->
+
+    <script src="/js/core/app.js"></script>
+    <script src="/js/core/controllers.js"></script>
+    <script src="/js/core/directives.js"></script>
+    <script src="/js/core/services.js"></script>
+
+    <script>angular.bootstrap(document, ["PresentWebApp"]);</script>
+</body>
+</html>

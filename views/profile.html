@@ -1,0 +1,39 @@
+<div id="profile">
+    <div class="user" ng-style="alternateLayout.user">
+        <img ng-src="{{user.profilePicture.url}}" class="profilePicture" ng-style="alternateLayout.profilePicture"/>
+        <span class="name">{{user.fullName}}</span>
+        <span class="username">@{{user.username}}</span>
+        <span class="followers">Followers: <strong>{{user.stats.followers}}</strong></span>
+        <div class="blockData">
+            <div class="demands">
+                <span>{{user.stats.demands}}</span>
+                <label>Demands</label>
+            </div>
+            <div class="videos">
+                <span>{{user.stats.videos}}</span>
+                <label>Videos</label>
+            </div>
+            <div class="views">
+                <span>{{user.stats.views}}</span>
+                <label>Views</label>
+            </div>
+            <div class="description">
+                <p>{{user.description}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="profileFeed" present-feed>
+        <div class="presentWrapper" ng-repeat="present in feedManager.presents">
+               <present-video></present-video>
+        </div>
+        <div class="loading" ng-show="feedManager.isLoading">
+            <img src="/assets/img/loader-white.gif" />
+        </div>
+        <div class="refreshFeed"
+             ng-show="!feedManager.isLoading"
+             ng-click="refreshFeed()">
+            Load More Videos
+        </div>
+    </div>
+</div>
