@@ -21,7 +21,7 @@ pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', 
 
 
 /*HOME
- =======================================*/
+ ======================================= */
 pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
   return {
     restrict: 'EA',
@@ -29,8 +29,39 @@ pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
       var downloadBtn = angular.element(elem);
       elem.bind('click', function() {
         var downloadElem = angular.element(document.querySelector('#download'));
-        $uiViewScroll(downloadElem);
+          $uiViewScroll(downloadElem);
       });
+    }
+  }
+}]);
+
+
+/* DOWNLOAD
+  ====================================== */
+pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $timeout) {
+  return {
+    restrict: 'EA',
+    controller: function($scope) {
+
+      $scope.images = ['http://placehold.it/250x360'];
+
+      $scope.viewer = {
+        changing: false,
+        index: 0,
+        source: $scope.images[0]
+      };
+
+      $interval(function() {
+        $scope.rotateScreens();
+      }, 4000);
+
+      $scope.rotateScreens = function() {
+          $scope.viewer.changing = true;
+          console.log('it works!');
+          $timeout(function() {
+            $scope.viewer.changing = false;
+          }, 800);
+      };
     }
   }
 }]);
@@ -38,7 +69,7 @@ pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
 
 
 /* FEED
- =======================================*/
+ ======================================= */
 
 pDirectives.directive('presentFeed', function() {
      return {
