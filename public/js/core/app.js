@@ -22,7 +22,7 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             controller: 'homeCtrl',
             resolve : {
                 Images: ['Utilities', function(Utilities) {
-                    var images = ['http://10.61.32.61:8000/assets/img/left-frame-bg.jpg'];
+                    var images = ['http://10.61.32.32:8000/assets/img/main-bg.jpg'];
                     return Utilities.preloadImages(images);
                 }],
                 Transition : ['Utilities', function(Utilities) {

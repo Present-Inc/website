@@ -122,7 +122,7 @@ a:hover {
   margin: 10px;
   padding: 5px 10px;
   height: 25px;
-  border: solid 1px #dddddd;
+  border: solid 1px #f2f2f2;
   border-radius: 2px;
   font-size: 16px;
 }
@@ -641,7 +641,7 @@ a:hover {
 }
 
 header {
-  background-color: rgba(108, 37, 155, 0.8);
+  background-color: rgba(142, 3, 245, 0.7);
 }
 
 /*
@@ -734,7 +734,7 @@ header {
  * css files that style specific views
  */
 #home {
-  height: 820px;
+  height: 100%;
   width: 100%;
   margin: 0px;
   overflow: auto;
@@ -744,7 +744,7 @@ header {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/assets/img/left-frame-bg.jpg);
+  background-image: url(/assets/img/main-bg.jpg);
 }
 @media (max-width: 630px) {
   #home {
@@ -791,7 +791,7 @@ header {
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: right;
-  background-color: rgba(108, 37, 155, 0.4);
+  background-color: rgba(142, 3, 245, 0.7);
 }
 #home .home-btn:hover, #home .discover-btn:hover, #home .download-btn:hover {
   cursor: pointer;
@@ -827,81 +827,19 @@ header {
 }
 #home h2 strong {
   text-decoration: underline;
-  text-decoration-color: #917ee5;
-}
-
-.download {
-  height: 740px;
-  width: 780px;
-  margin: 0px auto;
-  padding: 110px 0px 0px 0px;
-}
-@media (max-width: 960px) {
-  .download {
-    padding: 0px;
-    height: auto;
-    width: 100%;
-  }
-}
-
-.download .phone {
-  height: 654px;
-  width: 310px;
-  display: inline-block;
-  float: left;
-  background-image: url(/assets/img/iphone.png);
-}
-@media (max-width: 960px) {
-  .download .phone {
-    display: none;
-  }
-}
-.download .copy {
-  display: inline-block;
-  margin: 80px 0px 0px 70px;
-  width: 400px;
-}
-@media (max-width: 960px) {
-  .download .copy {
-    display: block;
-    width: 60%;
-    margin: 200px auto 240px auto;
-    text-align: center;
-  }
-}
-@media (max-width: 630px) {
-  .download .copy {
-    display: block;
-    width: 60%;
-    margin: 100px auto;
-    text-align: center;
-  }
-}
-.download .copy h1 {
-  font-size: 48px;
-  font-weight: 100;
-  letter-spacing: 2px;
-}
-.download .copy h2 {
-  color: #917ee5;
-}
-.download .copy p {
-  line-height: 25px;
-}
-.download .copy .appStore {
-  display: block;
-  margin: 40px auto;
+  text-decoration-color: #8e03f5;
 }
 
 footer {
   color: #47525d;
+  text-align: center;
   height: 80px;
 }
 
 footer .content {
-  width: 60%;
+  width: 100%;
   height: 80px;
-  margin: 0 auto;
+  margin: 200px auto 0px auto;
 }
 footer .copyright {
   display: inline-block;
@@ -911,7 +849,6 @@ footer h4 {
 }
 footer .footerNav {
   display: inline-block;
-  float: right;
 }
 footer p {
   display: inline-block;
@@ -923,6 +860,7 @@ footer a {
 }
 footer img {
   vertical-align: middle;
+  margin: 0px 0px 0px 20px;
 }
 
 #discoverFeed {
@@ -968,7 +906,7 @@ footer img {
   font-size: 14px;
   text-align: center;
   width: 180px;
-  background-color: #dddddd;
+  background-color: #f2f2f2;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -1041,7 +979,7 @@ footer img {
   height: 480px;
   padding: 10px;
   color: #47525d;
-  border-right: solid 1px #dddddd;
+  border-right: solid 1px #f2f2f2;
 }
 @media (max-width: 960px) {
   #profile .user {
@@ -1134,7 +1072,7 @@ footer img {
   font-size: 14px;
   text-align: center;
   width: 180px;
-  background-color: #dddddd;
+  background-color: #f2f2f2;
 }
 #profile .refreshFeed:hover {
   color: #33aaff;
@@ -1142,8 +1080,8 @@ footer img {
 }
 
 #download {
-  height: 760px;
-  width: 780px;
+  height: 800px;
+  width: 735px;
   margin: 0px auto;
   padding: 110px 0px 0px 0px;
 }
@@ -1156,21 +1094,37 @@ footer img {
 }
 
 #download .phone {
-  height: 654px;
-  width: 310px;
+  height: 516px;
+  width: 245px;
   display: inline-block;
   float: left;
   background-image: url(/assets/img/iphone.png);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 @media (max-width: 960px) {
   #download .phone {
     display: none;
   }
 }
+#download .icon {
+  height: 80px;
+  width: 80px;
+  display: inline-block;
+  float: left;
+  margin: 0px 30px 30px 0px;
+  background-image: url(/assets/img/app-icon.png);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 #download .copy {
   display: inline-block;
-  margin: 80px 0px 0px 70px;
-  width: 400px;
+  margin: 40px 0px 0px 70px;
+  width: 420px;
 }
 @media (max-width: 960px) {
   #download .copy {
@@ -1189,14 +1143,18 @@ footer img {
   }
 }
 #download .copy h1 {
-  font-size: 48px;
+  font-size: 36px;
+  margin: 5px 0px 0px 0px;
   font-weight: 100;
   letter-spacing: 2px;
 }
 #download .copy h2 {
+  font-size: 14px;
+  margin: 5px 0px 0px 0px;
   color: #917ee5;
 }
 #download .copy p {
+  clear: both;
   line-height: 25px;
 }
 #download .copy .appStore {

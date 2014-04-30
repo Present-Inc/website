@@ -1,12 +1,12 @@
 #home{
-  height: 820px;
+  height: 100%;
   width: 100%;
   margin: 0px;
   overflow: auto;
   @include background-size(cover);
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(/assets/img/left-frame-bg.jpg);
+  background-image: url(/assets/img/main-bg.jpg);
   @media(max-width: $break-medium) {
       display: none;
   }
@@ -105,83 +105,18 @@
 }
 
 
-.download {
-  height: 740px;
-  width: 780px;
-  margin: 0px auto;
-  padding: 110px 0px 0px 0px;
-  @media(max-width: $break-large) {
-    padding: 0px;
-    height: auto;
-    width: 100%;
-  }
-}
-
-.download {
-
-  .phone {
-    height: 654px;
-    width: 310px;
-    display: inline-block;
-    float: left;
-    background-image: url(/assets/img/iphone.png);
-    @media(max-width: $break-large) {
-      display: none;
-    }
-  }
-
-  .copy {
-      display: inline-block;
-      margin: 80px 0px 0px 70px;
-      width: 400px;
-
-      @media(max-width: $break-large) {
-        display: block;
-        width: 60%;
-        margin: 200px auto 240px auto;
-        text-align: center;
-      }
-
-      @media(max-width: $break-medium) {
-        display: block;
-        width: 60%;
-        margin: 100px auto;
-        text-align: center;
-    }
-
-    h1 {
-      font-size: 48px;
-      font-weight: 100;
-      letter-spacing: 2px;
-    }
-
-    h2 {
-      color: #917EE5
-    }
-
-    p {
-      line-height: 25px;
-    }
-
-    .appStore {
-      display: block;
-      margin: 40px auto;
-    }
-  }
-
-}
-
 footer{
   color: $main-grey;
+  text-align: center;
   height: 80px;
 }
 
 footer {
 
   .content {
-    width: 60%;
+    width: 100%;
     height: 80px;
-    margin: 0 auto;
+    margin: 200px auto 0px auto;
   }
 
   .copyright {
@@ -194,7 +129,6 @@ footer {
 
   .footerNav {
     display: inline-block;
-    float: right;
   }
 
   p {
@@ -206,8 +140,10 @@ footer {
     color: $main-grey;
     margin: 0px 15px 0px 20px;
   }
+
   img {
     vertical-align: middle;
+    margin: 0px 0px 0px 20px;
   }
 
 }

@@ -14,12 +14,12 @@
 
 /* COLORS */
 $main-blue:  #33AAFF;
-$main-purple: #917EE5 ;
+$main-purple: #8E03F5 ;
 $dark-purple: #6C259B;
-$transparent-purple: rgba($dark-purple, .8);
-$purple-overlay: rgba($dark-purple, .4);
+$transparent-purple: rgba($main-purple, .7);
+$purple-overlay: rgba($main-purple, .7);
 $main-grey: #47525D;
-$light-gray: #DDDDDD;
+$light-gray: #f2f2f2;
 $background-gray: #f8f8f8;
 $white: #FFFFFF;
 

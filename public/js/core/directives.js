@@ -29,7 +29,7 @@ pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
       var downloadBtn = angular.element(elem);
       elem.bind('click', function() {
         var downloadElem = angular.element(document.querySelector('#download'));
-        $uiViewScroll('downloadElem');
+        $uiViewScroll(downloadElem);
       });
     }
   }
