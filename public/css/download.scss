@@ -1,5 +1,11 @@
 
+
 #download {
+  background-color: #f7f7f7;
+  width: 100%;
+}
+
+#download .content{
   height: 800px;
   width: 735px;
   margin: 0px auto;
@@ -25,12 +31,24 @@
     }
   }
 
+  .phone img {
+    width: 204px;
+    height: 365px;
+    padding: 77px 0px 0px 22px;
+  }
+
+  .top {
+    width: 260px;
+    text-align: center;
+    margin: 0 auto;
+  }
+
   .icon {
     height: 80px;
     width: 80px;
     display: inline-block;
     float: left;
-    margin: 0px 30px 30px 0px;
+    margin: 5px 15px 30px 0px;
     background-image: url(/assets/img/app-icon.png);
     @include background-size(cover);
   }
@@ -67,6 +85,8 @@
     }
 
     p {
+      width: 100%;
+      text-align: center;
       clear: both;
       line-height: 25px;
     }
@@ -75,6 +95,44 @@
       display: block;
       margin: 40px auto;
     }
+  }
+
+  footer{
+    color: $main-grey;
+    text-align: center;
+    height: 80px;
+  }
+
+  footer {
+
+    .copyright {
+      display: inline-block;
+    }
+
+    h4 {
+      margin: 10px;
+    }
+
+    .footerNav {
+      margin: 100px 0px 50px 0px;
+      display: inline-block;
+    }
+
+    p {
+      display: inline-block;
+      margin: 0px;
+    }
+
+    a {
+      color: $main-grey;
+      margin: 0px 15px 0px 20px;
+    }
+
+    img {
+      vertical-align: middle;
+      margin: 0px 0px 0px 20px;
+    }
+
   }
 
 }

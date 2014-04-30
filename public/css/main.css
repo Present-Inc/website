@@ -58,6 +58,10 @@ html {
   overflow-y: scroll;
 }
 
+body {
+  background-color: #f7f7f7;
+}
+
 #main {
   padding: 0px;
   margin: 0px;
@@ -122,7 +126,7 @@ a:hover {
   margin: 10px;
   padding: 5px 10px;
   height: 25px;
-  border: solid 1px #f2f2f2;
+  border: solid 1px #cccccc;
   border-radius: 2px;
   font-size: 16px;
 }
@@ -641,7 +645,7 @@ a:hover {
 }
 
 header {
-  background-color: rgba(142, 3, 245, 0.7);
+  background-color: rgba(108, 37, 155, 0.7);
 }
 
 /*
@@ -745,6 +749,7 @@ header {
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(/assets/img/main-bg.jpg);
+  background-color: #cccccc;
 }
 @media (max-width: 630px) {
   #home {
@@ -791,7 +796,7 @@ header {
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: right;
-  background-color: rgba(142, 3, 245, 0.7);
+  background-color: rgba(51, 170, 255, 0.5);
 }
 #home .home-btn:hover, #home .discover-btn:hover, #home .download-btn:hover {
   cursor: pointer;
@@ -803,9 +808,9 @@ header {
   background-image: url(/assets/img/discover_arrow.png);
 }
 #home .download-btn {
-  width: 210px;
+  width: 220px;
   margin: 0px 0px 0px 20px;
-  padding: 12px 0px 0px 30px;
+  padding: 12px 0px 0px 20px;
   background-image: url(/assets/img/download_arrow.png);
 }
 #home h1 {
@@ -830,37 +835,8 @@ header {
   text-decoration-color: #8e03f5;
 }
 
-footer {
-  color: #47525d;
-  text-align: center;
-  height: 80px;
-}
-
-footer .content {
-  width: 100%;
-  height: 80px;
-  margin: 200px auto 0px auto;
-}
-footer .copyright {
-  display: inline-block;
-}
-footer h4 {
-  margin: 10px;
-}
-footer .footerNav {
-  display: inline-block;
-}
-footer p {
-  display: inline-block;
-  margin: 0px;
-}
-footer a {
-  color: #47525d;
-  margin: 0px 15px 0px 20px;
-}
-footer img {
-  vertical-align: middle;
-  margin: 0px 0px 0px 20px;
+#discover {
+  background-color: #cccccc;
 }
 
 #discoverFeed {
@@ -906,7 +882,7 @@ footer img {
   font-size: 14px;
   text-align: center;
   width: 180px;
-  background-color: #f2f2f2;
+  background-color: #cccccc;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
@@ -979,7 +955,7 @@ footer img {
   height: 480px;
   padding: 10px;
   color: #47525d;
-  border-right: solid 1px #f2f2f2;
+  border-right: solid 1px #cccccc;
 }
 @media (max-width: 960px) {
   #profile .user {
@@ -1072,7 +1048,7 @@ footer img {
   font-size: 14px;
   text-align: center;
   width: 180px;
-  background-color: #f2f2f2;
+  background-color: #cccccc;
 }
 #profile .refreshFeed:hover {
   color: #33aaff;
@@ -1080,13 +1056,18 @@ footer img {
 }
 
 #download {
+  background-color: #f7f7f7;
+  width: 100%;
+}
+
+#download .content {
   height: 800px;
   width: 735px;
   margin: 0px auto;
   padding: 110px 0px 0px 0px;
 }
 @media (max-width: 960px) {
-  #download {
+  #download .content {
     padding: 0px;
     height: auto;
     width: 100%;
@@ -1109,12 +1090,22 @@ footer img {
     display: none;
   }
 }
+#download .phone img {
+  width: 204px;
+  height: 365px;
+  padding: 77px 0px 0px 22px;
+}
+#download .top {
+  width: 260px;
+  text-align: center;
+  margin: 0 auto;
+}
 #download .icon {
   height: 80px;
   width: 80px;
   display: inline-block;
   float: left;
-  margin: 0px 30px 30px 0px;
+  margin: 5px 15px 30px 0px;
   background-image: url(/assets/img/app-icon.png);
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -1154,10 +1145,39 @@ footer img {
   color: #917ee5;
 }
 #download .copy p {
+  width: 100%;
+  text-align: center;
   clear: both;
   line-height: 25px;
 }
 #download .copy .appStore {
   display: block;
   margin: 40px auto;
+}
+#download footer {
+  color: #47525d;
+  text-align: center;
+  height: 80px;
+}
+#download footer .copyright {
+  display: inline-block;
+}
+#download footer h4 {
+  margin: 10px;
+}
+#download footer .footerNav {
+  margin: 100px 0px 50px 0px;
+  display: inline-block;
+}
+#download footer p {
+  display: inline-block;
+  margin: 0px;
+}
+#download footer a {
+  color: #47525d;
+  margin: 0px 15px 0px 20px;
+}
+#download footer img {
+  vertical-align: middle;
+  margin: 0px 0px 0px 20px;
 }

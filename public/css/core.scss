@@ -16,10 +16,10 @@
 $main-blue:  #33AAFF;
 $main-purple: #8E03F5 ;
 $dark-purple: #6C259B;
-$transparent-purple: rgba($main-purple, .7);
-$purple-overlay: rgba($main-purple, .7);
+$transparent-purple: rgba($dark-purple, .7);
+$transparent-blue: rgba($main-blue, .5);
 $main-grey: #47525D;
-$light-gray: #f2f2f2;
+$light-gray: #ccc;
 $background-gray: #f8f8f8;
 $white: #FFFFFF;
 
@@ -73,6 +73,10 @@ $center: 0px auto;
 //Forces a scroll bar to prevent page shifts between views
 html {
   overflow-y: scroll;
+}
+
+body {
+  background-color: #f7f7f7; 
 }
 
 //Controls Angular View Injections
