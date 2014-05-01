@@ -1,22 +1,7 @@
 var pDirectives = angular.module('p.directives', ['ngAnimate', 'ui.router']);
 
 
-pDirectives.directive('blockScroll', ['$window', '$anchorScroll', function($window, $anchorScroll) {
-  return {
-    restrict: 'EA',
-    link: function($scope) {
-      $window.bind('scroll', function() {
-        if (app.isFullScreen) {
-          $location.$hash('#header');
-          $anchorScroll();
-        }
-      });
-    }
-  }
-}]);
-
-
-pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', function($animate, $window, $anchorScroll) {
+pDirectives.directive('viewContainer', ['$animate', '$window', '$location', '$anchorScroll', function($animate, $window, $location, $anchorScroll) {
     return {
         restrict: 'EA',
         scope: false,
@@ -30,6 +15,12 @@ pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', 
                 $animate.addClass(element, 'dl-leave', function(){
                     $window.scrollTo(0,0);
                 });
+            });
+
+            angular.element($window).bind('scroll', function() {
+                if(scope.app.fullscreen) {
+                    $anchorScroll(null);
+                }
             });
         }
     }

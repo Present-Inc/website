@@ -44,16 +44,6 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
              }]
            }
         })
-        .state('download', {
-          url: '/download',
-          templateUrl: '/views/download',
-          controller: 'downloadCtrl',
-          resolve: {
-            Transistion : ['Utilities', function(Utilities) {
-              return Utilities.transitionComplete(1200);
-            }]
-          }
-        })
         .state('profile', {
             url: '/:user',
             templateUrl: '/views/profile',

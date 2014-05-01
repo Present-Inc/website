@@ -1,10 +1,31 @@
-<div id="home">
-    <div class="banner" ng-style="bannerPos">
-        <h1 ui-sref="discover">Share The Present</h1>
-        <h2>Post live videos anytime, anywhere</h2>
-        <div class="btnContainer">
-            <div ui-sref="discover" class="discover-btn">check it out</div>
-            <div class="download-btn" download-btn>download the app</div>
-        </div>
+<div id="home" class="fullscreen">
+  <div class="content">
+
+    <div class="phone">
+      <div class="appScreen" iphone>
+        <img ng-src="{{viewer.source}}" class="a-fade-fast" ng-hide="viewer.changing" />
+      </div>
     </div>
+    <div class="copy">
+      <div class="top">
+        <div class="icon"></div>
+        <h1>Present</h1>
+        <h2>Create and Share Videos Instantly</h2>
+      </div>
+      <p>Present is a fast, fun, and captivating way to share your life with friends and family– anywhere, anytime. <br /><br />
+        Begin capturing video, and immediately your friends and family can begin watching – it’s that easy.  No uploads, no length limits, and no storage costs.  You can even share
+        to Facebook and Twitter.<br /><br />
+        Imagine a world where people are connected through experiences shared in real time.</p>
+      <a ui-sref="discover"><button class="discoverBtn">Browse Present</button></a>
+
+    </div>
+    <!-- <footer>
+        <div class="footerNav">
+            <h4 class=copyright>&copy; PRESENT INC.</h4>
+            <a target="blank" href="/assets/html/terms.html">TERMS</a>
+            <a target="blank"href="/assets/html/policy/policy.html">PRIVATE POLICY</a>
+            <img src="http://cdn.mxpnl.com/site_media/images/partner/badge_light.png" />
+        </div>
+      </footer> -->
+  </div>
 </div>

@@ -28,15 +28,16 @@
 
   .logo {
     float: left;
-    margin: 5px 0px 0px 0px;
-    height: 40px;
-    width: 40px;
+    margin: 0px 0px 0px 0px;
+    height: 30px;
+    width: 30px;
     @media (max-width: $break-medium) {
       display: block;
       float: none;
       margin: 5px auto 0px auto;
     }
   }
+
 
   .logo img {
     height: 100%;
@@ -45,23 +46,16 @@
 
   nav {
     float: right;
+    color: #fff;
+    margin: 5px 0px 0px 0px;
+    font-weight: bold;
     @media (max-width: $break-medium) {
       display: none;
     }
   }
 
-  //Fixes apparent bug of occasionally rendering the nav outside of the header
-  nav a {
-    float: right;
-    font-family: $font-secondary, sans-serif;
-    font-size: 18px;
-    font-weight: 100;
-    letter-spacing: 1px;
-
-  }
-
   nav ul {
-    margin-top: 10px;
+    margin-top: 30px;
   }
 
   nav ul li {

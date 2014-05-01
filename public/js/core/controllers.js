@@ -6,7 +6,12 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
     $scope.message = 'Welcome to Present';
     $scope.app = {
         viewAnimation : 'a-fade',
-        isReady : false
+        isReady : false,
+        style : {
+          size : 'fullscreen'
+        },
+        fullscreen: true,
+        navigation : false
     };
 
     $scope.$on('$stateChangeStart', function() {
@@ -22,12 +27,16 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
 
 pControllers.controller('homeCtrl', ['$scope', function($scope) {
     $scope.message = 'Discover the present';
+    $scope.app.navigation = false;
+    $scope.app.fullscreen = true;
     $scope.app.viewAnimation = 'a-fade';
 }]);
 
 
 pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'DiscoverService',
     function($scope, $timeout, Feed, DiscoverService) {
+        $scope.app.navigation = true;
+        $scope.app.fullscreen = false;
         $scope.app.viewAnimation = 'a-fade';
 
         $scope.feedManager = {
@@ -69,7 +78,9 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
 
 pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile', 'ProfileService',
     function($scope, $timeout, Feed, Profile, ProfileService) {
+        $scope.app.navigation = true;
         $scope.app.viewAnimation = 'a-fade';
+        $scope.app.fullscreen = false;
 
         console.log('Profile Controllers');
 
@@ -122,6 +133,8 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
 pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', 'ProfileService',
     function($scope, Feed, Profile, ProfileService) {
     $scope.app.viewAnimation = 'a-fade';
+    $scope.app.fullscreen = true;
+
     $scope.user = Profile;
     $scope.feedManager = {
         active: null,
@@ -134,17 +147,13 @@ pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', '
 }]);
 
 
-pControllers.controller('downloadCtrl', ['$scope', '$interval', function($scope, $interval) {
-
-
-}]);
-
 pControllers.controller('verificationCtrl', ['$scope', 'ConfirmMessage', function($scope, ConfirmMessage) {
     $scope.message = ConfirmMessage;
 }]);
 
 pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidParams', 'AccountService',
     function($scope, $stateParams, ValidParams, AccountService) {
+    $scope.app.fullscreen = true;
 
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;

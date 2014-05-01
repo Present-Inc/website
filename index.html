@@ -9,17 +9,13 @@
 </head>
 <body ng-controller="mainCtrl" class="fullscreen">
 
-    <header id="header" class="fixed">
+    <header id="header" class="fixed" ng-show="app.navigation">
             <section>
                 <div class="logo">
                     <a ui-sref="home"><img src="../assets/img/logo-small.png" alt="Present" /></a>
                 </div>
                 <nav>
-                    <ul>
-                        <li><a ui-sref="discover">Discover</a></li>
-                        <li><a ui-sref="download">Download</a></li>
-                        <li><a href="http://blog.present.tv">Blog</a></li>
-                    </ul>
+                  <a ui-sref="home">&#8595;</a>
                 </nav>
             </section>
     </header>
@@ -33,7 +29,7 @@
          view-container
          id="main"
          class="fullscreen"
-         ng-class="app.viewAnimation">
+         ng-style="app.viewAnimation">
         <!--INJECTED TEMPLATES GO HERE -->
     </div>
 
