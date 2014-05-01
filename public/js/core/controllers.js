@@ -134,8 +134,9 @@ pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', '
 }]);
 
 
-pControllers.controller('downloadCtrl', [function($scope) {
-  
+pControllers.controller('downloadCtrl', ['$scope', '$interval', function($scope, $interval) {
+
+
 }]);
 
 pControllers.controller('verificationCtrl', ['$scope', 'ConfirmMessage', function($scope, ConfirmMessage) {

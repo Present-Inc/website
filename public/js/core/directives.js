@@ -20,7 +20,7 @@ pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', 
 }]);
 
 
-/*HOME
+/* HOME
  ======================================= */
 pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
   return {
@@ -43,25 +43,35 @@ pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $t
     restrict: 'EA',
     controller: function($scope) {
 
-      $scope.images = ['http://placehold.it/250x360'];
+      $scope.images = ['http://placehold.it/250x360/33AAFF/FFF', 'http://placehold.it/250x361/8E03F5/FFF', 'http://placehold.it/250x361/CCCCCC/FFF'];
 
       $scope.viewer = {
-        changing: false,
-        index: 0,
-        source: $scope.images[0]
+        changing: true,
+        key: 0,
+        source: '',
       };
 
       $interval(function() {
         $scope.rotateScreens();
-      }, 4000);
+      }, 5000);
 
       $scope.rotateScreens = function() {
           $scope.viewer.changing = true;
-          console.log('it works!');
+
+          if($scope.viewer.key ==  $scope.images.length) {
+            $scope.viewer.key = 0;
+          }
+
           $timeout(function() {
+            $scope.viewer.source = $scope.images[$scope.viewer.key];
+            console.log($scope.viewer.source);
             $scope.viewer.changing = false;
+            $scope.viewer.key++;
           }, 800);
+
       };
+
+      $scope.rotateScreens();
     }
   }
 }]);
