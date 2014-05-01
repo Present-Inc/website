@@ -1,5 +1,21 @@
 var pDirectives = angular.module('p.directives', ['ngAnimate', 'ui.router']);
 
+
+pDirectives.directive('blockScroll', ['$window', '$anchorScroll', function($window, $anchorScroll) {
+  return {
+    restrict: 'EA',
+    link: function($scope) {
+      $window.bind('scroll', function() {
+        if (app.isFullScreen) {
+          $location.$hash('#header');
+          $anchorScroll();
+        }
+      });
+    }
+  }
+}]);
+
+
 pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', function($animate, $window, $anchorScroll) {
     return {
         restrict: 'EA',
@@ -17,22 +33,6 @@ pDirectives.directive('viewContainer', ['$animate', '$window', '$anchorScroll', 
             });
         }
     }
-}]);
-
-
-/* HOME
- ======================================= */
-pDirectives.directive('downloadBtn', ['$uiViewScroll', function($uiViewScroll) {
-  return {
-    restrict: 'EA',
-    link: function(scope, elem, attrs) {
-      var downloadBtn = angular.element(elem);
-      elem.bind('click', function() {
-        var downloadElem = angular.element(document.querySelector('#download'));
-          $uiViewScroll(downloadElem);
-      });
-    }
-  }
 }]);
 
 
