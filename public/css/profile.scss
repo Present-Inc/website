@@ -5,7 +5,7 @@
   width: $large-width - 40px;
   color: $main-grey;
 
-  @media(max-width: $break-large) {
+  @media (max-width: $break-large) {
     width: 100%;
     padding: 0px;
     margin: 100px 0px;
@@ -60,7 +60,7 @@
     height: 480px;
     padding: 10px;
     color: $main-grey;
-    border-right: solid 1px $light-gray;
+    border-right: solid 1px $light-grey;
 
     @media (max-width: $break-large) {
       width: 480px;
@@ -163,7 +163,7 @@
     font-size: 14px;
     text-align: center;
     width: 180px;
-    background-color: $light-gray;
+    background-color: $light-grey;
   }
 
   .refreshFeed:hover {

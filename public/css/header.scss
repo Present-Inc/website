@@ -67,5 +67,6 @@
 
 header{
   @extend .mainHeader;
-  background-color: $transparent-purple;
+  overflow: hidden;
+  background-color: $alt-purple;
 }

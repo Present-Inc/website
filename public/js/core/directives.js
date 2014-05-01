@@ -1,17 +1,22 @@
 var pDirectives = angular.module('p.directives', ['ngAnimate', 'ui.router']);
 
 
-pDirectives.directive('viewContainer', ['$animate', '$window', '$location', '$anchorScroll', function($animate, $window, $location, $anchorScroll) {
+pDirectives.directive('viewContainer', ['$animate', '$window', '$location', '$anchorScroll', '$timeout',
+function($animate, $window, $location, $anchorScroll) {
     return {
         restrict: 'EA',
         scope: false,
         link : function(scope, element, attrs) {
-            scope.$on('$stateChangeSuccess', function() {
+            scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
                 $animate.addClass(element, 'dl-enter', function(){
                 });
             });
 
-            scope.$on('$stateChangeStart', function() {
+            scope.$on('$stateChangeStart', function(event, toState, fromState) {
+                console.log(toState);
+                if(toState.name != 'home' ) {
+                  scope.app.navigation = true;
+                }
                 $animate.addClass(element, 'dl-leave', function(){
                     $window.scrollTo(0,0);
                 });
@@ -22,12 +27,28 @@ pDirectives.directive('viewContainer', ['$animate', '$window', '$location', '$an
                     $anchorScroll(null);
                 }
             });
+
+            element.bind('click', function(event) {
+                var targetElem = angular.element(event.target);
+                var targetClass = targetElem.attr('class');
+                console.log(targetClass);
+                if( targetClass == 'downloadBtn'){
+                  scope.app.downloadModal = true;
+                }
+                else {
+                  scope.app.downloadModal = false;
+                }
+                scope.$apply();
+            });
         }
     }
 }]);
 
 
-/* DOWNLOAD
+
+
+
+/* HOME
   ====================================== */
 pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $timeout) {
   return {
@@ -66,7 +87,6 @@ pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $t
     }
   }
 }]);
-
 
 
 /* FEED
@@ -181,10 +201,6 @@ pDirectives.directive('jwplayer', function() {
                     }
                 }
             }, {offset: '50%'});
-
-            playerElem.bind('click', function() {
-               console.log('player element was clicked');
-            });
 
             scope.$on('activeVideoChanged', function(event, active) {
                 scope.video.state = scope.checkState();

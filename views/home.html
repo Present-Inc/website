@@ -1,6 +1,5 @@
 <div id="home" class="fullscreen">
   <div class="content">
-
     <div class="phone">
       <div class="appScreen" iphone>
         <img ng-src="{{viewer.source}}" class="a-fade-fast" ng-hide="viewer.changing" />
@@ -16,7 +15,7 @@
         Begin capturing video, and immediately your friends and family can begin watching – it’s that easy.  No uploads, no length limits, and no storage costs.  You can even share
         to Facebook and Twitter.<br /><br />
         Imagine a world where people are connected through experiences shared in real time.</p>
-      <button ng-click="showModal()"class="downloadBtn">Download</button>
+      <button ng-click="toggleDownloadModal(true)"class="downloadBtn">Download</button>
       <a ui-sref="discover"><button class="discoverBtn">Browse Present</button></a>
     </div>
     <footer>

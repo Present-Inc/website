@@ -14,13 +14,10 @@
 
 /* COLORS */
 $main-blue:  #33AAFF;
-$main-purple: #8E03F5 ;
-$dark-purple: #6C259B;
-$transparent-purple: rgba($dark-purple, .7);
-$transparent-blue: rgba($main-blue, .5);
+$main-purple: #A566FF;
+$alt-purple: #8E73FF;
 $main-grey: #47525D;
-$light-gray: #ccc;
-$background-gray: #f8f8f8;
+$light-grey: #ccc;
 $white: #FFFFFF;
 
 /*DIMENSIONS*/
@@ -76,7 +73,7 @@ html {
 }
 
 body {
-  background-color: #f7f7f7;
+  background-color: #fff;
 }
 
 //Controls Angular View Injections
@@ -98,7 +95,7 @@ body {
   width: 100%;
   position: fixed;
   top: 15%;
-  z-index: -1;
+  z-index: 10;
 }
 
 .loading {
@@ -110,4 +107,17 @@ body {
 .loading img {
   height: 100%;
   width: 100%;
+}
+
+#downloadModal {
+  position: fixed;
+  top: 20%;
+  height: 200px;
+  width: 100%;
+  background-color: transparentize($main-grey, .2);
+  z-index: 10;
+}
+
+.outOfFocus {
+  opacity: 0.5;
 }

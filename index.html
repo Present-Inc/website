@@ -8,22 +8,27 @@
     <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
 </head>
 <body ng-controller="mainCtrl" class="fullscreen">
-    <header id="header" class="fixed " ng-show="app.navigation">
-            <section>
-                <div class="logo">
-                    <a ui-sref="home"><img src="../assets/img/logo-small.png" alt="Present" /></a>
-                </div>
-                <nav>
-                  <a ui-sref="home">Download The App</a>
-                </nav>
-            </section>
-    </header>
 
     <div class="loadingContainer a-slide" ng-show="!app.isReady">
         <div class="loading">
             <img src="/assets/img/loader-white.gif" />
         </div>
     </div>
+
+    <div download-modal id="downloadModal" class="a-slide" ng-show="app.downloadModal"></div>
+
+    <header id="header" class="fixed a-slide" ng-show="app.navigation">
+            <section>
+                <div class="logo">
+                    <a ui-sref="discover"><img src="../assets/img/logo-small.png" alt="Present" /></a>
+                </div>
+                <div class="name"></div>
+                <nav ng-click="showModal()">
+                  <a>Download The App</a>
+                </nav>
+            </section>
+    </header>
+
     <div ui-view
          view-container
          id="main"

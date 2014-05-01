@@ -8,10 +8,11 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
         isReady : false,
         viewAnimation: 'a-fade',
         style : {
-          size : 'fullscreen'
+          size : 'fullscreen',
         },
         fullscreen: true,
-        navigation : false
+        navigation : false,
+        downloadModal: false
     };
 
     $scope.$on('$stateChangeStart', function() {
@@ -21,18 +22,22 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
     $scope.$on('$stateChangeSuccess', function() {
         $scope.app.isReady = true;
     });
+
+    $scope.showModal = function() {
+      $scope.app.downloadModal = true;
+    }
 }]);
 
 pControllers.controller('homeCtrl', ['$scope', function($scope) {
     $scope.message = 'Discover the present';
     $scope.app.navigation = false;
     $scope.app.fullscreen = true;
+
 }]);
 
 
 pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'DiscoverService',
     function($scope, $timeout, Feed, DiscoverService) {
-        $scope.app.navigation = true;
         $scope.app.fullscreen = false;
 
         $scope.feedManager = {
@@ -74,7 +79,6 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
 
 pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile', 'ProfileService',
     function($scope, $timeout, Feed, Profile, ProfileService) {
-        $scope.app.navigation = true;
         $scope.app.fullscreen = false;
 
         console.log('Profile Controllers');
