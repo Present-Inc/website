@@ -5,8 +5,8 @@ var pControllers = angular.module('p.controllers', ['ngAnimate']);
 pControllers.controller('mainCtrl', ['$scope', function($scope) {
     $scope.message = 'Welcome to Present';
     $scope.app = {
-        viewAnimation : 'a-fade',
         isReady : false,
+        viewAnimation: 'a-fade',
         style : {
           size : 'fullscreen'
         },
@@ -21,15 +21,12 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
     $scope.$on('$stateChangeSuccess', function() {
         $scope.app.isReady = true;
     });
-
-
 }]);
 
 pControllers.controller('homeCtrl', ['$scope', function($scope) {
     $scope.message = 'Discover the present';
     $scope.app.navigation = false;
     $scope.app.fullscreen = true;
-    $scope.app.viewAnimation = 'a-fade';
 }]);
 
 
@@ -37,7 +34,6 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
     function($scope, $timeout, Feed, DiscoverService) {
         $scope.app.navigation = true;
         $scope.app.fullscreen = false;
-        $scope.app.viewAnimation = 'a-fade';
 
         $scope.feedManager = {
             active: null,
@@ -79,7 +75,6 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
 pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile', 'ProfileService',
     function($scope, $timeout, Feed, Profile, ProfileService) {
         $scope.app.navigation = true;
-        $scope.app.viewAnimation = 'a-fade';
         $scope.app.fullscreen = false;
 
         console.log('Profile Controllers');
@@ -132,7 +127,6 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
 
 pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', 'ProfileService',
     function($scope, Feed, Profile, ProfileService) {
-    $scope.app.viewAnimation = 'a-fade';
     $scope.app.fullscreen = true;
 
     $scope.user = Profile;

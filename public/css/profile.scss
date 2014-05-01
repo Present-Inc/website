@@ -1,7 +1,7 @@
 
 #profile {
   margin: 0px auto 0px auto;
-  padding: 200px 20px;
+  padding: 100px 20px;
   width: $large-width - 40px;
   color: $main-grey;
 
@@ -147,7 +147,7 @@
     .description {
       width: 340px;
       margin: 0px auto;
-      
+
       @media (max-width: $break-small) {
           width: 100%;
       }
@@ -172,5 +172,3 @@
   }
 
 }
-
-

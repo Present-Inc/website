@@ -12,7 +12,7 @@
   width: 715px;
   margin: 0px auto;
   padding: 60px 0px 0px 0px;
-  @media(max-width: $break-large) {
+  @media (max-width: $break-large) {
     padding: 0px;
     height: auto;
     width: 100%;
@@ -28,7 +28,7 @@
     float: left;
     background-image: url(/assets/img/iphone.png);
     @include background-size(cover);
-    @media(max-width: $break-large) {
+    @media (max-width: $break-large) {
       display: none;
     }
   }
@@ -40,7 +40,8 @@
   }
 
   .top {
-    width: 260px;
+    width: 460px;
+    overflow: auto;
     text-align: left;
   }
 
@@ -56,18 +57,18 @@
 
   .copy {
       display: inline-block;
-      margin: 0px 0px 0px 50px;
-      width: 420px;
-      text-align: left;
-      font-weight: 100;
-      @media(max-width: $break-large) {
+      margin: 30px 0px 0px 50px;
+      width: 420px ;
+      text-align: justify;
+      font-weight: 300;
+      @media  (max-width: $break-large) {
         display: block;
         width: 60%;
         margin: 200px auto 240px auto;
         text-align: center;
       }
 
-      @media(max-width: $break-medium) {
+      @media (max-width: $break-medium) {
         display: block;
         width: 60%;
         margin: 100px auto;
@@ -76,7 +77,7 @@
 
     h1 {
       font-size: 36px;
-      margin: 5px 0px 0px 0px;
+      margin: 10px 0px 0px 0px;
       font-weight: 100;
       letter-spacing: 2px;
     }
@@ -93,19 +94,40 @@
     }
 
     .discoverBtn {
+      outline: none;
       height: 40px;
       width: 160px;
+      margin: 0px 0px 0px 10px;
       background-color: transparent;
       color: $main-purple;
       border: solid 1px $main-purple;
       @include border-radius(4px);
     }
+
+    .downloadBtn {
+      outline: none;
+      height: 40px;
+      width: 160px;
+      background-color: transparent;
+      margin: 10px 10px 0px 0px;
+      color: $main-blue;
+      border: solid 1px $main-blue;
+      @include border-radius(4px);
+    }
+
+    .downloadBtn:hover {
+      background-color: transparentize($main-blue, 0.95);
+    }
+
+    .discoverBtn:hover {
+      background-color: transparentize($main-purple, 0.95);
+    }
   }
 
   footer{
-    color: $main-grey;
+    color: $light-gray;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     height: 80px;
   }
 
@@ -113,9 +135,6 @@
 
     .copyright {
       display: inline-block;
-    }
-
-    h4 {
       margin: 10px;
     }
 
@@ -125,19 +144,22 @@
       display: inline-block;
     }
 
-    p {
-      display: inline-block;
-      margin: 0px;
+    a {
+      color: $light-gray;
+      margin: 0px 15px 0px 20px;
     }
 
-    a {
-      color: $main-grey;
-      margin: 0px 15px 0px 20px;
+    a:hover {
+      color: $main-blue; 
     }
 
     img {
       vertical-align: middle;
-      margin: 0px 0px 0px 20px;
+      margin: 0px 0px 0px 15px;
+    }
+
+    .mixpanel {
+      height: 20px;
     }
 
   }

@@ -8,14 +8,13 @@
     <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
 </head>
 <body ng-controller="mainCtrl" class="fullscreen">
-
-    <header id="header" class="fixed" ng-show="app.navigation">
+    <header id="header" class="fixed " ng-show="app.navigation">
             <section>
                 <div class="logo">
                     <a ui-sref="home"><img src="../assets/img/logo-small.png" alt="Present" /></a>
                 </div>
                 <nav>
-                  <a ui-sref="home">&#8595;</a>
+                  <a ui-sref="home">Download The App</a>
                 </nav>
             </section>
     </header>
@@ -29,7 +28,7 @@
          view-container
          id="main"
          class="fullscreen"
-         ng-style="app.viewAnimation">
+         ng-class="app.viewAnimation">
         <!--INJECTED TEMPLATES GO HERE -->
     </div>
 
