@@ -14,7 +14,7 @@
 
 #profileFeed {
     width: 480px;
-    margin: 0px 0px 0px 440px;
+    margin: 0px 0px 60px 440px;
     padding: 0px 0px 40px 0px;
 
     @media (max-width: $break-large) {
@@ -30,9 +30,8 @@
 
 #profileFeed {
   .presentWrapper {
-    margin: 0px auto 120px auto;
+    margin: 0px auto 80px auto;
     width: 480px;
-    height: 480px;
     @media (max-width: $break-small) {
       width: 100%;
       height: auto;
@@ -57,10 +56,10 @@
     float: left;
     position: fixed;
     width: 400px;
-    height: 480px;
-    padding: 10px;
+    height: 380px;
+    padding: 100px 10px 10px 10px;
     color: $main-grey;
-    border-right: solid 1px $light-grey;
+    border-right: solid 1px #f7f7f7;
 
     @media (max-width: $break-large) {
       width: 480px;

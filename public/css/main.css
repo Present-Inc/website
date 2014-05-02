@@ -31,7 +31,7 @@ body { background-color: #fff; }
 
 .loading img { height: 100%; width: 100%; }
 
-#downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(71, 82, 93, 0.8); z-index: 10; }
+#downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(240, 240, 240, 0.95); z-index: 10; }
 
 .outOfFocus { opacity: 0.5; }
 
@@ -133,27 +133,23 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 header { overflow: hidden; background-color: #8e73ff; }
 
 /* PRESENTS ================================================ */
-.presentWrapper .user { margin: 0px 0px 10px 0px; }
-.presentWrapper .user a { color: #47525d; }
-.presentWrapper .user img { height: 50px; width: 50px; margin: 0px 10px 10px 0px; vertical-align: middle; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; border-radius: 30px; }
-.presentWrapper .user p { display: inline; font-size: 20px; font-weight: bold; }
 .presentWrapper .videoContainer { position: relative; z-index: 0; }
 .presentWrapper .videoContainer img { width: 100%; }
-.presentWrapper .timeAgo { position: absolute; bottom: 10px; right: 10px; background-color: none; }
 .presentWrapper .playerPlaceholder { position: absolute; z-index: 5; }
 .presentWrapper .player { z-index: 1; }
-.presentWrapper .info { margin: 20px 0px 0px 0px; }
-.presentWrapper .info span { margin: 0px 10px 0px 10px; display: inline-block; }
-.presentWrapper .info a { margin: 0px 3px 0px 0px; color: #33aaff; font-weight: 600; }
-.presentWrapper .info .likesIcon { margin: 0px 10px 0px 0px; vertical-align: bottom; }
-.presentWrapper .info .commentsIcon { float: left; margin: 2px 10px 20px 0px; }
-.presentWrapper .likes { width: 10%; float: right; text-align: right; }
-@media (max-width: 500px) { .presentWrapper .likes { width: 20%; margin: 0px 5px 0px 0px; } }
-.presentWrapper .title { width: 80%; }
+.presentWrapper .creator { display: inline-block; width: 75%; float: left; margin: 0px 0px 10px 0px; }
+.presentWrapper .creator .profilePicture { float: left; height: 60px; width: 60px; margin: 0px 15px 10px 0px; vertical-align: middle; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; border-radius: 30px; }
+.presentWrapper .creator .displayName { color: #33aaff; display: block; margin: 0px 0px 0px 0px; font-size: 20px; font-weight: bold; }
+.presentWrapper .creator .username { color: #cccccc; display: inline; margin: 5px 0px 0px 0px; font-size: 12px; font-weight: 300; }
+.presentWrapper .info { margin: 20px 0px 0px 0px; overflow: auto; }
+.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; }
+@media (max-width: 500px) { .presentWrapper .timeAgo { width: 20%; margin: 0px 5px 0px 0px; } }
+.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 12px; }
 @media (max-width: 500px) { .presentWrapper .title { width: 60%; } }
+.presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
 /* VIEW CSS Files css files that style specific views */
-#home { background-color: #f7f7f7; background-image: url(/assets/img/main-bg.png); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; width: 100%; }
+#home { background-color: #f7f7f7; background-image: url(/assets/img/main-bg.png); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; width: 100%; }
 
 #home .content { width: 715px; margin: 0px auto; padding: 60px 0px 0px 0px; }
 @media (max-width: 960px) { #home .content { padding: 0px; height: auto; width: 100%; } }
@@ -183,10 +179,10 @@ header { overflow: hidden; background-color: #8e73ff; }
 
 #discover { background-color: #cccccc; }
 
-#discoverFeed { margin: 0px auto 20px auto; padding: 85px 0px 50px 0px; width: 480px; z-index: -1; }
+#discoverFeed { margin: 0px auto 20px auto; padding: 65px 0px 50px 0px; width: 480px; z-index: -1; }
 @media (max-width: 500px) { #discoverFeed { width: 100%; } }
 
-#discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; font-weight: 300; }
+#discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; font-weight: 300; border-bottom: solid 1px #f5f5f5; padding: 0px 0px 20px 0px; }
 @media (max-width: 500px) { #discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; } }
 #discoverFeed .videoContainer { margin: 0 auto; height: 480px; width: 480px; }
 @media (max-width: 500px) { #discoverFeed .videoContainer { width: 100%; height: auto; } }
@@ -197,16 +193,16 @@ header { overflow: hidden; background-color: #8e73ff; }
 #profile { margin: 0px auto 0px auto; padding: 100px 20px; width: 920px; color: #47525d; }
 @media (max-width: 960px) { #profile { width: 100%; padding: 0px; margin: 100px 0px; } }
 
-#profileFeed { width: 480px; margin: 0px 0px 0px 440px; padding: 0px 0px 40px 0px; }
+#profileFeed { width: 480px; margin: 0px 0px 60px 440px; padding: 0px 0px 40px 0px; }
 @media (max-width: 960px) { #profileFeed { margin: 0px auto; } }
 @media (max-width: 500px) { #profileFeed { margin: 0px 0px; width: 100%; height: auto; } }
 
-#profileFeed .presentWrapper { margin: 0px auto 120px auto; width: 480px; height: 480px; }
+#profileFeed .presentWrapper { margin: 0px auto 80px auto; width: 480px; }
 @media (max-width: 500px) { #profileFeed .presentWrapper { width: 100%; height: auto; } }
 #profileFeed .videoContainer { margin: 0 auto; height: 480px; width: 480px; }
 @media (max-width: 500px) { #profileFeed .videoContainer { width: 100%; height: auto; } }
 
-#profile .user { float: left; position: fixed; width: 400px; height: 480px; padding: 10px; color: #47525d; border-right: solid 1px #cccccc; }
+#profile .user { float: left; position: fixed; width: 400px; height: 380px; padding: 100px 10px 10px 10px; color: #47525d; border-right: solid 1px #f7f7f7; }
 @media (max-width: 960px) { #profile .user { width: 480px; height: auto; position: relative; float: none; margin: 0px auto; border-right: none; text-align: center; } }
 @media (max-width: 500px) { #profile .user { width: 100%; height: auto; margin: 0px 0px; padding: 0px 0px; } }
 #profile .user .profilePicture { display: block; float: left; height: 100px; width: 100px; margin: 0px 20px 0px 0px; -webkit-border-radius: 60px; -moz-border-radius: 60px; -ms-border-radius: 60px; border-radius: 60px; }

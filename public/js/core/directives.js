@@ -13,7 +13,6 @@ function($animate, $window, $location, $anchorScroll) {
             });
 
             scope.$on('$stateChangeStart', function(event, toState, fromState) {
-                console.log(toState);
                 if(toState.name != 'home' ) {
                   scope.app.navigation = true;
                 }
@@ -31,7 +30,6 @@ function($animate, $window, $location, $anchorScroll) {
             element.bind('click', function(event) {
                 var targetElem = angular.element(event.target);
                 var targetClass = targetElem.attr('class');
-                console.log(targetClass);
                 if( targetClass == 'downloadBtn'){
                   scope.app.downloadModal = true;
                 }
@@ -76,7 +74,6 @@ pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $t
 
           $timeout(function() {
             $scope.viewer.source = $scope.images[$scope.viewer.key];
-            console.log($scope.viewer.source);
             $scope.viewer.changing = false;
             $scope.viewer.key++;
           }, 800);
@@ -108,14 +105,6 @@ pDirectives.directive('presentFeed', function() {
      }
 });
 
-pDirectives.directive('presentUser', function() {
-    return {
-        restrict: 'EA',
-        templateUrl:'views/partials/presentUser',
-        replace: true
-
-    }
-});
 
 pDirectives.directive('presentVideo', function() {
     return {
@@ -130,14 +119,24 @@ pDirectives.directive('jwplayer', function() {
         restrict: 'EA',
         scope: {
                media : '=',
+               islive: '=',
                videoid : '@'
         },
         require: '^presentFeed',
-        template : '<img class="playerPlaceholder a-fade" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
+        template : '<img class="playerPlaceholder" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
         controller: function($scope) {
 
+            if($scope.isLive) {
+              $scope.activePlaylistUrl = $scope.media.live;
+            } else {
+              $scope.activePlaylistUrl = $scope.media.replay;
+            }
+
+            console.log($scope.activePlaylistUrl);
+
+
             $scope.setupProperties = {
-                file : $scope.media.replay,
+                file : $scope.activePlaylistUrl,
                 image: $scope.media.still,
                 width: '100%',
                 height: '100%',
@@ -177,6 +176,7 @@ pDirectives.directive('jwplayer', function() {
                         if(scope.video.state == 'uninitialized') {
                             scope.video.state = 'loading';
                             jwplayer(scope.video._id).setup(scope.setupProperties);
+                            console.log(scope.setupProperties.file);
                             jwplayer(scope.video._id).onPlay(function() {
                                 if(scope.video.state == 'stopped') {
                                     jwplayer(scope.video._id).play(false);

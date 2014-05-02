@@ -8,7 +8,7 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
         isReady : false,
         viewAnimation: 'a-fade',
         style : {
-          size : 'fullscreen',
+          size : 'fullscreen'
         },
         fullscreen: true,
         navigation : false,
@@ -85,6 +85,7 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
 
         $scope.user = Profile;
         $scope.alternateLayout = {};
+
         if(!$scope.user.fullName) {
             $scope.alternateLayout.user = {'text-align': 'center'};
             $scope.alternateLayout.profilePicture = {'float': 'none', 'margin': '0px auto 20px auto'}
@@ -99,18 +100,12 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
             refreshLimit: 1
         };
 
-        $scope.feedManager.presents.map(function(present) {
-              present.creator.username = $scope.user.username;
-        });
-
         $scope.loadMoreVideos = function() {
             $scope.feedManager.isLoading = true;
             console.log('Loading more videos...' );
             ProfileService.loadFeed($scope.user.username, $scope.feedManager.cursor)
                 .then(function(newFeed) {
-                    newFeed.videos.map(function(video) {
-                        video.creator.username = $scope.user.username;
-                    });
+                    $scope.mapProfileData(newFeed.videos)
                     $scope.feedManager.cursor = newFeed.cursor;
                     console.log('Next Cursor: ' + $scope.feedManager.cursor);
                     $timeout(function() {
@@ -125,6 +120,21 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
             $scope.feedManager.presents = [];
             $scope.loadMoreVideos();
         }
+
+        $scope.mapProfileData = function(presents) {
+            presents.map(function(present) {
+                  present.creator.profilePicture.url = $scope.user.profilePicture.url;
+                  if($scope.user.fullName) {
+                      present.creator.displayName = $scope.user.fullName;
+                  } else {
+                      present.creator.displayName = $scope.user.username;
+                  }
+                  present.creator.username = $scope.user.username;
+
+            });
+        }
+
+        $scope.mapProfileData($scope.feedManager.presents);
 
 }]);
 

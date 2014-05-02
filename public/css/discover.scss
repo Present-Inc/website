@@ -5,7 +5,7 @@
 
 #discoverFeed {
   margin: 0px auto 20px auto;
-  padding: 85px 0px 50px 0px;
+  padding: 65px 0px 50px 0px;
   width: $video-width;
   z-index: $zContent;
   @media (max-width: $break-small) {
@@ -18,11 +18,13 @@
   .presentWrapper{
     margin: 10px 0px 60px 0px;
     font-weight: $font-weight-light;
+    border-bottom: solid 1px #f5f5f5;
+    padding: 0px 0px 20px 0px;
     @media (max-width: $break-small) {
       margin: 10px 0px 60px 0px;
     }
   }
-
+  
   .videoContainer {
     margin: 0 auto;
     height: $video-height;

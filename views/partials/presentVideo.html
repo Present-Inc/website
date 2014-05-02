@@ -2,18 +2,22 @@
     <div jwplayer
          videoid="{{present._id}}"
          media="present.mediaUrl"
+         islive="present.isLive"
          class="videoContainer"
          >
     </div>
     <div class="info">
-        <div>
-            <span class="likes">
-                <img src="assets/img/heart.png" class="likesIcon" /> {{present.likes}}
-            </span>
-            <span class="title">
-                <img src="assets/img/comment.png" class="commentsIcon"/>
-                <a>{{present.creator.username}}</a> {{present.title}}
-            </span>
+
+        <div class="creator">
+            <img class="profilePicture" ng-src="{{present.creator.profilePicture.url}}" />
+            <a ui-sref="profile({user: present.creator.username})">
+                <p class="displayName">{{present.creator.displayName}}</p>
+                <p class="username">@{{present.creator.username}}</p>
+                <span class="title"><img class="commentsIcon" src="assets/img/comment.png" ng-show="present.title"/> {{present.title}} </span>
+            </a>
         </div>
+        <span class="timeAgo">
+            {{present.timeAgo}}
+        </span>
      </div>
 </div>

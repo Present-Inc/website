@@ -122,9 +122,6 @@ pServices.factory('UsersApiResource', ['$http', '$q', function($http, $q) {
             return defer.promise;
         },
         resetPassword : function(userId, token, password) {
-            console.log(userId);
-            console.log(token);
-            console.log(password);
             var defer = $q.defer();
             var methodUrl = protocol + developmentServer + '/v1/users/reset_password';
             $http({
@@ -234,7 +231,8 @@ pServices.factory('FeedDelegate', function() {
             deserializedVideo.creator = {
                 _id            : video.creatorUser.object ? video.creatorUser.object._id : '',
                 username       : video.creatorUser.object ? video.creatorUser.object.username : '',
-                profilePicture : video.creatorUser.object ? video.creatorUser.object.profile.picture : ''
+                fullName       : video.creatorUser.object ? video.creatorUser.object.profile.fullName : '',
+                profilePicture : video.creatorUser.object ? video.creatorUser.object.profile.picture : {}
             };
             deserializedVideo.likes = video.likes.count;
             deserializedVideo.start = video.creationTimeRange.startDate;
@@ -242,13 +240,19 @@ pServices.factory('FeedDelegate', function() {
 
             if(video.creationTimeRange.endDate) {
                 deserializedVideo.isLive = false;
-                deserializedVideo.timeAgo = Math.abs(new Date() - new Date(video.creationTimeRange.endDate));
+                deserializedVideo.timeAgo = moment(deserializedVideo.end).fromNow();
             }
             else {
                 deserializedVideo.isLive = true;
                 deserializedVideo.timeAgo = 'Present';
             }
-            deserializedVideo.comments = '';
+
+            if(deserializedVideo.creator.fullName) {
+              deserializedVideo.creator.displayName = deserializedVideo.creator.fullName;
+            } else {
+              deserializedVideo.creator.displayName = deserializedVideo.creator.username;
+            }
+
             return deserializedVideo;
         },
         deserializeComments : function(comments) {

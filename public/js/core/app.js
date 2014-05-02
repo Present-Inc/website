@@ -36,7 +36,6 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
            controller: 'discoverCtrl',
            resolve: {
              Feed : ['$stateParams', 'DiscoverService', function($stateParams, DiscoverService) {
-                 console.log($stateParams.user);
                  return DiscoverService.loadFeed($stateParams.user);
              }],
              Transition : ['Utilities', function(Utilities){

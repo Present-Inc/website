@@ -3,6 +3,7 @@
 #home {
   background-color: #f7f7f7;
   background-image: url(/assets/img/main-bg.png);
+  background-position: right; 
   @include background-size(cover);
   width: 100%;
 }
@@ -122,6 +123,7 @@
       background-color: transparentize($main-purple, 0.95);
     }
   }
+
 
   footer{
     color: $light-grey;
