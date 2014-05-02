@@ -32,7 +32,7 @@ app.get('/views/partials/:name', function(req, res) {
     res.sendfile('./views/partials/' + name + '.html');
 });
 
-app.get('/send_link/:device', function(req, res) {
+app.post('/send_link', function(req, res) {
     router.send_link(req, res);
 });
 

@@ -6,14 +6,16 @@ var client = require('twilio')(accountSid, authToken);
 
 module.exports = {
     send_link : function(req, res) {
+      var targetPhone = req.param('number');
+      console.log(targetPhone)
       if(req.param('device') == 'iphone') {
         var link = 'https://itunes.apple.com/us/app/present-share-the-present/id813743986?mt=8'
         client.messages.create({
-        	to: "+17249946182",
+        	to: targetPhone,
         	from: "+17248265155",
         	body: link,
         }, function(err, message) {
-        	console.log(message.sid);
+        	console.log(err);
         });
       }
   }
