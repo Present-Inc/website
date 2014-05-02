@@ -123,7 +123,7 @@ pDirectives.directive('jwplayer', function() {
                videoid : '@'
         },
         require: '^presentFeed',
-        template : '<img class="playerPlaceholder" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
+        template : '<img class="playerPlaceholder a-fade-fast" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
         controller: function($scope) {
 
             if($scope.isLive) {
@@ -131,9 +131,6 @@ pDirectives.directive('jwplayer', function() {
             } else {
               $scope.activePlaylistUrl = $scope.media.replay;
             }
-
-            console.log($scope.activePlaylistUrl);
-
 
             $scope.setupProperties = {
                 file : $scope.activePlaylistUrl,
@@ -168,6 +165,10 @@ pDirectives.directive('jwplayer', function() {
                 else return scope.video.state;
             };
 
+            scope.$on('$destroy', function() {
+                jwplayer(scope.video_id).remove();
+            });
+
             playerElem.waypoint(function(direction) {
                 if(direction == 'down') {
                     feedManager.setActiveVideo(scope.video);
@@ -176,7 +177,6 @@ pDirectives.directive('jwplayer', function() {
                         if(scope.video.state == 'uninitialized') {
                             scope.video.state = 'loading';
                             jwplayer(scope.video._id).setup(scope.setupProperties);
-                            console.log(scope.setupProperties.file);
                             jwplayer(scope.video._id).onPlay(function() {
                                 if(scope.video.state == 'stopped') {
                                     jwplayer(scope.video._id).play(false);
@@ -200,7 +200,7 @@ pDirectives.directive('jwplayer', function() {
                         }
                     }
                 }
-            }, {offset: '50%'});
+            }, {offset: '60%'});
 
             scope.$on('activeVideoChanged', function(event, active) {
                 scope.video.state = scope.checkState();

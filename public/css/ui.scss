@@ -25,6 +25,30 @@ a:hover {
   text-decoration: none;
 }
 
+.secondaryBtn {
+  outline: none;
+  background-color: transparent;
+  color: $main-purple;
+  border: solid 1px $main-purple;
+  @include border-radius(4px);
+}
+
+.mainBtn {
+  outline: none;
+  background-color: transparent;
+  color: $main-blue;
+  border: solid 1px $main-blue;
+  @include border-radius(4px);
+}
+
+.mainBtn:hover {
+  background-color: transparentize($main-blue, 0.95);
+}
+
+.secondaryBtn:hover {
+  background-color: transparentize($main-purple, 0.95);
+}
+
 /*
  * FORM CONTROL
  */

@@ -156,7 +156,12 @@ pServices.factory('DiscoverService', ['$q', 'VideosApiResource', 'FeedDelegate',
                             var nextVideo = FeedDelegate.deserializeVideo(video.object);
                             feed.videos.push(nextVideo);
                         });
+                        return feed;
+                    })
+                    .then(function(feed) {
+                      FeedDelegate.preRenderFeed(feed).then(function() {
                         loadingFeed.resolve(feed);
+                      });
                     })
                     .catch(function(error) {
                         loadingFeed.reject(error);
@@ -181,7 +186,12 @@ pServices.factory('ProfileService', ['$q', 'VideosApiResource', 'UsersApiResourc
                         var nextVideo = FeedDelegate.deserializeVideo(video.object);
                         feed.videos.push(nextVideo);
                     });
+                    return feed;
+                })
+                .then(function(feed) {
+                  FeedDelegate.preRenderFeed(feed).then(function() {
                     loadingFeed.resolve(feed);
+                  });
                 })
                 .catch(function(error) {
                     loadingFeed.reject(error);
@@ -217,7 +227,7 @@ pServices.factory('ProfileService', ['$q', 'VideosApiResource', 'UsersApiResourc
 
 /*Feed Delegates
 ======================================= */
-pServices.factory('FeedDelegate', function() {
+pServices.factory('FeedDelegate', ['$q', '$interval', function($q, $interval) {
     return{
         deserializeVideo : function(video) {
             var deserializedVideo = {};
@@ -255,11 +265,24 @@ pServices.factory('FeedDelegate', function() {
 
             return deserializedVideo;
         },
-        deserializeComments : function(comments) {
-            return 'comments';
-        }
+        preRenderFeed: function(Feed) {
+            var promises = [];
+            console.log('preloading images');
+            angular.forEach(Feed.videos, function(source, key) {
+                var still = new Image();
+                still.src = source.mediaUrl.still;
+                var checkImageInterval = $interval(function() {
+                  promises.push(checkImageInterval);
+                  //if(still.complete) {
+                    console.log('image loaded');
+                    $interval.cancel(checkImageInterval);
+                  //}
+                }, 100)
+            });
+            return $q.all(promises);
+        },
     }
-});
+}]);
 
 /* PROFILE DELEGATE
 ====================================*/
@@ -333,16 +356,6 @@ pServices.factory('Utilities', ['$q', '$timeout', function($q, $timeout) {
             }, duration);
             return defer.promise;
         },
-        preloadImages: function(images) {
-            var defer = $q.defer();
-            console.log('preloading images');
-            angular.forEach(images, function(source, key) {
-                var img = new Image();
-                img.src = source;
-                defer.resolve();
-            });
-            return defer.promise;
-        },
         checkParams: function(params) {
             var defer = $q.defer();
             angular.forEach(params, function(param, key) {
@@ -353,32 +366,6 @@ pServices.factory('Utilities', ['$q', '$timeout', function($q, $timeout) {
                     defer.resolve(true)
                 }
             });
-            return defer.promise;
-        }
-    }
-}]);
-
-
-/*
- * ABOUT
- * ===============================================
- */
-
-pServices.factory('TeamInfo', ['$q', '$http', function($q, $http) {
-    return {
-        getTeam : function() {
-            var methodURL = '/data/team.json';
-            var defer = $q.defer();
-            $http({
-                method: 'GET',
-                url: methodURL
-            })
-                .success(function(data, status, headers, config) {
-                    defer.resolve(data);
-                })
-                .error(function(data, status, headers, config) {
-                    defer.reject("Could\'t Load Data");
-                });
             return defer.promise;
         }
     }

@@ -45,6 +45,14 @@ a { text-decoration: none; color: white; }
 
 a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 
+.secondaryBtn, #home .copy .discoverBtn { outline: none; background-color: transparent; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+
+.mainBtn, #home .copy .downloadBtn, #discoverFeed .refreshFeed, #profile .refreshFeed { outline: none; background-color: transparent; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+
+.mainBtn:hover, #home .copy .downloadBtn:hover, #discoverFeed .refreshFeed:hover, #profile .refreshFeed:hover { background-color: rgba(51, 170, 255, 0.05); }
+
+.secondaryBtn:hover, #home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.05); }
+
 /* FORM CONTROL */
 .form-textbox { width: 80%; margin: 10px; padding: 5px 10px; height: 25px; border: solid 1px #cccccc; border-radius: 2px; font-size: 16px; }
 
@@ -142,7 +150,7 @@ header { overflow: hidden; background-color: #8e73ff; }
 .presentWrapper .creator .displayName { color: #33aaff; display: block; margin: 0px 0px 0px 0px; font-size: 20px; font-weight: bold; }
 .presentWrapper .creator .username { color: #cccccc; display: inline; margin: 5px 0px 0px 0px; font-size: 12px; font-weight: 300; }
 .presentWrapper .info { margin: 20px 0px 0px 0px; overflow: auto; }
-.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; }
+.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 12px; }
 @media (max-width: 500px) { .presentWrapper .timeAgo { width: 20%; margin: 0px 5px 0px 0px; } }
 .presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 12px; }
 @media (max-width: 500px) { .presentWrapper .title { width: 60%; } }
@@ -165,10 +173,8 @@ header { overflow: hidden; background-color: #8e73ff; }
 #home .copy h1 { font-size: 36px; margin: 10px 0px 0px 0px; font-weight: 100; letter-spacing: 2px; }
 #home .copy h2 { font-size: 14px; margin: 5px 0px 0px 0px; color: #917ee5; }
 #home .copy p { clear: both; line-height: 25px; }
-#home .copy .discoverBtn { outline: none; height: 40px; width: 160px; margin: 0px 0px 0px 10px; background-color: transparent; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
-#home .copy .downloadBtn { outline: none; height: 40px; width: 160px; background-color: transparent; margin: 10px 10px 0px 0px; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
-#home .copy .downloadBtn:hover { background-color: rgba(51, 170, 255, 0.05); }
-#home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.05); }
+#home .copy .discoverBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
+#home .copy .downloadBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
 #home footer { color: #cccccc; text-align: center; font-size: 11px; height: 80px; }
 #home footer .copyright { display: inline-block; margin: 10px; }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
@@ -182,13 +188,12 @@ header { overflow: hidden; background-color: #8e73ff; }
 #discoverFeed { margin: 0px auto 20px auto; padding: 65px 0px 50px 0px; width: 480px; z-index: -1; }
 @media (max-width: 500px) { #discoverFeed { width: 100%; } }
 
-#discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; font-weight: 300; border-bottom: solid 1px #f5f5f5; padding: 0px 0px 20px 0px; }
+#discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; min-height: 480px; font-weight: 300; border-bottom: solid 1px #f5f5f5; padding: 0px 0px 20px 0px; }
 @media (max-width: 500px) { #discoverFeed .presentWrapper { margin: 10px 0px 60px 0px; } }
 #discoverFeed .videoContainer { margin: 0 auto; height: 480px; width: 480px; }
 @media (max-width: 500px) { #discoverFeed .videoContainer { width: 100%; height: auto; } }
 #discoverFeed .videoContainer img { width: 100%; }
-#discoverFeed .refreshFeed { margin: 0px auto; padding: 10px 0px; font-weight: bold; color: white; font-size: 14px; text-align: center; width: 180px; background-color: #cccccc; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px; }
-#discoverFeed .refreshFeed:hover { color: #33aaff; cursor: pointer; }
+#discoverFeed .refreshFeed { display: block; height: 40px; width: 160px; margin: 0 auto; }
 
 #profile { margin: 0px auto 0px auto; padding: 100px 20px; width: 920px; color: #47525d; }
 @media (max-width: 960px) { #profile { width: 100%; padding: 0px; margin: 100px 0px; } }
@@ -197,7 +202,7 @@ header { overflow: hidden; background-color: #8e73ff; }
 @media (max-width: 960px) { #profileFeed { margin: 0px auto; } }
 @media (max-width: 500px) { #profileFeed { margin: 0px 0px; width: 100%; height: auto; } }
 
-#profileFeed .presentWrapper { margin: 0px auto 80px auto; width: 480px; }
+#profileFeed .presentWrapper { margin: 0px auto 80px auto; width: 480px; min-height: 500px; }
 @media (max-width: 500px) { #profileFeed .presentWrapper { width: 100%; height: auto; } }
 #profileFeed .videoContainer { margin: 0 auto; height: 480px; width: 480px; }
 @media (max-width: 500px) { #profileFeed .videoContainer { width: 100%; height: auto; } }
@@ -216,5 +221,5 @@ header { overflow: hidden; background-color: #8e73ff; }
 #profile .user .block, #profile .user .demands, #profile .user .videos, #profile .user .views { vertical-align: top; display: inline-block; height: 80px; width: 100px; text-align: center; }
 #profile .user .description { width: 340px; margin: 0px auto; }
 @media (max-width: 500px) { #profile .user .description { width: 100%; } }
-#profile .refreshFeed { margin: 0px auto; padding: 10px 0px; font-weight: bold; color: white; border-radius: 5px; font-size: 14px; text-align: center; width: 180px; background-color: #cccccc; }
+#profile .refreshFeed { display: block; height: 40px; width: 160px; margin: 0 auto; }
 #profile .refreshFeed:hover { color: #33aaff; cursor: pointer; }

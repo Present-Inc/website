@@ -32,6 +32,7 @@
   .presentWrapper {
     margin: 0px auto 80px auto;
     width: 480px;
+    min-height: 500px;
     @media (max-width: $break-small) {
       width: 100%;
       height: auto;
@@ -154,15 +155,11 @@
   }
 
   .refreshFeed {
-    margin: 0px auto;
-    padding: 10px 0px;
-    font-weight: bold;
-    color: $white;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: center;
-    width: 180px;
-    background-color: $light-grey;
+    @extend .mainBtn;
+    display: block;
+    height: 40px;
+    width: 160px;
+    margin: 0 auto;
   }
 
   .refreshFeed:hover {

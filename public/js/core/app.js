@@ -21,10 +21,6 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             templateUrl: '/views/home',
             controller: 'homeCtrl',
             resolve : {
-                Images: ['Utilities', function(Utilities) {
-                    var images = ['http://10.61.32.32:8000/assets/img/main-bg.jpg'];
-                    return Utilities.preloadImages(images);
-                }],
                 Transition : ['Utilities', function(Utilities) {
                     return Utilities.transitionComplete(1600);
                 }]
@@ -36,7 +32,7 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
            controller: 'discoverCtrl',
            resolve: {
              Feed : ['$stateParams', 'DiscoverService', function($stateParams, DiscoverService) {
-                 return DiscoverService.loadFeed($stateParams.user);
+                  return DiscoverService.loadFeed($stateParams.user);
              }],
              Transition : ['Utilities', function(Utilities){
                  return Utilities.transitionComplete(1200);

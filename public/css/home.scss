@@ -3,7 +3,7 @@
 #home {
   background-color: #f7f7f7;
   background-image: url(/assets/img/main-bg.png);
-  background-position: right; 
+  background-position: right;
   @include background-size(cover);
   width: 100%;
 }
@@ -94,33 +94,18 @@
     }
 
     .discoverBtn {
-      outline: none;
+      @extend .secondaryBtn;
       height: 40px;
       width: 160px;
-      margin: 0px 0px 0px 10px;
-      background-color: transparent;
-      color: $main-purple;
-      border: solid 1px $main-purple;
-      @include border-radius(4px);
+      margin: 10px 10px 0px 0px;
     }
 
     .downloadBtn {
-      outline: none;
+      @extend .mainBtn;
       height: 40px;
       width: 160px;
-      background-color: transparent;
       margin: 10px 10px 0px 0px;
-      color: $main-blue;
-      border: solid 1px $main-blue;
-      @include border-radius(4px);
-    }
 
-    .downloadBtn:hover {
-      background-color: transparentize($main-blue, 0.95);
-    }
-
-    .discoverBtn:hover {
-      background-color: transparentize($main-purple, 0.95);
     }
   }
 

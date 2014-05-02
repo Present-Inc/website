@@ -17,6 +17,7 @@
 
   .presentWrapper{
     margin: 10px 0px 60px 0px;
+    min-height: 480px; 
     font-weight: $font-weight-light;
     border-bottom: solid 1px #f5f5f5;
     padding: 0px 0px 20px 0px;
@@ -24,7 +25,7 @@
       margin: 10px 0px 60px 0px;
     }
   }
-  
+
   .videoContainer {
     margin: 0 auto;
     height: $video-height;
@@ -40,20 +41,12 @@
   }
 
   .refreshFeed {
-    margin: 0px auto;
-    padding: 10px 0px;
-    font-weight: bold;
-    color: $white;
-    font-size: 14px;
-    text-align: center;
-    width: 180px;
-    background-color: $light-grey;
-    @include border-radius(2px);
+    @extend .mainBtn;
+    display: block;
+    height: 40px;
+    width: 160px;
+    margin: 0 auto;
   }
 
-  .refreshFeed:hover {
-    color: $main-blue;
-    cursor: pointer;
-  }
 
 }
