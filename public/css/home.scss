@@ -13,6 +13,7 @@
   margin: 0px auto;
   padding: 60px 0px 0px 0px;
   @media (max-width: $break-large) {
+    overflow: auto;
     padding: 0px;
     height: auto;
     width: 100%;
@@ -43,6 +44,10 @@
     width: 460px;
     overflow: auto;
     text-align: left;
+    @media (max-width: $break-large) {
+      text-align: center;
+      width: 100%;
+    }
   }
 
   .icon {
@@ -53,6 +58,11 @@
     margin: 5px 15px 30px 0px;
     background-image: url(/assets/img/app-icon.png);
     @include background-size(cover);
+    @media (max-width: $break-large) {
+      float: none;
+      display: block;
+      margin: 20px auto;
+    }
   }
 
   .copy {
@@ -63,15 +73,15 @@
       font-weight: 300;
       @media  (max-width: $break-large) {
         display: block;
-        width: 60%;
-        margin: 200px auto 240px auto;
+        width: 40%;
+        margin: 80px auto 0px auto;
         text-align: center;
       }
 
       @media (max-width: $break-medium) {
         display: block;
         width: 60%;
-        margin: 100px auto;
+        margin: 80px auto;
         text-align: center;
     }
 
@@ -98,6 +108,9 @@
       height: 40px;
       width: 160px;
       margin: 10px 10px 0px 0px;
+      @media (max-width: $break-large) {
+        display: none;
+      }
     }
 
     .downloadBtn {

@@ -15,7 +15,21 @@
         </div>
     </div>
 
-    <div download-modal id="downloadModal" class="a-slide" ng-show="app.downloadModal"></div>
+    <div ng-controller="downloadModalCtrl" id="downloadModal" class="a-slide" ng-show="app.downloadModal">
+      <div class="content">
+          <div class="appStore">
+            <p>Available for the iPhone.</p>
+            <img src="/assets/img/app-store-badge.svg" alt="Apple App Store -- Present"/>
+          </div>
+          <div class="textToDownload">
+            <p>enter your mobile number and we'll text you the link!</p>
+            <div class="formContainer">
+              <input type="text" class="form-textbox" ng-model="phoneNumber"/>
+              <button class="submitBtn" ng-click="sendDownloadLink()">Submit</button>
+            </div>
+          </div>
+      </div>
+    </div>
 
     <header id="header" class="fixed a-slide" ng-show="app.navigation">
             <section>

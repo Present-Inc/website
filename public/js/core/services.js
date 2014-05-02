@@ -129,13 +129,13 @@ pServices.factory('UsersApiResource', ['$http', '$q', function($http, $q) {
                 url: methodUrl,
                 data: {user_id: userId, password_reset_token: token, password: password}
             })
-                .success(function(data, status, headers, config) {
-                    defer.resolve(data);
-                })
-                .error(function(data, status, headers, config) {
-                    var errorMessage = 'ERROR in usersService: API returned with a response code: ' + status;
-                    defer.reject(errorMessage);
-                });
+            .success(function(data, status, headers, config) {
+                defer.resolve(data);
+            })
+            .error(function(data, status, headers, config) {
+                var errorMessage = 'ERROR in usersService: API returned with a response code: ' + status;
+                defer.reject(errorMessage);
+            });
             return defer.promise;
         }
     }
@@ -327,6 +327,32 @@ pServices.factory('ProfileDelegate', function() {
      },
    }
  }]);
+
+
+/* DOWNLOAD LINK
+ * ===========================================
+ */
+
+pServices.factory('TextMessageService', ['$http', '$q', function($http, $q) {
+    return {
+      sendTextMessage : function(phoneNumber) {
+        var defer = $q.defer();
+        $http({
+            method: 'POST',
+            url: '/send_link/',
+            data: {device: 'iphone', number: phoneNumber}
+        })
+        .success(function(data, status, headers, config) {
+            defer.resolve(data);
+        })
+        .error(function(data, status, headers, config) {
+            var errorMessage = 'ERROR in TextMessageService: API returned with a response code: ' + status;
+            defer.reject(errorMessage);
+        });
+        return defer.promise;
+      }
+    }
+}]);
 
 
 /* ACCOUNT

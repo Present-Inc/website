@@ -28,7 +28,21 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
     }
 }]);
 
-pControllers.controller('homeCtrl', ['$scope', '$interval', '$timeout', 'AppScreens', function($scope,  $interval, $timeout, AppScreens) {
+pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', function($scope, TextMessageService) {
+
+  $scope.phoneNumber = '+1';
+
+  $scope.sendDownloadLink = function() {
+    TextMessageService.sendTextMessage($scope.phoneNumber)
+      .then(function(someData){
+        console.log(someData);
+      })
+  }
+
+}]);
+
+pControllers.controller('homeCtrl', ['$scope', '$interval', '$timeout', 'AppScreens',
+function($scope,  $interval, $timeout, AppScreens) {
     $scope.images = AppScreens;
     $scope.app.navigation = false;
     $scope.app.fullscreen = true;
