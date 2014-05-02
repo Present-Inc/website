@@ -28,10 +28,34 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
     }
 }]);
 
-pControllers.controller('homeCtrl', ['$scope', function($scope) {
-    $scope.message = 'Discover the present';
+pControllers.controller('homeCtrl', ['$scope', '$interval', '$timeout', 'AppScreens', function($scope,  $interval, $timeout, AppScreens) {
+    $scope.images = AppScreens;
     $scope.app.navigation = false;
     $scope.app.fullscreen = true;
+
+    $scope.viewer = {
+      changing: false,
+      key: 0,
+      source: $scope.images[0],
+    };
+
+    $interval(function() {
+      $scope.rotateScreens();
+    }, 5000);
+
+    $scope.rotateScreens = function() {
+        $scope.viewer.changing = true;
+
+        if($scope.viewer.key ==  $scope.images.length) {
+          $scope.viewer.key = 0;
+        } else $scope.viewer.key++;
+
+        $timeout(function() {
+          $scope.viewer.source = $scope.images[$scope.viewer.key];
+          $scope.viewer.changing = false;
+        }, 1000);
+
+    };
 
 }]);
 

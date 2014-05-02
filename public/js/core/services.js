@@ -273,10 +273,10 @@ pServices.factory('FeedDelegate', ['$q', '$interval', function($q, $interval) {
                 still.src = source.mediaUrl.still;
                 var checkImageInterval = $interval(function() {
                   promises.push(checkImageInterval);
-                  //if(still.complete) {
+                  if(still.complete) {
                     console.log('image loaded');
                     $interval.cancel(checkImageInterval);
-                  //}
+                  }
                 }, 100)
             });
             return $q.all(promises);
@@ -307,6 +307,26 @@ pServices.factory('ProfileDelegate', function() {
         }
     }
 });
+
+
+/* HOME
+ * =============================================
+ */
+
+ pServices.factory('HomeService', ['$q', function($q) {
+   return{
+     preloadPhoneScreens: function() {
+         var promises = [];
+         var images = ['assets/img/app-screen.png', 'http://placehold.it/250x361/8E03F5/FFF', 'http://placehold.it/250x361/CCCCCC/FFF'];
+         angular.forEach(images, function(source, key) {
+             var img = new Image();
+             img.src = source;
+             console.log('preloading: ' + source);
+         });
+         return images;
+     },
+   }
+ }]);
 
 
 /* ACCOUNT

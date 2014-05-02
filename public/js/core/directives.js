@@ -44,48 +44,6 @@ function($animate, $window, $location, $anchorScroll) {
 
 
 
-
-
-/* HOME
-  ====================================== */
-pDirectives.directive('iphone', ['$interval', '$timeout', function($interval, $timeout) {
-  return {
-    restrict: 'EA',
-    controller: function($scope) {
-
-      $scope.images = ['http://placehold.it/250x360/33AAFF/FFF', 'http://placehold.it/250x361/8E03F5/FFF', 'http://placehold.it/250x361/CCCCCC/FFF'];
-
-      $scope.viewer = {
-        changing: true,
-        key: 0,
-        source: '',
-      };
-
-      $interval(function() {
-        $scope.rotateScreens();
-      }, 5000);
-
-      $scope.rotateScreens = function() {
-          $scope.viewer.changing = true;
-
-          if($scope.viewer.key ==  $scope.images.length) {
-            $scope.viewer.key = 0;
-          }
-
-          $timeout(function() {
-            $scope.viewer.source = $scope.images[$scope.viewer.key];
-            $scope.viewer.changing = false;
-            $scope.viewer.key++;
-          }, 800);
-
-      };
-
-      $scope.rotateScreens();
-    }
-  }
-}]);
-
-
 /* FEED
  ======================================= */
 
@@ -110,7 +68,12 @@ pDirectives.directive('presentVideo', function() {
     return {
         restrict : 'EA',
         templateUrl: 'views/partials/presentVideo',
-        replace: true
+        replace: true,
+        controller: function($scope) {
+          if($scope.present.isLive) {
+            $scope.livePlayer = 'livePlayer'
+          } else $scope.livePlayer = ''
+        }
    }
 });
 
@@ -131,6 +94,8 @@ pDirectives.directive('jwplayer', function() {
             } else {
               $scope.activePlaylistUrl = $scope.media.replay;
             }
+
+            console.log($scope.activePlaylistUrl);
 
             $scope.setupProperties = {
                 file : $scope.activePlaylistUrl,
@@ -165,9 +130,11 @@ pDirectives.directive('jwplayer', function() {
                 else return scope.video.state;
             };
 
-            scope.$on('$destroy', function() {
-                jwplayer(scope.video_id).remove();
-            });
+            /*scope.$on('$destroy', function() {
+                if(scope.video.state == 'playing' || scope.video.state == 'stopped') {
+                  jwplayer(scope.video_id).remove();
+                }
+            });*/
 
             playerElem.waypoint(function(direction) {
                 if(direction == 'down') {

@@ -21,6 +21,9 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             templateUrl: '/views/home',
             controller: 'homeCtrl',
             resolve : {
+                AppScreens : ['HomeService', function(HomeService) {
+                    return HomeService.preloadPhoneScreens();
+                }],
                 Transition : ['Utilities', function(Utilities) {
                     return Utilities.transitionComplete(1600);
                 }]
