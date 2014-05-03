@@ -31,18 +31,6 @@ body { background-color: #fff; }
 
 .loading img { height: 100%; width: 100%; }
 
-#downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(240, 240, 240, 0.95); z-index: 10; }
-
-#downloadModal .content { width: 960px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 14px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 40% center; }
-#downloadModal .appStore { width: 40%; height: 100px; float: left; display: inline-block; }
-#downloadModal .appStore p { margin: 0px auto 20px auto; }
-#downloadModal .appStore img { display: block; margin: 0 auto; height: 55px; }
-#downloadModal .textToDownload { width: 60%; height: 100px; display: inline-block; }
-#downloadModal .textToDownload p { width: 340px; margin: 0px auto 15px auto; }
-#downloadModal .formContainer { height: 50px; width: 270px; margin: 0 auto; overflow: auto; }
-#downloadModal input[type="text"] { outline: none; display: inline-block; width: 60%; margin: 0px; float: left; }
-#downloadModal .submitBtn { float: left; height: 36px; width: 70px; margin: 0px 0px 0px 5px; vertical-align: top; }
-
 body { color: #47525d; font-family: "Helvetica Neue", sans-serif; font-size: 14px; }
 
 /* HEADINGS */
@@ -55,9 +43,9 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 
 .secondaryBtn, #home .copy .discoverBtn { outline: none; background-color: transparent; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 
-.mainBtn, #downloadModal .submitBtn, #home .copy .downloadBtn, #discoverFeed .refreshFeed, #profile .refreshFeed { outline: none; background-color: transparent; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+.mainBtn, #home .copy .downloadBtn, #discoverFeed .refreshFeed, #profile .refreshFeed, #downloadModal .submitBtn { outline: none; background-color: transparent; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 
-.mainBtn:hover, #downloadModal .submitBtn:hover, #home .copy .downloadBtn:hover, #discoverFeed .refreshFeed:hover, #profile .refreshFeed:hover { background-color: rgba(51, 170, 255, 0.05); }
+.mainBtn:hover, #home .copy .downloadBtn:hover, #discoverFeed .refreshFeed:hover, #profile .refreshFeed:hover, #downloadModal .submitBtn:hover { background-color: rgba(51, 170, 255, 0.05); }
 
 .secondaryBtn:hover, #home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.05); }
 
@@ -166,7 +154,8 @@ header { overflow: hidden; background-color: #8e73ff; }
 .presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
 /* VIEW CSS Files css files that style specific views */
-#home { background-color: #f7f7f7; background-image: url(/assets/img/main-bg.png); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; width: 100%; }
+#home { width: 100%; background-image: url(/assets/img/main-bg.png); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
+@media (max-width: 960px) { #home { background-image: none; } }
 
 #home .content { width: 715px; margin: 0px auto; padding: 60px 0px 0px 0px; }
 @media (max-width: 960px) { #home .content { overflow: auto; padding: 0px; height: auto; width: 100%; } }
@@ -180,7 +169,7 @@ header { overflow: hidden; background-color: #8e73ff; }
 @media (max-width: 960px) { #home .icon { float: none; display: block; margin: 20px auto; } }
 #home .copy { display: inline-block; margin: 30px 0px 0px 50px; width: 420px; text-align: justify; font-weight: 300; }
 @media (max-width: 960px) { #home .copy { display: block; width: 40%; margin: 80px auto 0px auto; text-align: center; } }
-@media (max-width: 630px) { #home .copy { display: block; width: 60%; margin: 80px auto; text-align: center; } }
+@media (max-width: 630px) { #home .copy { display: block; width: 60%; margin: 40px auto; text-align: center; } }
 #home .copy h1 { font-size: 36px; margin: 10px 0px 0px 0px; font-weight: 100; letter-spacing: 2px; }
 #home .copy h2 { font-size: 14px; margin: 5px 0px 0px 0px; color: #917ee5; }
 #home .copy p { clear: both; line-height: 25px; }
@@ -190,6 +179,7 @@ header { overflow: hidden; background-color: #8e73ff; }
 #home footer { color: #cccccc; text-align: center; font-size: 11px; height: 80px; }
 #home footer .copyright { display: inline-block; margin: 10px; }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
+@media (max-width: 960px) { #home footer .footerNav { width: 100%; } }
 #home footer a { color: #cccccc; margin: 0px 15px 0px 20px; }
 #home footer a:hover { color: #33aaff; }
 #home footer img { vertical-align: middle; margin: 0px 0px 0px 15px; }
@@ -235,3 +225,18 @@ header { overflow: hidden; background-color: #8e73ff; }
 @media (max-width: 500px) { #profile .user .description { width: 100%; } }
 #profile .refreshFeed { display: block; height: 40px; width: 160px; margin: 0 auto; }
 #profile .refreshFeed:hover { color: #33aaff; cursor: pointer; }
+
+#downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(240, 240, 240, 0.95); z-index: 10; }
+
+#downloadModal .content { width: 960px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 14px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 40% center; }
+@media (max-width: 960px) { #downloadModal .content { width: 100%; background-image: none; } }
+#downloadModal .appStore { width: 40%; height: 100px; float: left; display: inline-block; }
+@media (max-width: 960px) { #downloadModal .appStore { width: 100%; } }
+#downloadModal .appStore p { margin: 0px auto 20px auto; }
+#downloadModal .appStore img { display: block; margin: 0 auto; height: 55px; }
+#downloadModal .textToDownload { width: 60%; height: 100px; display: inline-block; }
+@media (max-width: 960px) { #downloadModal .textToDownload { display: none; } }
+#downloadModal .textToDownload p { width: 340px; margin: 0px auto 15px auto; }
+#downloadModal .formContainer { height: 50px; width: 270px; margin: 0 auto; overflow: auto; }
+#downloadModal input[type="text"] { outline: none; display: inline-block; width: 60%; margin: 0px; float: left; }
+#downloadModal .submitBtn { float: left; height: 36px; width: 70px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 200; }

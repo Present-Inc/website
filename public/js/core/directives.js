@@ -22,7 +22,9 @@ function($animate, $window, $location, $anchorScroll) {
             });
 
             angular.element($window).bind('scroll', function() {
-                if(scope.app.fullscreen) {
+                var screenWidth = $window.innerWidth;
+                console.log(screenWidth);
+                if(scope.app.fullscreen && screenWidth  > 960) {
                     $anchorScroll(null);
                 }
             });

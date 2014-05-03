@@ -1,138 +1,88 @@
-
-
-#home {
-  background-color: #f7f7f7;
+#downloadModal {
+  position: fixed;
+  top: 20%;
+  height: 200px;
   width: 100%;
+  background-color: transparentize(#f0f0f0, .05);
+  z-index: 10;
 }
 
-#home .content{
-  height: 800px;
-  width: 735px;
-  margin: 0px auto;
-  padding: 110px 0px 0px 0px;
-  @media(max-width: $break-large) {
-    padding: 0px;
-    height: auto;
-    width: 100%;
+#downloadModal {
+  .content {
+    width: 960px;
+    height: 160px;
+    margin: 0 auto;
+    padding: 50px 0px 0px 0px;
+    color: #474747;
+    font-weight: 600;
+    font-size: $font-size-small;
+    text-transform: uppercase;
+    text-align: center;
+    background-image: url(/assets/img/divider.png);
+    background-size: auto 60%;
+    background-repeat: no-repeat;
+    background-position: 40% center;
+    @media (max-width: $break-large) {
+      width: 100%;
+      background-image: none; 
+    }
   }
-}
 
-#home {
-
-  .phone {
-    height: 516px;
-    width: 245px;
-    display: inline-block;
+  .appStore {
+    width: 40%;
+    height: 100px;
     float: left;
-    background-image: url(/assets/img/iphone.png);
-    @include background-size(cover);
-    @media(max-width: $break-large) {
+    display: inline-block;
+    @media (max-width: $break-large) {
+      width: 100%;
+    }
+  }
+
+  .appStore p {
+    margin: 0px auto 20px auto;
+  }
+
+  .appStore img {
+    display: block;
+    margin: 0 auto;
+    height: 55px;
+  }
+  .textToDownload {
+    width: 60%;
+    height: 100px;
+    display: inline-block;
+    @media (max-width: $break-large) {
       display: none;
     }
   }
 
-  .phone img {
-    width: 204px;
-    height: 365px;
-    padding: 77px 0px 0px 22px;
+  .textToDownload p {
+    width: 340px;
+    margin: 0px auto 15px auto;
   }
 
-  .top {
-    width: 260px;
-    text-align: center;
+  .formContainer {
+    height: 50px;
+    width: 270px;
     margin: 0 auto;
+    overflow: auto;
   }
 
-  .icon {
-    height: 80px;
-    width: 80px;
+  input[type="text"] {
+    outline: none;
     display: inline-block;
+    width: 60%;
+    margin: 0px;
     float: left;
-    margin: 5px 15px 30px 0px;
-    background-image: url(/assets/img/app-icon.png);
-    @include background-size(cover);
   }
 
-  .copy {
-      display: inline-block;
-      margin: 40px 0px 0px 70px;
-      width: 420px;
-      @media(max-width: $break-large) {
-        display: block;
-        width: 60%;
-        margin: 200px auto 240px auto;
-        text-align: center;
-      }
-
-      @media(max-width: $break-medium) {
-        display: block;
-        width: 60%;
-        margin: 100px auto;
-        text-align: center;
-    }
-
-    h1 {
-      font-size: 36px;
-      margin: 5px 0px 0px 0px;
-      font-weight: 100;
-      letter-spacing: 2px;
-    }
-
-    h2 {
-      font-size: 14px;
-      margin: 5px 0px 0px 0px;
-      color: #917EE5
-    }
-
-    p {
-      width: 100%;
-      text-align: center;
-      clear: both;
-      line-height: 25px;
-    }
-
-    .appStore {
-      display: block;
-      margin: 40px auto;
-    }
+  .submitBtn {
+    @extend .mainBtn;
+    float: left;
+    height: 36px;
+    width: 70px;
+    margin: 0px 0px 0px 5px;
+    vertical-align: top;
+    font-weight: 200;
   }
-
-  footer{
-    color: $main-grey;
-    text-align: center;
-    height: 80px;
-  }
-
-  footer {
-
-    .copyright {
-      display: inline-block;
-    }
-
-    h4 {
-      margin: 10px;
-    }
-
-    .footerNav {
-      margin: 100px 0px 50px 0px;
-      display: inline-block;
-    }
-
-    p {
-      display: inline-block;
-      margin: 0px;
-    }
-
-    a {
-      color: $main-grey;
-      margin: 0px 15px 0px 20px;
-    }
-
-    img {
-      vertical-align: middle;
-      margin: 0px 0px 0px 20px;
-    }
-
-  }
-
 }
