@@ -169,7 +169,7 @@ pDirectives.directive('jwplayer', function() {
                         }
                     }
                 }
-            }, {offset: '60%'});
+            }, {offset: '80%'});
 
             scope.$on('activeVideoChanged', function(event, active) {
                 scope.video.state = scope.checkState();
