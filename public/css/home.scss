@@ -2,7 +2,7 @@
 
 #home {
   width: 100%;
-  background-image: url(/assets/img/main-bg.png);
+  background-image: url(/assets/img/main-bg.jpg);
   background-position: right;
   @include background-size(cover);
   @media (max-width: $break-large) {
@@ -25,7 +25,7 @@
 #home {
 
   .phone {
-    height: 516px;
+    height: 545px;
     width: 245px;
     display: inline-block;
     float: left;
@@ -39,7 +39,7 @@
   .phone img {
     width: 204px;
     height: 365px;
-    padding: 77px 0px 0px 22px;
+    padding: 78px 0px 0px 22px;
   }
 
   .top {

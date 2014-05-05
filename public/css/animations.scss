@@ -1,13 +1,12 @@
 /* CUSTOM CSS ANIMATIONS
    ============================ */
 
-/*FADE*/
 .a-fade {
-  &.dl-enter {
+  &.view-enter {
     @include  _animation(fadeIn, 1s, 0s);
   }
 
-  &.dl-leave {
+  &.view-leave {
     @include _animation(fadeOut, 1s, 0s);
   }
 
@@ -30,17 +29,9 @@
 }
 
 .a-fade-fast{
-  &.dl-enter {
-    @include  _animation(fadeIn, .8s, 0s);
-  }
-
-  &.dl-leave {
-    @include _animation(fadeOut, .8s, 0s);
-  }
-
   &.ng-hide-add {
     display: block!important;
-    @include  _animation(fadeOut, 1s, 0s);
+    @include  _animation(fadeOut, .2s, .8s);
   }
 
   &.ng-hide-remove{
@@ -49,14 +40,6 @@
 }
 
 .a-slide {
-  &.dl-enter {
-      @include  _animation(slideInUp, 1s, 0s);
-   }
-
-  &.dl-leave {
-     @include  _animation(fadeOut, 1s, 0s);
-  }
-
   &.ng-hide-remove {
     @include  _animation(slideInDown, 1s, 0s);
   }

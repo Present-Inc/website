@@ -8,7 +8,7 @@ function($animate, $window, $location, $anchorScroll) {
         scope: false,
         link : function(scope, element, attrs) {
             scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-                $animate.addClass(element, 'dl-enter', function(){
+                $animate.addClass(element, 'view-enter', function(){
                 });
             });
 
@@ -16,14 +16,13 @@ function($animate, $window, $location, $anchorScroll) {
                 if(toState.name != 'home' ) {
                   scope.app.navigation = true;
                 }
-                $animate.addClass(element, 'dl-leave', function(){
+                $animate.addClass(element, 'view-leave', function(){
                     $window.scrollTo(0,0);
                 });
             });
 
             angular.element($window).bind('scroll', function() {
                 var screenWidth = $window.innerWidth;
-                console.log(screenWidth);
                 if(scope.app.fullscreen && screenWidth  > 960) {
                     $anchorScroll(null);
                 }
@@ -193,7 +192,6 @@ pDirectives.directive('jwplayer', function() {
 
 /* ACCOUNT
  ======================================= */
-
 
 pDirectives.directive('password', [function() {
     return  {

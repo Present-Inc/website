@@ -57,21 +57,16 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 .form-btn { margin: 10px auto; padding: 6px 20px; font-size: 20px; color: white; background-color: #80caff; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px; border: none; }
 
 /* CUSTOM CSS ANIMATIONS ============================ */
-/*FADE*/
-.a-fade.dl-enter { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
-.a-fade.dl-leave { -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+.a-fade.view-enter { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+.a-fade.view-leave { -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-fade.enter { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-fade.leave { -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-fade.ng-hide-add { display: block !important; -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-fade.ng-hide-remove { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 
-.a-fade-fast.dl-enter { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 0.8s; animation-duration: 0.8s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
-.a-fade-fast.dl-leave { -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 0.8s; animation-duration: 0.8s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
-.a-fade-fast.ng-hide-add { display: block !important; -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+.a-fade-fast.ng-hide-add { display: block !important; -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 0.2s; animation-duration: 0.2s; -webkit-animation-delay: 0.8s; animation-delay: 0.8s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-fade-fast.ng-hide-remove { -webkit-animation: fadeIn; animation: fadeIn; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 
-.a-slide.dl-enter { -webkit-animation: slideInUp; animation: slideInUp; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
-.a-slide.dl-leave { -webkit-animation: fadeOut; animation: fadeOut; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-slide.ng-hide-remove { -webkit-animation: slideInDown; animation: slideInDown; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 .a-slide.ng-hide-add { display: block !important; -webkit-animation: slideOutUp; animation: slideOutUp; -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-delay: 0s; animation-delay: 0s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
 
@@ -155,15 +150,15 @@ header { overflow: hidden; background-color: #a566ff; }
 .presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
 /* VIEW CSS Files css files that style specific views */
-#home { width: 100%; background-image: url(/assets/img/main-bg.png); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
+#home { width: 100%; background-image: url(/assets/img/main-bg.jpg); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
 @media (max-width: 960px) { #home { background-image: none; } }
 
 #home .content { width: 715px; margin: 0px auto; padding: 60px 0px 0px 0px; }
 @media (max-width: 960px) { #home .content { overflow: auto; padding: 0px; height: auto; width: 100%; } }
 
-#home .phone { height: 516px; width: 245px; display: inline-block; float: left; background-image: url(/assets/img/iphone.png); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
+#home .phone { height: 545px; width: 245px; display: inline-block; float: left; background-image: url(/assets/img/iphone.png); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
 @media (max-width: 960px) { #home .phone { display: none; } }
-#home .phone img { width: 204px; height: 365px; padding: 77px 0px 0px 22px; }
+#home .phone img { width: 204px; height: 365px; padding: 78px 0px 0px 22px; }
 #home .top { width: 460px; overflow: auto; text-align: left; }
 @media (max-width: 960px) { #home .top { text-align: center; width: 100%; } }
 #home .icon { height: 80px; width: 80px; display: inline-block; float: left; margin: 5px 15px 30px 0px; background-image: url(/assets/img/app-icon.png); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
