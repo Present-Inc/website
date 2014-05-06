@@ -1,0 +1,2 @@
+AddType font/otf .otf
+AddType application/font-otf .otf
