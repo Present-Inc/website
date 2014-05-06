@@ -45,9 +45,9 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 
 .mainBtn, #home .copy .downloadBtn, #discoverFeed .refreshFeed, #profile .refreshFeed, #downloadModal .submitBtn { outline: none; background-color: transparent; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 
-.mainBtn:hover, #home .copy .downloadBtn:hover, #discoverFeed .refreshFeed:hover, #profile .refreshFeed:hover, #downloadModal .submitBtn:hover { background-color: rgba(51, 170, 255, 0.05); }
+.mainBtn:hover, #home .copy .downloadBtn:hover, #discoverFeed .refreshFeed:hover, #profile .refreshFeed:hover, #downloadModal .submitBtn:hover { background-color: rgba(51, 170, 255, 0.1); }
 
-.secondaryBtn:hover, #home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.05); }
+.secondaryBtn:hover, #home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
 /* FORM CONTROL */
 .form-textbox { width: 80%; margin: 10px; padding: 5px 10px; height: 25px; border: solid 1px #cccccc; border-radius: 2px; font-size: 16px; }
