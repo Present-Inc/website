@@ -2,10 +2,10 @@
  * FONTS
  * ================================================
  */
- @font-face { @include createFont('Helvetica Neue', 'assets/fonts/HelveticaNeue-Light.otf', 100, normal);}
- @font-face { @include createFont('Helvetica Neue', 'assets/fonts/HelveticaNeue-Thin.otf', 300, normal);}
- @font-face { @include createFont('Helvetica Neue', 'assets/fonts/HelveticaNeue.otf', 400, normal);}
- @font-face { @include createFont('Helvetica Neue', 'assets/fonts/HelveticaNeue-Medium.otf', 600, normal);}
+ @font-face { @include createFont('PresentFT', '../assets/fonts/HelveticaNeue-UltraLight.otf', 100, normal);}
+ @font-face { @include createFont('PresentFT', '../assets/fonts/HelveticaNeue-Light.otf', 300, normal);}
+ @font-face { @include createFont('PresentFT', '../assets/fonts/HelveticaNeue.otf', 400, normal);}
+ @font-face { @include createFont('PresentFT', '../assets/fonts/HelveticaNeue-Medium.otf', 600, normal);}
 
 /*
  * CORE VARIABLE DECLARATIONS
@@ -17,7 +17,7 @@ $main-blue:  #33AAFF;
 $main-purple: #A566FF;
 $alt-purple: #8E73FF;
 $main-grey: #47525D;
-$light-grey: #ccc;
+$light-grey: #c4c4c4;
 $white: #FFFFFF;
 
 /*DIMENSIONS*/
@@ -30,15 +30,16 @@ $video-width: 480px;
 
 
 /* TYPOGRAPHY */
-$font-primary: 'Helvetica Neue', sans-serif;
-$font-secondary: 'Helvetica Neue', sans-serif;
+$font-primary: 'PresentFT', serif;
+$font-secondary: 'PresentFT', sans-serif;
 
 $font-weight-super-light: 100;
 $font-weight-light: 300;
 $font-weight-normal: 400;
-$font-weight-bold: 700;
+$font-weight-bold: 600;
 
 $font-size-small: 14px;
+$font-size-nav: 16px;
 $font-size-medium: 20px;
 $font-size-large: 46px;
 
@@ -74,6 +75,7 @@ html {
 
 body {
   background-color: #fff;
+  font-weight: normal;
 }
 
 //Controls Angular View Injections

@@ -48,6 +48,8 @@
     color: #fff;
     margin: 8px 0px 0px 0px;
     font-weight: 100;
+    letter-spacing: 1px;
+    font-size: $font-size-nav;
     @media (max-width: $break-medium) {
       display: none;
     }

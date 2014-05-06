@@ -3,10 +3,10 @@
 @import url(normalize.css);
 /* MIXINS ================================================ */
 /* FONTS ================================================ */
-@font-face { font-family: "Helvetica Neue"; src: url("assets/fonts/HelveticaNeue-Light.otf") format("opentype"); font-weight: 100; font-style: normal; }
-@font-face { font-family: "Helvetica Neue"; src: url("assets/fonts/HelveticaNeue-Thin.otf") format("opentype"); font-weight: 300; font-style: normal; }
-@font-face { font-family: "Helvetica Neue"; src: url("assets/fonts/HelveticaNeue.otf") format("opentype"); font-weight: 400; font-style: normal; }
-@font-face { font-family: "Helvetica Neue"; src: url("assets/fonts/HelveticaNeue-Medium.otf") format("opentype"); font-weight: 600; font-style: normal; }
+@font-face { font-family: "PresentFT"; src: url("../assets/fonts/HelveticaNeue-UltraLight.otf") format("opentype"); font-weight: 100; font-style: normal; }
+@font-face { font-family: "PresentFT"; src: url("../assets/fonts/HelveticaNeue-Light.otf") format("opentype"); font-weight: 300; font-style: normal; }
+@font-face { font-family: "PresentFT"; src: url("../assets/fonts/HelveticaNeue.otf") format("opentype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "PresentFT"; src: url("../assets/fonts/HelveticaNeue-Medium.otf") format("opentype"); font-weight: 600; font-style: normal; }
 /* CORE VARIABLE DECLARATIONS ================================================ */
 /* COLORS */
 /*DIMENSIONS*/
@@ -17,7 +17,7 @@
 /* GLOBAL STYLES ================================================ */
 html { overflow-y: scroll; }
 
-body { background-color: #fff; }
+body { background-color: #fff; font-weight: normal; }
 
 #viewContainer { padding: 0px; margin: 0px; width: 100%; }
 
@@ -31,10 +31,10 @@ body { background-color: #fff; }
 
 .loading img { height: 100%; width: 100%; }
 
-body { color: #47525d; font-family: "Helvetica Neue", sans-serif; font-size: 14px; }
+body { color: #47525d; font-family: "PresentFT", serif; font-size: 14px; }
 
 /* HEADINGS */
-h1 { font-family: "Helvetica Neue", sans-serif; font-weight: 100; }
+h1 { font-family: "PresentFT", sans-serif; font-weight: 100; }
 
 /* LINKS */
 a { text-decoration: none; color: white; }
@@ -50,7 +50,7 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 .secondaryBtn:hover, #home .copy .discoverBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
 /* FORM CONTROL */
-.form-textbox { width: 80%; margin: 10px; padding: 5px 10px; height: 25px; border: solid 1px #cccccc; border-radius: 2px; font-size: 16px; }
+.form-textbox { width: 80%; margin: 10px; padding: 5px 10px; height: 25px; border: solid 1px #c4c4c4; border-radius: 2px; font-size: 16px; }
 
 .form-readonly { background-color: #F2F2F2; }
 
@@ -124,7 +124,7 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 .mainHeader .logo, header .logo { float: left; margin: 0px 0px 0px 0px; height: 30px; width: 30px; }
 @media (max-width: 630px) { .mainHeader .logo, header .logo { display: block; float: none; margin: 5px auto 0px auto; } }
 .mainHeader .logo img, header .logo img { height: 100%; width: 100%; }
-.mainHeader nav, header nav { float: right; color: #fff; margin: 8px 0px 0px 0px; font-weight: 100; }
+.mainHeader nav, header nav { float: right; color: #fff; margin: 8px 0px 0px 0px; font-weight: 100; letter-spacing: 1px; font-size: 16px; }
 @media (max-width: 630px) { .mainHeader nav, header nav { display: none; } }
 .mainHeader nav ul, header nav ul { margin-top: 0px; }
 .mainHeader nav ul li, header nav ul li { display: inline-block; margin: 0px 8px 0px 8px; }
@@ -141,11 +141,11 @@ header { overflow: hidden; background-color: #a566ff; }
 .presentWrapper .creator { display: inline-block; width: 75%; float: left; margin: 0px 0px 10px 0px; }
 .presentWrapper .creator .profilePicture { float: left; height: 60px; width: 60px; margin: 0px 15px 10px 0px; vertical-align: middle; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; border-radius: 30px; }
 .presentWrapper .creator .displayName { color: #33aaff; display: block; margin: 0px 0px 0px 0px; font-size: 20px; font-weight: bold; }
-.presentWrapper .creator .username { color: #cccccc; display: inline; margin: 5px 0px 0px 0px; font-size: 12px; font-weight: 300; }
+.presentWrapper .creator .username { color: #c4c4c4; display: inline; margin: 5px 0px 0px 0px; font-size: 14px; font-weight: 300; font-style: normal; }
 .presentWrapper .info { padding: 20px 0px 0px 0px; overflow: auto; }
-.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 12px; }
+.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 14px; }
 @media (max-width: 500px) { .presentWrapper .timeAgo { width: 20%; margin: 0px 5px 0px 0px; } }
-.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 12px; }
+.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 14px; }
 @media (max-width: 500px) { .presentWrapper .title { width: 60%; } }
 .presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
@@ -172,16 +172,16 @@ header { overflow: hidden; background-color: #a566ff; }
 #home .copy .discoverBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
 @media (max-width: 960px) { #home .copy .discoverBtn { display: none; } }
 #home .copy .downloadBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
-#home footer { color: #cccccc; text-align: center; font-size: 11px; height: 80px; }
+#home footer { color: #c4c4c4; text-align: center; font-size: 11px; height: 80px; }
 #home footer .copyright { display: inline-block; margin: 10px; }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
 @media (max-width: 960px) { #home footer .footerNav { width: 100%; } }
-#home footer a { color: #cccccc; margin: 0px 15px 0px 20px; }
+#home footer a { color: #c4c4c4; margin: 0px 15px 0px 20px; }
 #home footer a:hover { color: #33aaff; }
 #home footer img { vertical-align: middle; margin: 0px 0px 0px 15px; }
 #home footer .mixpanel { height: 20px; }
 
-#discover { background-color: #cccccc; }
+#discover { background-color: #c4c4c4; }
 
 #discoverFeed { margin: 0px auto 20px auto; padding: 65px 0px 50px 0px; width: 480px; z-index: -1; }
 @media (max-width: 500px) { #discoverFeed { width: 100%; } }

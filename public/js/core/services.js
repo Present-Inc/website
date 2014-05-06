@@ -184,7 +184,9 @@ pServices.factory('ProfileService', ['$q', 'VideosApiResource', 'UsersApiResourc
                     angular.forEach(VideosApiResponse.results, function(video, key) {
                         feed.cursor = VideosApiResponse.nextCursor;
                         var nextVideo = FeedDelegate.deserializeVideo(video.object);
-                        feed.videos.push(nextVideo);
+                        if (!nextVideo.isAvailble) {
+                          feed.videos.push(nextVideo);
+                        }
                     });
                     return feed;
                 })
