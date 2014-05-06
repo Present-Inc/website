@@ -31,12 +31,17 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
 pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', function($scope, TextMessageService) {
 
   $scope.phoneNumber = '+1';
+  $scope.feedbackMessage = 'Message and data rates may apply';
 
   $scope.sendDownloadLink = function() {
+    console.log('Sending link...');
     TextMessageService.sendTextMessage($scope.phoneNumber)
-      .then(function(someData){
-        console.log(someData);
+      .then(function(){
+        $scope.feedbackMessage = 'Success! The message has been sent.';
       })
+      .catch(function(){
+        $scope.feedbackMessage = $scope.phoneNumber + ' is not valid';
+      });
   }
 
 }]);

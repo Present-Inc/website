@@ -321,7 +321,6 @@ pServices.factory('ProfileDelegate', function() {
          angular.forEach(images, function(source, key) {
              var img = new Image();
              img.src = source;
-             console.log('preloading: ' + source);
          });
          return images;
      },
@@ -343,11 +342,12 @@ pServices.factory('TextMessageService', ['$http', '$q', function($http, $q) {
             data: {device: 'iphone', number: phoneNumber}
         })
         .success(function(data, status, headers, config) {
-            defer.resolve(data);
+            defer.resolve();
         })
         .error(function(data, status, headers, config) {
             var errorMessage = 'ERROR in TextMessageService: API returned with a response code: ' + status;
-            defer.reject(errorMessage);
+            console.log(errorMessage);
+            defer.reject();
         });
         return defer.promise;
       }

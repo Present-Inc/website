@@ -230,9 +230,10 @@ header { overflow: hidden; background-color: #a566ff; }
 @media (max-width: 960px) { #downloadModal .appStore { width: 100%; } }
 #downloadModal .appStore p { margin: 0px auto 20px auto; }
 #downloadModal .appStore img { display: block; margin: 0 auto; height: 55px; }
-#downloadModal .textToDownload { width: 300px; height: 100px; display: inline-block; }
+#downloadModal .textToDownload { width: 300px; height: 120px; display: inline-block; }
 @media (max-width: 960px) { #downloadModal .textToDownload { display: none; } }
 #downloadModal .textToDownload p { width: 300px; margin: 0px auto 15px auto; }
 #downloadModal .formContainer { height: 50px; width: 300px; margin: 0 auto; overflow: auto; }
-#downloadModal input[type="text"] { outline: none; display: inline-block; width: 200px; margin: 0px; float: left; }
-#downloadModal .submitBtn { float: left; height: 36px; width: 70px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 200; }
+#downloadModal input[type="text"] { outline: none; display: inline-block; width: 180px; margin: 0px; float: left; }
+#downloadModal .submitBtn { float: left; height: 36px; width: 90px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 200; }
+#downloadModal .feedbackMessage { text-transform: none; font-weight: 200; font-size: 11px; display: block; }

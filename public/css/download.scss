@@ -51,7 +51,7 @@
 
   .textToDownload {
     width: 300px;
-    height: 100px;
+    height: 120px;
     display: inline-block;
     @media (max-width: $break-large) {
       display: none;
@@ -73,7 +73,7 @@
   input[type="text"] {
     outline: none;
     display: inline-block;
-    width: 200px;
+    width: 180px;
     margin: 0px;
     float: left;
   }
@@ -82,9 +82,16 @@
     @extend .mainBtn;
     float: left;
     height: 36px;
-    width: 70px;
+    width: 90px;
     margin: 0px 0px 0px 5px;
     vertical-align: top;
     font-weight: 200;
+  }
+
+  .feedbackMessage {
+    text-transform: none;
+    font-weight: 200; 
+    font-size: 11px;
+    display: block;
   }
 }
