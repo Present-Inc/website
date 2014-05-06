@@ -9,6 +9,21 @@
 </head>
 <body ng-controller="mainCtrl" class="fullscreen">
 
+        <!-- [if lte IE 9] >
+        <style>
+            #main {display: none;}
+            .loadingContainer {display: none!important;}
+            .unsupported { text-align: center; width: 500px; margin: 80px auto; }
+            .unsupported img { margin-bottom: 20px; width: 100px}
+            .unsupported a { color: blue;}
+        </style>
+        <div class="unsupported">
+          <img src="/assets/img/app-icon.png" />
+          <h2><b>Your browser is out-of-date. Go <a href="http://browsehappy.com/" target="">here</a> to download one of these up-to-date, free and excellent browsers.</b></h2>
+        </div>
+        <[end if -->
+
+
     <div class="loadingContainer a-slide" ng-show="!app.isReady">
         <div class="loading">
             <img src="/assets/img/loader-white.gif" />
@@ -18,7 +33,7 @@
     <div ng-controller="downloadModalCtrl" id="downloadModal" class="a-slide" ng-show="app.downloadModal">
       <div class="content">
           <div class="appStore">
-            <p>Available for the iPhone.</p>
+            <p>Available for the iPhone</p>
             <img src="/assets/img/app-store-badge.svg" alt="Apple App Store -- Present"/>
           </div>
           <div class="textToDownload">
@@ -26,6 +41,7 @@
             <div class="formContainer">
               <input type="text" class="form-textbox" ng-model="phoneNumber"/>
               <button class="submitBtn" ng-click="sendDownloadLink()">Submit</button>
+              <p>{{feedbackMessage}}</p>
             </div>
           </div>
       </div>
@@ -47,12 +63,11 @@
 
     <div ui-view
          view-container
-         id="main"
+         id="viewContainer"
          class="fullscreen"
          ng-class="app.viewAnimation">
         <!--INJECTED TEMPLATES GO HERE -->
     </div>
-
 
     <script src="//jwpsrv.com/library/VLJzhpFREeOBbyIACi0I_Q.js" ></script>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

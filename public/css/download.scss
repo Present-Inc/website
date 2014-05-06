@@ -9,7 +9,7 @@
 
 #downloadModal {
   .content {
-    width: 960px;
+    width: 800px;
     height: 160px;
     margin: 0 auto;
     padding: 50px 0px 0px 0px;
@@ -21,17 +21,18 @@
     background-image: url(/assets/img/divider.png);
     background-size: auto 60%;
     background-repeat: no-repeat;
-    background-position: 40% center;
+    background-position: 42% center;
     @media (max-width: $break-large) {
       width: 100%;
-      background-image: none; 
+      background-image: none;
     }
   }
 
   .appStore {
-    width: 40%;
+    width: 300px;
     height: 100px;
     float: left;
+    margin: 0px 20px 0px 0px;
     display: inline-block;
     @media (max-width: $break-large) {
       width: 100%;
@@ -47,8 +48,9 @@
     margin: 0 auto;
     height: 55px;
   }
+
   .textToDownload {
-    width: 60%;
+    width: 300px;
     height: 100px;
     display: inline-block;
     @media (max-width: $break-large) {
@@ -57,13 +59,13 @@
   }
 
   .textToDownload p {
-    width: 340px;
+    width: 300px;
     margin: 0px auto 15px auto;
   }
 
   .formContainer {
     height: 50px;
-    width: 270px;
+    width: 300px;
     margin: 0 auto;
     overflow: auto;
   }
@@ -71,7 +73,7 @@
   input[type="text"] {
     outline: none;
     display: inline-block;
-    width: 60%;
+    width: 200px;
     margin: 0px;
     float: left;
   }

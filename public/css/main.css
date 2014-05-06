@@ -19,7 +19,7 @@ html { overflow-y: scroll; }
 
 body { background-color: #fff; }
 
-#main { padding: 0px; margin: 0px; width: 100%; }
+#viewContainer { padding: 0px; margin: 0px; width: 100%; }
 
 .clear { clear: both; }
 
@@ -200,7 +200,7 @@ header { overflow: hidden; background-color: #a566ff; }
 @media (max-width: 960px) { #profileFeed { margin: 0px auto; } }
 @media (max-width: 500px) { #profileFeed { margin: 0px 0px; width: 100%; height: auto; } }
 
-#profileFeed .presentWrapper { margin: 0px auto 80px auto; width: 480px; min-height: 500px; }
+#profileFeed .presentWrapper { margin: 0px auto 60px auto; width: 480px; min-height: 500px; }
 @media (max-width: 500px) { #profileFeed .presentWrapper { width: 100%; height: auto; } }
 #profileFeed .videoContainer { margin: 0 auto; height: 480px; width: 480px; }
 @media (max-width: 500px) { #profileFeed .videoContainer { width: 100%; height: auto; } }
@@ -224,15 +224,15 @@ header { overflow: hidden; background-color: #a566ff; }
 
 #downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(240, 240, 240, 0.95); z-index: 10; }
 
-#downloadModal .content { width: 960px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 14px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 40% center; }
+#downloadModal .content { width: 800px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 14px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 42% center; }
 @media (max-width: 960px) { #downloadModal .content { width: 100%; background-image: none; } }
-#downloadModal .appStore { width: 40%; height: 100px; float: left; display: inline-block; }
+#downloadModal .appStore { width: 300px; height: 100px; float: left; margin: 0px 20px 0px 0px; display: inline-block; }
 @media (max-width: 960px) { #downloadModal .appStore { width: 100%; } }
 #downloadModal .appStore p { margin: 0px auto 20px auto; }
 #downloadModal .appStore img { display: block; margin: 0 auto; height: 55px; }
-#downloadModal .textToDownload { width: 60%; height: 100px; display: inline-block; }
+#downloadModal .textToDownload { width: 300px; height: 100px; display: inline-block; }
 @media (max-width: 960px) { #downloadModal .textToDownload { display: none; } }
-#downloadModal .textToDownload p { width: 340px; margin: 0px auto 15px auto; }
-#downloadModal .formContainer { height: 50px; width: 270px; margin: 0 auto; overflow: auto; }
-#downloadModal input[type="text"] { outline: none; display: inline-block; width: 60%; margin: 0px; float: left; }
+#downloadModal .textToDownload p { width: 300px; margin: 0px auto 15px auto; }
+#downloadModal .formContainer { height: 50px; width: 300px; margin: 0 auto; overflow: auto; }
+#downloadModal input[type="text"] { outline: none; display: inline-block; width: 200px; margin: 0px; float: left; }
 #downloadModal .submitBtn { float: left; height: 36px; width: 70px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 200; }
