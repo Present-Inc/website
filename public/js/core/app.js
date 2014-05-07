@@ -122,11 +122,7 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
                     return ProfileService.loadProfile(null, $stateParams.user);
                 }],
                 Transition : ['Utilities', function(Utilities){
-<<<<<<< HEAD
                     return Utilities.transitionComplete(600);
-=======
-                    return Utilities.transitionComplete(800);
->>>>>>> temp
                 }]
             }
         });
