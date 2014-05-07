@@ -235,5 +235,5 @@ header { overflow: hidden; background-color: #a566ff; }
 #downloadModal .textToDownload p { width: 300px; margin: 0px auto 15px auto; }
 #downloadModal .formContainer { height: 50px; width: 300px; margin: 0 auto; overflow: auto; }
 #downloadModal input[type="text"] { outline: none; display: inline-block; width: 180px; margin: 0px; float: left; }
-#downloadModal .submitBtn { float: left; height: 36px; width: 90px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 200; }
-#downloadModal .feedbackMessage { text-transform: none; font-weight: 200; font-size: 11px; display: block; }
+#downloadModal .submitBtn { float: left; height: 36px; width: 90px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 300; }
+#downloadModal .feedbackMessage { text-transform: none; font-weight: 200; font-size: 12px; display: block; }

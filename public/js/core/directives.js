@@ -13,12 +13,11 @@ function($animate, $window, $location, $anchorScroll) {
             });
 
             scope.$on('$stateChangeStart', function(event, toState, fromState) {
-                if(!scope.app.fullscreen) {
-                  scope.app.navigation = true;
+                scope.app.downloadModal = false
+                console.log($location)
+                if($location.url == '/home') {
+                  scope.app.navigation = false;
                 }
-                $animate.addClass(element, 'view-leave', function(){
-                    $window.scrollTo(0,0);
-                });
             });
 
             angular.element($window).bind('scroll', function() {

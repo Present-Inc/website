@@ -11,7 +11,7 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
           size : 'fullscreen'
         },
         fullscreen: true,
-        navigation : false,
+        navigation : true,
         downloadModal: false
     };
 
@@ -49,7 +49,6 @@ pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', fu
 pControllers.controller('homeCtrl', ['$scope', '$interval', '$timeout', 'AppScreens',
 function($scope,  $interval, $timeout, AppScreens) {
     $scope.images = AppScreens;
-    $scope.app.navigation = false;
     $scope.app.fullscreen = true;
 
     $scope.viewer = {
@@ -205,7 +204,7 @@ pControllers.controller('verificationCtrl', ['$scope', 'ConfirmMessage', functio
 pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidParams', 'Profile', 'AccountService',
     function($scope, $stateParams, ValidParams, Profile, AccountService) {
     $scope.app.fullscreen = true;
-    $scope.app.navigation = false; 
+    $scope.app.navigation = false;
     console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
