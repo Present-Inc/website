@@ -13,7 +13,7 @@ function($animate, $window, $location, $anchorScroll) {
             });
 
             scope.$on('$stateChangeStart', function(event, toState, fromState) {
-                if(toState.name != 'home' ) {
+                if(!scope.app.fullscreen) {
                   scope.app.navigation = true;
                 }
                 $animate.addClass(element, 'view-leave', function(){

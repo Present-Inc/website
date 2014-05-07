@@ -25,7 +25,7 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
                     return HomeService.preloadPhoneScreens();
                 }],
                 Transition : ['Utilities', function(Utilities) {
-                    return Utilities.transitionComplete(1600);
+                    return Utilities.transitionComplete(1000);
                 }]
             }
         })
@@ -96,6 +96,9 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
                 }],
                 Profile: ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {
                     return ProfileService.loadProfile(null, $stateParams.user);
+                }],
+                Transition : ['Utilities', function(Utilities){
+                    return Utilities.transitionComplete(600);
                 }]
             }
         });
