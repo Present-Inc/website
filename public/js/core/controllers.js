@@ -202,13 +202,13 @@ pControllers.controller('verificationCtrl', ['$scope', 'ConfirmMessage', functio
     $scope.message = ConfirmMessage;
 }]);
 
-pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidParams', 'AccountService',
-    function($scope, $stateParams, ValidParams, AccountService) {
+pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidParams', 'Profile', 'AccountService',
+    function($scope, $stateParams, ValidParams, Profile, AccountService) {
     $scope.app.fullscreen = true;
-
+    console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
-    $scope.minLength = 3;
+    $scope.minLength = 5;
 
     $scope.error = {
         message: '',
@@ -216,6 +216,7 @@ pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidPa
     };
 
     $scope.userInput = {
+        username: Profile.username,
         password: '',
         confirmation: '',
         valid: false
@@ -225,7 +226,7 @@ pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidPa
     $scope.checkPassword = function() {
         if($scope.userInput.password == $scope.userInput.confirmation ) {
             if($scope.userInput.password.length < $scope.minLength) {
-                $scope.error.message = 'Password must be at least 4 characters';
+                $scope.error.message = 'Password must be at least 5 characters';
                 $scope.error.type = 'short';
             }
             else if($scope.userInput.password.length > $scope.maxLength) {
@@ -245,7 +246,6 @@ pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidPa
     };
 
     $scope.sendPassword = function(){
-        console.log('resetting password');
         if($scope.error.type == 'mismatch') {
             $scope.error.message = 'Passwords do not match';
         }
@@ -258,6 +258,9 @@ pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidPa
                         $scope.error.message = 'We could not reset your password. Please contact support@present.tv';
                     }
                 })
+                .catch(function(errorMessage) {
+                    $scope.error.message = errorMessage;
+                });
         }
     }
 

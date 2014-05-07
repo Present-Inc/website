@@ -64,13 +64,13 @@ pServices.factory('VideosApiResource', ['$http', '$q', function($http, $q) {
 
 pServices.factory('UsersApiResource', ['$http', '$q', function($http, $q) {
     return{
-        show: function(username) {
+        show: function(username, userId) {
             var defer = $q.defer();
             var methodUrl = protocol + developmentServer + '/v1/users/show';
             $http({
                 method: 'GET',
                 url: methodUrl,
-                params: {username: username}
+                params: {username: username, user_id: userId}
             })
             .success(function(data, status, headers, config) {
                 defer.resolve(data);
@@ -111,7 +111,7 @@ pServices.factory('UsersApiResource', ['$http', '$q', function($http, $q) {
             })
             .error(function(data, status, headers, config) {
                 var errorMessage = 'ERROR in usersService: API returned with a response code: ' + status;
-                defer.reject(errorMessage);
+                defer.reject(data);
             });
             return defer.promise;
         }
@@ -179,10 +179,10 @@ pServices.factory('ProfileService', ['$q', 'VideosApiResource', 'UsersApiResourc
                 });
             return loadingFeed.promise;
         },
-        loadProfile : function(username) {
+        loadProfile : function(username, user_id) {
             var loadingProfile = $q.defer();
             var profile = {};
-            Users.show(username)
+            Users.show(username, user_id)
                 .then(function(UsersApiResponse) {
                    profile = ProfileDelegate.deserializeProfile(UsersApiResponse.result.object);
                     loadingProfile.resolve(profile);
@@ -361,7 +361,8 @@ pServices.factory('AccountService', ['$q', 'UsersApiResource', function($q, User
                    defer.resolve(true);
                 })
                 .catch(function(error) {
-                   defer.resolve(false);
+                   console.log(error.result);
+                   defer.reject(error.result);
                 });
                 return defer.promise;
             }

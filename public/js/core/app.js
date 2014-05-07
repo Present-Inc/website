@@ -93,6 +93,9 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
                 ValidParams : ['$stateParams', 'Utilities', function($stateParams, Utilities) {
                     var params = [$stateParams.password_reset_token];
                     return Utilities.checkParams(params);
+                }],
+                Profile: ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {
+                    return ProfileService.loadProfile(null, $stateParams.user);
                 }]
             }
         });

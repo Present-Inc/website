@@ -53,7 +53,7 @@ a:hover {
  * FORM CONTROL
  */
 
-.form-textbox {
+.formTextbox {
   width: 80%;
   margin: 10px;
   padding: 5px 10px;
@@ -64,16 +64,12 @@ a:hover {
   font-size: 16px;
 }
 
-.form-readonly {
+.formReadonly {
   background-color: #F2F2F2;
 }
 
-.form-btn {
+.formBtn {
   margin: 10px auto;
   padding: 6px 20px;
-  font-size: 20px;
-  color: $white;
-  background-color: lighten($main-blue, 15);
-  @include border-radius(2px);
-  border: none;
+  @extend .mainBtn;
 }
