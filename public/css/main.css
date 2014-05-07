@@ -112,7 +112,7 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
   100% { opacity: 0; -webkit-transform: translateY(-300px); transform: translateY(-300px); } }
 #emailVerification { padding: 100px 0px 0px 0px; text-align: center; }
 
-#resetPassword { padding: 100px 0px 0px 0px; margin: 0 auto; width: 300px; text-align: center; }
+#resetPassword { padding: 40px 0px 20px 0px; margin: 0 auto; width: 300px; text-align: center; }
 
 /* Main Header ================================================ */
 .fixed { z-index: 100; position: fixed; top: 0px; }

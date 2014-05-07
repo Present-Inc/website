@@ -205,6 +205,7 @@ pControllers.controller('verificationCtrl', ['$scope', 'ConfirmMessage', functio
 pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidParams', 'Profile', 'AccountService',
     function($scope, $stateParams, ValidParams, Profile, AccountService) {
     $scope.app.fullscreen = true;
+    $scope.app.navigation = false; 
     console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
