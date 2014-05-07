@@ -43,6 +43,11 @@ $font-size-nav: 16px;
 $font-size-medium: 20px;
 $font-size-large: 46px;
 
+@media
+(-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    $font-size-small: 13px;
+}
 
 /*Layers*/
 $zHeader: 100;
