@@ -20,6 +20,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             url: '/',
             templateUrl: '/views/home',
             controller: 'homeCtrl',
+            data: {
+              navigation : false,
+              fullsreen  : true
+            },
             resolve : {
                 AppScreens : ['HomeService', function(HomeService) {
                     return HomeService.preloadPhoneScreens();
@@ -33,6 +37,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
            url: '/discover',
            templateUrl: '/views/discover',
            controller: 'discoverCtrl',
+           data: {
+             navigation : true,
+             fullsreen  : false
+           },
            resolve: {
              Feed : ['$stateParams', 'DiscoverService', function($stateParams, DiscoverService) {
                   return DiscoverService.loadFeed($stateParams.user);
@@ -46,6 +54,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             url: '/:user',
             templateUrl: '/views/profile',
             controller: 'profileCtrl',
+            data: {
+              navigation : true,
+              fullsreen  : false
+            },
             resolve : {
                 Feed : ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {
                     console.log($stateParams.user);
@@ -63,6 +75,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             url: '/:user/p/:video',
             templateUrl: '/views/profile',
             controller : 'individualPresentCtrl',
+            data: {
+              navigation : true,
+              fullsreen  : true
+            },
             resolve : {
                 Feed : ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {
                     return ProfileService.loadIndividualPresent($stateParams.video);
@@ -79,6 +95,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             url: '/account/:user/confirm?email_confirmation_token',
             templateUrl: '/views/emailVerification',
             controller: 'verificationCtrl',
+            data: {
+              navigation : false,
+              fullsreen  : true
+            },
             resolve:  {
                 ConfirmMessage : ['$stateParams', 'AccountService', function($stateParams, AccountService) {
                     return AccountService.confirmEmail($stateParams.user, $stateParams.email_confirmation_token);
@@ -89,6 +109,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             url: '/account/:user/reset_password?password_reset_token',
             templateUrl: '/views/resetPassword',
             controller: 'resetPasswordCtrl',
+            data: {
+              navigation : false,
+              fullsreen  : true
+            },
             resolve: {
                 ValidParams : ['$stateParams', 'Utilities', function($stateParams, Utilities) {
                     var params = [$stateParams.password_reset_token];
@@ -98,7 +122,11 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
                     return ProfileService.loadProfile(null, $stateParams.user);
                 }],
                 Transition : ['Utilities', function(Utilities){
+<<<<<<< HEAD
                     return Utilities.transitionComplete(600);
+=======
+                    return Utilities.transitionComplete(800);
+>>>>>>> temp
                 }]
             }
         });
