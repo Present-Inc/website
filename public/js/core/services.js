@@ -62,29 +62,6 @@ pServices.factory('VideosApiResource', ['$http', '$q', function($http, $q) {
     }
 }]);
 
-pServices.factory('CommentsApiResource', ['$http', '$q', function($http, $q) {
-    return {
-        listVideoComments : function(videoId, apiSuccessCallback) {
-            var methodURL = protocol + developmentServer + '/v1/comments/list_video_comments';
-            var defer = $q.defer();
-            $http({
-                method: 'GET',
-                url: methodURL,
-                params: {video_id: videoId}
-            })
-            .success(function(data, status, headers, config) {
-                defer.resolve(data);
-            })
-            .error(function(data, status, headers, config) {
-                var errorMessage = 'ERROR in commentsService: API returned with response code: ' + status;
-                defer.reject(errorMessage);
-            });
-            return defer.promise;
-        }
-    }
-}]);
-
-
 pServices.factory('UsersApiResource', ['$http', '$q', function($http, $q) {
     return{
         show: function(username) {
@@ -154,7 +131,9 @@ pServices.factory('DiscoverService', ['$q', 'VideosApiResource', 'FeedDelegate',
                         feed.cursor = VideosApiResponse.nextCursor;
                         angular.forEach(VideosApiResponse.results, function(video, key) {
                             var nextVideo = FeedDelegate.deserializeVideo(video.object);
-                            feed.videos.push(nextVideo);
+                            if (nextVideo.isAvailable) {
+                              feed.videos.push(nextVideo);
+                            }
                         });
                         return feed;
                     })
@@ -184,7 +163,7 @@ pServices.factory('ProfileService', ['$q', 'VideosApiResource', 'UsersApiResourc
                     angular.forEach(VideosApiResponse.results, function(video, key) {
                         feed.cursor = VideosApiResponse.nextCursor;
                         var nextVideo = FeedDelegate.deserializeVideo(video.object);
-                        if (!nextVideo.isAvailble) {
+                        if (nextVideo.isAvailable) {
                           feed.videos.push(nextVideo);
                         }
                     });
@@ -235,6 +214,7 @@ pServices.factory('FeedDelegate', ['$q', '$interval', function($q, $interval) {
             var deserializedVideo = {};
             deserializedVideo._id = video._id;
             deserializedVideo.title = video.title;
+            deserializedVideo.isAvailable = video.isAvailable;
             deserializedVideo.mediaUrl = {
                 still  : video.mediaUrls ? video.mediaUrls.images['480px'] : '',
                 live   : video.mediaUrls ? video.mediaUrls.playlists.live.master : '',
@@ -269,14 +249,12 @@ pServices.factory('FeedDelegate', ['$q', '$interval', function($q, $interval) {
         },
         preRenderFeed: function(Feed) {
             var promises = [];
-            console.log('preloading images');
             angular.forEach(Feed.videos, function(source, key) {
                 var still = new Image();
                 still.src = source.mediaUrl.still;
                 var checkImageInterval = $interval(function() {
                   promises.push(checkImageInterval);
                   if(still.complete) {
-                    console.log('image loaded');
                     $interval.cancel(checkImageInterval);
                   }
                 }, 100)

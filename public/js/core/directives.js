@@ -50,17 +50,16 @@ function($animate, $window, $location, $anchorScroll) {
 
 pDirectives.directive('presentFeed', function() {
      return {
-         restrict: 'EA',
-         controller: function($scope) {
+          restrict: 'EA',
+           controller: function($scope) {
 
-            console.log('Present Feed Initialized');
+              console.log('Present Feed Initialized');
 
-            this.setActiveVideo = function(video) {
-                $scope.feedManager.active = video;
-                $scope.$broadcast('activeVideoChanged', $scope.feedManager.active);
-            };
-
-         }
+              this.setActiveVideo = function(video) {
+                  $scope.feedManager.active = video;
+                  $scope.$broadcast('activeVideoChanged', $scope.feedManager.active);
+              };
+          }
      }
 });
 
