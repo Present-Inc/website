@@ -1,0 +1,35 @@
+/*
+ * core.scss
+ * Sets all sass variables and global styles
+ */
+
+
+/*
+ * Variables
+ * ==================================
+ */
+
+//Responsive Grid
+$break-large: 960px;
+
+
+/*
+ * FONTS
+ * ================================================
+ */
+ @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-UltraLight.otf', 100, normal);}
+ @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-Light.otf', 300, normal);}
+ @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue.otf', 400, normal);}
+ @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-Medium.otf', 600, normal);}
+
+
+/* Globals
+==================================*/
+
+body, html {
+  width: 100%;
+}
+
+.fullscreen {
+  height: 100%;
+}

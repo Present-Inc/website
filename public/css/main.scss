@@ -1,0 +1,26 @@
+/*
+ * main.scss
+ * Imports all scss and scss dependencies
+ * Compiles into main.css
+ */
+
+
+
+/*IMPORTS
+==================================*/
+
+//normalize.css
+// Provides cross browser compatability
+@import 'normalize.css';
+
+//mixins.scss
+//Define sass mixins
+@import 'mixins';
+
+//core.scss
+//Sets all sass variables and provides global styles
+@import 'core';
+
+//splash.css
+//Sets all styles for the splash view
+ @import 'splash';
