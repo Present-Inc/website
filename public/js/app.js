@@ -5,47 +5,58 @@
  * Written by Daniel Lucas
  *
  * app.js
+ * PresentWebApp
  * Initialize Angular Application
  * @dependency ui-router
  */
 
-var PresentWebApp = angular.module('PresentWebApp', ['ui.router']);
+define(['angular',
+        'ui-router',
+        'controllers/index',
+        'services/index'], function(angular) {
 
-/*
- * PresentWebApp configuration
- * Define routes with ui-router's $stateProvider
- * @dependency $stateProvider
- * @dependency $locationProvider
- */
+    var PresentWebApp = angular.module('PresentWebApp', ['ui.router', 'PControllers', 'PServices']);
 
-PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
+    /*
+     * PresentWebApp State Configureation
+     * Define routes with ui-router's $stateProvider
+     * @dependency {ui-router} $stateProvider
+     * @dependency {Angular}   $locationProvider
+     */
 
-  /*
-   * Enable client side routing by enabling the html5 history API
-   * Removes the '#' from url's
-   */
+    PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
 
-   $locationProvider.html5Mode(true);
+      /*
+       * Enable client side routing by enabling the html5 history API
+       * Removes the '#' from url's
+       */
 
-   /*
-    * Configure Application states using ui router
-    * State data -- sets properties of the applicationManageer
-    *   @property <Boolean> fullscreen  -- when true  state is full screen (i.e doens't scroll)
-    *   @property <Boolean> navigation  -- when true navigation bar is visible
-    */
+       $locationProvider.html5Mode(true);
 
-
-    $stateProvider
-      .state('splash', {
-        url: '/',
-        templateUrl: 'views/splash',
-        controller: 'splashCtrl',
-        data: {
-          fullscreen: true,
-          navigation: false
-        }
-      });
+       /*
+        * Configure Application states using ui router
+        * State data -- sets properties of the applicationManageer
+        *   @property <Boolean> fullscreen  -- when true  state is full screen (i.e doens't scroll)
+        *   @property <Boolean> navigation  -- when true navigation bar is visible
+        */
 
 
+        $stateProvider
+          .state('splash', {
+            url: '/',
+            templateUrl: 'views/splash',
+            controller: 'splashCtrl',
+            data: {
+              fullscreen: true,
+              navigation: false
+            }
+          });
 
-}]);
+
+
+    }]);
+
+
+    return PresentWebApp;
+
+});

@@ -8,7 +8,9 @@
     "angular-ui-router": "~0.2.10",
     "angular-classy": "~0.4.2",
     "angular-animate": "~1.2.16",
-    "jquery": "~2.1.1"
+    "jquery": "~2.1.1",
+    "requirejs": "~2.1.11",
+    "requirejs-domready": "~2.0.1"
   },
   "repository": {
     "type": "git",
