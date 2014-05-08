@@ -2,7 +2,7 @@
 /*IMPORTS
 ==================================*/
 @import url(normalize.css);
-/* MIXINS ================================================ */
+/* mixins.scss Defines sass mixins */
 /* core.scss Sets all sass variables and global styles */
 /* Variables ================================== */
 /* FONTS ================================================ */
@@ -14,11 +14,22 @@
 ==================================*/
 body, html { width: 100%; }
 
+body { font-family: 'PresentFT', sans-serif; }
+
 .fullscreen { height: 100%; }
+
+h1 { font-weight: 100; font-size: 42px; color: #47525d; }
+
+.secondaryBtn { outline: none; padding: 6px 10px 8px 10px; background-color: transparent; font-weight: 300; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+
+.mainBtn { outline: none; padding: 12px; padding: 6px 10px 8px 10px; background-color: transparent; font-weight: 300; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+
+.mainBtn:hover { background-color: rgba(51, 170, 255, 0.1); }
+
+.secondaryBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
 /* splash.scss Styles for splash view */
 #splash { width: 100%; height: 100%; background-image: url(/assets/img/main-bg.jpg); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
-@media (max-width: 960px) { #splash { background-image: none; } }
 
 #splash .content { width: 960px; margin: 0px auto; padding: 60px 0px 0px 0px; text-align: center; }
-@media (max-width: 960px) { #splash .content { overflow: auto; padding: 0px; height: auto; width: 100%; } }
+@media (max-width: 960px) { #splash .content { overflow: auto; height: auto; width: 100%; } }

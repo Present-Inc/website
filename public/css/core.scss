@@ -9,6 +9,13 @@
  * ==================================
  */
 
+//Colors
+$main-blue:  #33AAFF;
+$main-purple: #A566FF;
+$alt-purple: #8E73FF;
+$main-grey: #47525D;
+$light-grey: #c4c4c4;
+
 //Responsive Grid
 $break-large: 960px;
 
@@ -17,10 +24,14 @@ $break-large: 960px;
  * FONTS
  * ================================================
  */
+
  @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-UltraLight.otf', 100, normal);}
  @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-Light.otf', 300, normal);}
  @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue.otf', 400, normal);}
  @font-face { @include _createFont('PresentFT', '../assets/fonts/HelveticaNeue-Medium.otf', 600, normal);}
+
+$font-size-small: 14px;
+$font-size-large: 42px;
 
 
 /* Globals
@@ -30,6 +41,46 @@ body, html {
   width: 100%;
 }
 
+body {
+  font-family: 'PresentFT', sans-serif;
+}
+
+
 .fullscreen {
   height: 100%;
+}
+
+h1 {
+  font-weight: 100;
+  font-size: $font-size-large;
+  color: $main-grey;
+}
+
+.secondaryBtn {
+  outline: none;
+  padding: 6px 10px 8px 10px;
+  background-color: transparent;
+  font-weight: 300;
+  color: $main-purple;
+  border: solid 1px $main-purple;
+  @include _border-radius(4px);
+}
+
+.mainBtn {
+  outline: none;
+  padding: 12px;
+  padding: 6px 10px 8px 10px;
+  background-color: transparent;
+  font-weight: 300; 
+  color: $main-blue;
+  border: solid 1px $main-blue;
+  @include _border-radius(4px);
+}
+
+.mainBtn:hover {
+  background-color: transparentize($main-blue, 0.9);
+}
+
+.secondaryBtn:hover {
+  background-color: transparentize($main-purple, 0.9);
 }
