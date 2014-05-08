@@ -1,8 +1,10 @@
 /*
  * Present Web App
  * Version 2
+ * Present Inc.
  * Written by Daniel Lucas
  *
+ * app.js
  * Initialize Angular Application
  * @dependency ui-router
  */
@@ -34,10 +36,10 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
 
 
     $stateProvider
-      .state('landing', {
+      .state('splash', {
         url: '/',
-        templateUrl: 'views/landing',
-        controller: 'landingCtrl',
+        templateUrl: 'views/splash',
+        controller: 'splashCtrl',
         data: {
           fullscreen: true,
           navigation: false
