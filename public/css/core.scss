@@ -56,6 +56,17 @@ h1 {
   color: $main-grey;
 }
 
+.mainBtn {
+  outline: none;
+  padding: 12px;
+  padding: 6px 10px 8px 10px;
+  background-color: transparent;
+  font-weight: 300;
+  color: $main-blue;
+  border: solid 1px $main-blue;
+  @include _border-radius(4px);
+}
+
 .secondaryBtn {
   outline: none;
   padding: 6px 10px 8px 10px;
@@ -63,17 +74,6 @@ h1 {
   font-weight: 300;
   color: $main-purple;
   border: solid 1px $main-purple;
-  @include _border-radius(4px);
-}
-
-.mainBtn {
-  outline: none;
-  padding: 12px;
-  padding: 6px 10px 8px 10px;
-  background-color: transparent;
-  font-weight: 300; 
-  color: $main-blue;
-  border: solid 1px $main-blue;
   @include _border-radius(4px);
 }
 

@@ -20,9 +20,9 @@ body { font-family: 'PresentFT', sans-serif; }
 
 h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 
-.secondaryBtn { outline: none; padding: 6px 10px 8px 10px; background-color: transparent; font-weight: 300; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
-
 .mainBtn { outline: none; padding: 12px; padding: 6px 10px 8px 10px; background-color: transparent; font-weight: 300; color: #33aaff; border: solid 1px #33aaff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+
+.secondaryBtn { outline: none; padding: 6px 10px 8px 10px; background-color: transparent; font-weight: 300; color: #a566ff; border: solid 1px #a566ff; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 
 .mainBtn:hover { background-color: rgba(51, 170, 255, 0.1); }
 
