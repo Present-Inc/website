@@ -4,9 +4,12 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         concat: {
+            options: {
+                separator: ';'
+            },
             dist: {
-                src: ['public/js/*.js', 'public/js/controllers/*js'],
-                dest: 'public/dist/<%= pkg.name %>.js'
+                src: ['public/js/core/*.js'],
+                dest: 'public/js/core/dist/<%= pkg.name %>.js'
             }
         },
 
@@ -45,10 +48,6 @@ module.exports = function(grunt) {
 
 
         watch: {
-          js: {
-            files: ['public/js/*.js', 'public/js/controllers/*.js'],
-            tasks: ['concat']
-          },
           scss: {
               files: ['public/css/*.scss'],
               tasks: ['sass']
@@ -67,5 +66,4 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', ['concat', 'ngmin', 'uglify']);
     grunt.registerTask('watch-scss', ['watch:scss']);
-    grunt.registerTask('watch-js', ['watch:js']);
 };
