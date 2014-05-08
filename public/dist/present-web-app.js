@@ -47,3 +47,9 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
 
 
 }]);
+
+
+
+PresentWebApp.controller('landingCtrl', ['$scope', function() {
+  $scope.message = 'Welcome to Present!';
+}]);
