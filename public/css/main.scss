@@ -21,6 +21,10 @@
 //Sets all sass variables and provides global styles
 @import 'core';
 
-//splash.css
+//splash.scss
 //Sets all styles for the splash view
- @import 'splash';
+@import 'splash';
+
+//discover.scss
+//Sets all styles for the discover view
+@import 'discover'; 

@@ -33,3 +33,5 @@ h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 
 #splash .content { width: 960px; margin: 0px auto; padding: 60px 0px 0px 0px; text-align: center; }
 @media (max-width: 960px) { #splash .content { overflow: auto; height: auto; width: 100%; } }
+
+#discover { text-align: center; }

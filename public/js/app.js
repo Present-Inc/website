@@ -13,7 +13,8 @@
 define(['angular',
         'ui-router',
         'controllers/index',
-        'services/index'], function(angular) {
+        'services/index',
+        'directives/index'], function(angular) {
 
     var PresentWebApp = angular.module('PresentWebApp', ['ui.router', 'PControllers', 'PServices']);
 
@@ -49,6 +50,15 @@ define(['angular',
             data: {
               fullscreen: true,
               navigation: false
+            }
+          })
+          .state('discover', {
+            url: '/',
+            templateUrl: 'views/discover',
+            controller: 'discoverCtrl',
+            data: {
+              fullscreen: false,
+              navigation: true
             }
           });
 
