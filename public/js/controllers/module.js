@@ -7,6 +7,6 @@
 define(['angular'], function(angular) {
 
     // return the PControllers Module
-    return angular.module('PControllers', [])
+    return angular.module('PControllers', []);
 
 });
