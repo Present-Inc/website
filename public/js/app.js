@@ -6,12 +6,19 @@
  *
  * app.js
  * PresentWebApp
+ *
  * Initialize Angular Application
- * @dependency ui-router
+ *   @dependency {Angular}   Angular           -- It's AngularJS
+ *   @dependency {ui-router} ui-router         -- Handles application state and view loading
+ *   @dependency {Present}   controllers/index -- Module loader for all the applicaiton controllers
+ *   @dependency {Present}   services/index    -- Module loader for all the application services
+ *   @dependency {Present}   directives/index  -- Module loader for all the application directives
+ *   @dependency {Present}   apiClient/index   -- Modle loader for all the application directives
  */
 
 define(['angular',
         'ui-router',
+        'apiClient/index',
         'controllers/index',
         'services/index',
         'directives/index'], function(angular) {
@@ -61,8 +68,6 @@ define(['angular',
               navigation: true
             }
           });
-
-
 
     }]);
 
