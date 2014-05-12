@@ -16,7 +16,6 @@ define(['./module'], function(PControllers) {
  return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager',
 
    function($scope, ApplicationManager) {
-     console.log('mainCtrl has been initiated');
      $scope.ApplicationManager = ApplicationManager;
 
      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
@@ -31,13 +30,9 @@ define(['./module'], function(PControllers) {
         $scope.ApplicationManager.navigationMode(true);
       else
         $scope.ApplicationManager.navigationMode(false);
-
-
      });
 
-
-
-   }
+  }
 
  ]);
 

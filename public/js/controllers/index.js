@@ -4,5 +4,6 @@
  * Combines all controllers into one requireJS module to be injected into PresentWebApp
  */
 
-define(['./splashController',
-        './mainCtrl'], function() {});
+define(['./mainCtrl',
+        './splashCtrl',
+        './discoverCtrl'], function() {});
