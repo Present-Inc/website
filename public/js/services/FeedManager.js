@@ -3,11 +3,11 @@
  * Defines RewqureJS module for FeedManager directive
  */
 
-define(['./module', function(PServices) {
+define(['./module'], function(PServices) {
 
   /*
    * PServices.FeedManager
-   * Service that controls the video feed
+   * Provides properties and methods to manage the state of Video Feeds
    */
 
    return PServices.service('FeedManager', [function() {
@@ -21,7 +21,7 @@ define(['./module', function(PServices) {
         this.limit = 10;
 
         //Instance methods on the Feed Manager
-        this.loadMoreVideos : {
+        this.loadMoreVideos = {
             homeFeed : function() {
               //Load More Videos
             },
@@ -35,4 +35,4 @@ define(['./module', function(PServices) {
 
    }]);
 
-}]);
+});

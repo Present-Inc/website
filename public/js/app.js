@@ -60,7 +60,7 @@ define(['angular',
             }
           })
           .state('discover', {
-            url: '/',
+            url: '/discover',
             templateUrl: 'views/discover',
             controller: 'discoverCtrl',
             data: {
@@ -70,7 +70,6 @@ define(['angular',
           });
 
     }]);
-
 
     return PresentWebApp;
 

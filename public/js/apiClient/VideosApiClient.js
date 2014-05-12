@@ -13,7 +13,7 @@ define(['./module'], function(PApiClient){
    PApiClient.factory('VideosApiClient', [function() {
       return {
         listBrandNewVideos: function() {
-
+            
         }
       }
    }]);

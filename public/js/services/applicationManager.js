@@ -7,8 +7,8 @@ define(['./module'], function(PServices) {
 
   /*
   * PServices.applicationManager
-  * Provides application level properties and methods
-  *   @dependency {Present} Application Manager
+  * Provides properties and methods to manage the state of the application
+  * Only injected one per application, usually on the highest level scope
   */
 
   return PServices.service('ApplicationManager', [function() {
@@ -16,7 +16,7 @@ define(['./module'], function(PServices) {
     //define default application properties
       this.fullscreen = false;
       this.navigation = false;
-      this.message = 'this is a test';
+      this.status = 'Application is currently running';
 
       this.fullscreenMode = function(value) {
         if(value)
