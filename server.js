@@ -4,7 +4,7 @@ var express = require('express'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
     ejs = require('ejs'),
-    middleware = require('./middleware/'),
+    middleware = require('./server/middleware'),
     httpPort = 8000;
 
 var app = express();
