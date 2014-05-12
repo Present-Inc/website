@@ -18,12 +18,11 @@
 
 define(['angular',
         'ui-router',
-        'apiClient/index',
         'controllers/index',
         'services/index',
         'directives/index'], function(angular) {
 
-    var PresentWebApp = angular.module('PresentWebApp', ['ui.router', 'PControllers', 'PServices']);
+    var PresentWebApp = angular.module('PresentWebApp', ['ui.router', 'PControllers', 'PServices', 'PDirectives']);
 
     /*
      * PresentWebApp State Configureation
@@ -50,6 +49,7 @@ define(['angular',
 
 
         $stateProvider
+
           .state('splash', {
             url: '/',
             templateUrl: 'views/splash',
@@ -66,6 +66,11 @@ define(['angular',
             data: {
               fullscreen: false,
               navigation: true
+            },
+            resolve: {
+              discoverFeed : function(FeedLoader) {
+                return FeedLoader.loadDiscoverFeed();
+              }
             }
           });
 

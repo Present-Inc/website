@@ -4,4 +4,9 @@
  * Combines all services into one requireJS module to be injected into PresentWebApp
  */
 
-define(['./applicationManager', './feedManager'], function() {});
+define(['./ApplicationManager',
+        './FeedManager',
+        './FeedLoader',
+        './Logger',
+        './apiClient/VideosApiClient',
+        './apiClient/ApiClientConfig'], function() {});
