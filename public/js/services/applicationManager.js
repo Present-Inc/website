@@ -11,29 +11,24 @@ define(['./module'], function(PServices) {
   *   @dependency {Present} Application Manager
   */
 
-  return PServices.factory('ApplicationManager', [function() {
+  return PServices.service('ApplicationManager', [function() {
 
-    //define default application properties 
-    function ApplicationManager() {
+    //define default application properties
       this.fullscreen = false;
       this.navigation = false;
-    };
+      this.message = 'this is a test';
 
-    ApplicationManager.prototype.fullscreenMode = function(value) {
-      if(value)
-      this.fullscreen = value;
-      else return this.fullscreen;
-    };
+      this.fullscreenMode = function(value) {
+        if(value)
+        this.fullscreen = value;
+        else return this.fullscreen;
+      };
 
-    ApplicationManager.prototype.navigationMode = function(value) {
-      if(value)
-      this.navigation = value;
-      else return this.navigationMode;
-    };
-
-    var newApplicationManager = new ApplicationManager();
-
-    return newApplicationManager;
+      this.navigationMode = function(value) {
+        if(value)
+        this.navigation = value;
+        else return this.navigationMode;
+      };
 
   }]);
 

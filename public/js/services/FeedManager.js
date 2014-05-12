@@ -10,31 +10,28 @@ define(['./module', function(PServices) {
    * Service that controls the video feed
    */
 
-   return PServices.factory('FeedManager', [function() {
+   return PServices.service('FeedManager', [function() {
 
-     function FeedManager() {
+        //Set default properties for the FeedManager
         this.active = null;
         this.videos = [];
         this.cursor = -1;
         this.isLoading = false;
         this.needsRefreshed = false;
         this.limit = 10;
-      };
 
-      FeedManager.prototype.LoadMoreVideos = {
-        homeFeed : function() {
-          //Load More Videos
-        },
-        discoverFeed: function() {
-          //Load More Videos
-        },
-        profileFeed: function() {
-          //Load More Videos
-        }
-      };
-
-      var newFeedManager = new FeedManager();
-      return newFeedManager; 
+        //Instance methods on the Feed Manager
+        this.loadMoreVideos : {
+            homeFeed : function() {
+              //Load More Videos
+            },
+            discoverFeed: function() {
+              //Load More Videos
+            },
+            profileFeed: function() {
+              //Load More Videos
+            }
+        };
 
    }]);
 
