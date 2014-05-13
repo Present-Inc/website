@@ -1,12 +1,18 @@
 #discover {
-  text-align: center; 
+  text-align: center;
   width: 960px;
   margin: 0 auto;
+  padding: 0px 0px 20px 0px; 
 }
 
 #discover {
   .feed {
     width: 480px;
+    margin: 0 auto;
+  }
+
+  .loadMoreVideos {
+    display: block;
     margin: 0 auto;
   }
 }

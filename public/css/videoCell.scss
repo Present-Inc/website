@@ -1,3 +1,19 @@
+/* videoCell.scss
+ * Define all styles for the Video Cells
+ */
+
+
+/*
+ * Set Local Variables
+ */
+
+//z-indexes that will order the elements in the video player
+$still-index: 1;
+$video-index: 0;
+$location-index:2;
+$loadingIndication-index: 3;
+
+
 
 .videoCell {
   width: 480px;
@@ -6,6 +22,12 @@
 }
 
 .videoCell {
+
+  .videoPlayer {
+    .still {
+      z-index: $still-index; 
+    }
+  }
 
   .creator {
     float: left;
@@ -35,13 +57,24 @@
   }
 
   .commentsPreview {
-    margin: 10px 0px 0px 0px;
-    padding: 5px 0px 0px 0px;
+    margin: 20px 0px 0px 0px;
+    padding: 15px 0px 0px 0px;
     border-top: solid 1px #ccc;
   }
 
-  .commentsPreview .addComment {
-    margin: 10px 0px 0px 0px; 
+  .commentsPreview {
+
+    .sourceUser {
+      display: inline-block;
+    }
+
+    .commentBody {
+      display: inline-block;
+    }
+
+    .addComment {
+      margin: 20px 0px 0px 0px;
+    }
   }
 
 }

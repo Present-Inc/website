@@ -28,15 +28,20 @@ h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 
 .secondaryBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
+/* videoCell.scss Define all styles for the Video Cells */
+/* Set Local Variables */
 .videoCell { width: 480px; margin: 0px 0px 40px 0px; text-align: left; }
 
+.videoCell .videoPlayer .still { z-index: 1; }
 .videoCell .creator { float: left; width: 300px; margin: 10px 0px 20px 0px; }
 .videoCell .profilePicture { float: left; margin: 0px 10px 0px 0px; }
 .videoCell .timeAgo { width: 180px; float: right; margin: 10px 0px 0px 0px; text-align: right; }
 .videoCell .counts { clear: both; }
 .videoCell .counts div { display: inline-block; margin: 0px 5px 0px 0px; }
-.videoCell .commentsPreview { margin: 10px 0px 0px 0px; padding: 5px 0px 0px 0px; border-top: solid 1px #ccc; }
-.videoCell .commentsPreview .addComment { margin: 10px 0px 0px 0px; }
+.videoCell .commentsPreview { margin: 20px 0px 0px 0px; padding: 15px 0px 0px 0px; border-top: solid 1px #ccc; }
+.videoCell .commentsPreview .sourceUser { display: inline-block; }
+.videoCell .commentsPreview .commentBody { display: inline-block; }
+.videoCell .commentsPreview .addComment { margin: 20px 0px 0px 0px; }
 
 /* splash.scss Styles for splash view */
 #splash { width: 100%; height: 100%; background-image: url(/assets/img/main-bg.jpg); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
@@ -44,6 +49,7 @@ h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 #splash .content { width: 960px; margin: 0px auto; padding: 60px 0px 0px 0px; text-align: center; }
 @media (max-width: 960px) { #splash .content { overflow: auto; height: auto; width: 100%; } }
 
-#discover { text-align: center; width: 960px; margin: 0 auto; }
+#discover { text-align: center; width: 960px; margin: 0 auto; padding: 0px 0px 20px 0px; }
 
 #discover .feed { width: 480px; margin: 0 auto; }
+#discover .loadMoreVideos { display: block; margin: 0 auto; }
