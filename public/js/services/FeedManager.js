@@ -18,7 +18,6 @@ define(['./module'], function(PServices) {
         this.cursor = -1;
         this.isLoading = false;
         this.needsRefreshed = false;
-        this.limit = 10;
 
         //Instance methods on the Feed Manager
         this.loadMoreVideos = {
