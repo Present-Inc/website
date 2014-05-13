@@ -11,6 +11,7 @@ define(['./module'], function(PServices) {
    */
 
    var debugModeEnabled = true;
+   var testModeEnabled  = true;
 
    return PServices.factory('Logger', [function() {
     return {
@@ -18,6 +19,9 @@ define(['./module'], function(PServices) {
         if(debugModeEnabled) {
           console.log(content);
         }
+      },
+      test: function(content) {
+        console.log(content);
       },
       error: function(content) {
         console.warn(content);

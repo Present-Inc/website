@@ -42,14 +42,13 @@
                this.timeAgo = '20 minutes ago';
              }
 
-             this.likes =  { count: rawVideoData.likes.count};
-
-             this.comments = {
-               content : {},
-               count   : rawVideoData.comments.count
+             this.counts = {
+               likes    : rawVideoData.likes.count,
+               comments : rawVideoData.comments.count,
+               replies  : rawVideoData.replies.count
              };
 
-             this.replies = { count: rawVideoData.replies.count};
+             this.comments = [];
 
            }
 
@@ -66,13 +65,19 @@
 
             function deserializedComment(rawCommentsData) {
               this.body = rawCommentsData.body;
+              this.sourceUser = {
+                username: rawCommentsData.sourceUser.object.username,
+                profilePicture: rawCommentsData.sourceUser.object.profile.picture.url
+              };
+              this.timeAgo = '5 min';
+
             }
 
             var comments = [];
 
             //Logger.debug(['PServices.ApiClientResponseHandler.deserializeComments -- raw comments object', ApiClientResponseObject]);
             for(var i=0; i < ApiClientResponseObject.results.length; i++) {
-              comments.push(new deserializedComment(ApiClientResponseObject.results[i].object))
+              comments.push(new deserializedComment(ApiClientResponseObject.results[i].object));
             }
 
             return comments;
@@ -88,7 +93,7 @@
 
             function deserializedCreator(rawCreatorData) {
               this._id = rawCreatorData._id;
-              this.username = rawCreatorData.username;
+              this.username = '@' + rawCreatorData.username;
               this.fullName = rawCreatorData.profile.fullName;
 
               //Set Full name to Display Name, if available

@@ -30,7 +30,7 @@ define(['../module'], function(PServices){
             $http({
               method: 'GET',
               url: resourceUrl,
-              params: {limit: 5, cursor: cursor ? cursor : null}
+              params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null}
             })
               .success(function(data, status, headers) {
                   Logger.debug(['PServices.VideosApiClient.listBrandNewVideos -- http success block', status, data]);

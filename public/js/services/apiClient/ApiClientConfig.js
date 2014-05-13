@@ -15,7 +15,7 @@ define(['../module'], function(PApiClient){
          return 'https://api.present.tv'
        },
        getVideoQueryLimit: function() {
-         return 5;
+         return 15;
        }
      }
    }]);

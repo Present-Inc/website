@@ -29,22 +29,25 @@ define(['./module'], function(PServices) {
                VideosApiClient.listBrandNewVideos(cursor)
                  .then(function(rawApiResponse) {
 
-                   var deserializedFeed = [];
+                   var deserializedFeed = {
+                     cursor: rawApiResponse.nextCursor,
+                     videos: []
+                   };
 
                    for(var i=0; i < rawApiResponse.results.length; i++) {
                      var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                     deserializedVideo.comments.content = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
+                     deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
                      deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                     deserializedFeed.push(deserializedVideo);
+                     deserializedFeed.videos.push(deserializedVideo);
                    };
 
-                   Logger.debug(['PServices.FeedLoader -- resolving the discover feed', deserializedFeed]);
+                   Logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
                    loadingDiscoverFeed.resolve(deserializedFeed);
 
                  })
                  .catch(function(VideosApiClientResponse) {
+                   //controller is watching for false return value to display an error feedback message
                    loadingDiscoverFeed.resolve(false)
-
                  })
 
                return loadingDiscoverFeed.promise;
