@@ -76,6 +76,4 @@ define(['angular',
 
     }]);
 
-    return PresentWebApp;
-
 });
