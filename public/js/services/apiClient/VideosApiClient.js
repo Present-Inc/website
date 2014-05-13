@@ -3,37 +3,42 @@
  * Defines RequireJS module for the Present Video Api Client
  */
 
-define(['../module'], function(PApiClient){
+define(['../module'], function(PServices){
 
-  /* PApiClient.videoApiClient
-   * Handles are API requests directed at the Videos API Resource
+  /* PServices.videoApiClient
+   * Sends API requests directed at the Videos API Resource and handles the raw API response
    *   @dependency {Angular} $http
-   *   @dependency {Present} $q
+   *   @dependency {Angular} $q
+   *   @dependency {Utility} Logger -- Configurable log For development
    *   @dependency {Present} ApiConfig -- Provides API configuration properties
-   *   @dependency {Present} DevLog -- Configurable Log For Development
+   *
    */
 
-   PApiClient.factory('VideosApiClient', ['$http', '$q', 'ApiConfig', 'Logger',
+   PServices.factory('VideosApiClient', ['$http', '$q', 'Logger', 'ApiConfig',
 
-     function($http, $q, ApiConfig, Logger) {
+     function($http, $q, Logger, ApiConfig) {
         return {
+
+          /* Sends a request to the list_brand_new_videos videos resouce
+           * Handles success and error blocks then resolves the api response to the FeedLoader
+           *   @param <Number> cursor -- active video cursor
+           */
+
           listBrandNewVideos: function(cursor) {
             var sendingRequest = $q.defer();
             var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
             $http({
               method: 'GET',
               url: resourceUrl,
-              params: {limit: 5}
+              params: {limit: 5, cursor: cursor ? cursor : null}
             })
               .success(function(data, status, headers) {
-                  var debugLog = ['PServices.VideosApiClient.listBrandNewVideos -- http success block', status, data];
-                  Logger.debug(debugLog);
-                  sendingRequest.resolve(data.results);
+                  Logger.debug(['PServices.VideosApiClient.listBrandNewVideos -- http success block', status, data]);
+                  sendingRequest.resolve(data);
               })
               .error(function(data, status, headers) {
-                  var debugLog = ['PServices.VideosApiClient.listBrandNewVideos -- http success block', status, data];
-                  Logger.debug(debugLog);
-                  sendingRequest.reject(data.results);
+                  Logger.error(['PServices.VideosApiClient.listBrandNewVideos -- http error block', status, data]);
+                  sendingRequest.reject(data);
               });
 
             return sendingRequest.promise;

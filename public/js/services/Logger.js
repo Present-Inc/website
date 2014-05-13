@@ -18,6 +18,9 @@ define(['./module'], function(PServices) {
         if(debugModeEnabled) {
           console.log(content);
         }
+      },
+      error: function(content) {
+        console.warn(content);
       }
     }
    }]);
