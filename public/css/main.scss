@@ -21,10 +21,14 @@
 //Sets all sass variables and provides global styles
 @import 'core';
 
+//videoCell.scss
+//Sets all styles for the video cells
+@import 'videoCell'; 
+
 //splash.scss
 //Sets all styles for the splash view
 @import 'splash';
 
 //discover.scss
 //Sets all styles for the discover view
-@import 'discover'; 
+@import 'discover';

@@ -1,3 +1,64 @@
+
 <div id="discover">
+
   <h1>Discover the Present</h1>
+
+  <!-- feed -->
+  <div feed class="feed">
+
+    <div ng-repeat="video in FeedManager.videos">
+
+      <!-- videoCell -->
+      <div video-cell class="videoCell">
+        <!-- videoPlayer -->
+        <div class="videoPlayer">
+          <span class="videoLocation"></span>
+          <img ng-src="{{video.media.still}}" class="videoStll" />
+          <div class="jwplayer"></div>
+        </div>
+        <!-- end videoPlayer -->
+
+        <!-- videoMetaData -->
+        <div class="videoMetaData">
+
+          <div class="timeAgo" ng-bind="video.timeAgo"></div>
+
+          <!-- creator -->
+          <div class="creator">
+            <img class="profilePicture" ng-src="{{video.creator.profilePicture}}" height="70px" width="70px"/>
+            <div class="displayName" ng-bind="video.creator.displayName"></div>
+            <div class="userName" ng-bind="video.creator.username"></div>
+            <div class="title" ng-bind="video.title"></div>
+          </div>
+          <!-- end creator -->
+
+
+          <!-- counts -->
+          <div class="counts">
+            <label class="repliesLabel">Replies: </label>
+            <div class="replies" ng-bind="video.counts.replies"></div>
+            <label class="likesLabel">Likes: </label>
+            <div class="likes"   ng-bind="video.counts.likes"></div>
+            <label class="commentsLabel">Comments: </label>
+            <div class="comments" ng-bind="video.counts.comments"></div>
+          </div>
+          <!-- end counts -->
+
+          <!-- commentsPreview -->
+          <div class="commentsPreview">
+            <div class="comment" ng-bind="video.comments[0].body"></div>
+            <div class="comment" ng-bind="video.comments[1].body"></div>
+            <div class="comment" ng-bind="video.comments[2].body"></div>
+            <button class="addComment">Add Comment</button>
+          </div>
+          <!-- end commentsPreview -->
+
+          </div>
+          <!-- end videoMetaData -->
+        </div>
+        <!-- end videoCell -->
+
+      </div>
+  </div>
+  <!-- end feed -->
 </div>

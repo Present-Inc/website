@@ -1,0 +1,47 @@
+
+.videoCell {
+  width: 480px;
+  margin: 0px 0px 40px 0px;
+  text-align: left;
+}
+
+.videoCell {
+
+  .creator {
+    float: left;
+    width: 300px;
+    margin: 10px 0px 20px 0px;
+  }
+
+  .profilePicture {
+    float: left;
+    margin: 0px 10px 0px 0px;
+  }
+
+  .timeAgo {
+    width: 180px;
+    float: right;
+    margin: 10px 0px 0px 0px;
+    text-align: right;
+  }
+
+  .counts {
+    clear: both;
+  }
+
+  .counts div {
+    display: inline-block;
+    margin: 0px 5px 0px 0px;
+  }
+
+  .commentsPreview {
+    margin: 10px 0px 0px 0px;
+    padding: 5px 0px 0px 0px;
+    border-top: solid 1px #ccc;
+  }
+
+  .commentsPreview .addComment {
+    margin: 10px 0px 0px 0px; 
+  }
+
+}
