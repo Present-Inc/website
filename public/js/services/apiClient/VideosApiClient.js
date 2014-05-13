@@ -42,8 +42,8 @@ define(['../module'], function(PServices){
               });
 
             return sendingRequest.promise;
-
           }
+
         }
      }
 
