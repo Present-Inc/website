@@ -1,6 +1,6 @@
 /*
  * FeedManager.js
- * Defines RewqureJS module for FeedManager directive
+ * Defines RequireJS module for FeedManager Service
  */
 
 define(['./module'], function(PServices) {
@@ -27,7 +27,7 @@ define(['./module'], function(PServices) {
         /* FeedManager.loadMoreVideos
          * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
          */
-         
+
          FeedManager.prototype.loadMoreVideos = function(feedType, cursor, username) {
 
            this.videos = [];

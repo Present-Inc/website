@@ -3,18 +3,18 @@
  * Defines RequireJS module for the Present Video Api Client
  */
 
-define(['../module'], function(PServices){
+define(['../module'], function(PServices) {
 
-  /* PServices.videoApiClient
+  /* PServices.VideoApiClient
    * Sends API requests directed at the Videos API Resource and handles the raw API response
    *   @dependency {Angular} $http
    *   @dependency {Angular} $q
-   *   @dependency {Utility} Logger -- Configurable log For development
+   *   @dependency {Present} Logger -- Configurable log For development
    *   @dependency {Present} ApiConfig -- Provides API configuration properties
    *
    */
 
-   PServices.factory('VideosApiClient', ['$http', '$q', 'Logger', 'ApiConfig',
+   return PServices.factory('VideosApiClient', ['$http', '$q', 'Logger', 'ApiConfig',
 
      function($http, $q, Logger, ApiConfig) {
         return {
