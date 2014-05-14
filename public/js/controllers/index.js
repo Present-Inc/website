@@ -7,4 +7,5 @@
 define(['./mainCtrl',
         './splashCtrl',
         './loginCtrl',
+        './homeCtrl',
         './discoverCtrl'], function() {});

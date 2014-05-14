@@ -4,6 +4,7 @@
  */
 
 define(['./module'], function(PControllers) {
+
     /*
      * PControllers.loginCtrl
      *   @dependency {Angular} $scope
@@ -23,14 +24,16 @@ define(['./module'], function(PControllers) {
             .then(function(newSession) {
               if(newSession) {
                 $scope.SessionManager.isLoggedIn =true;
-                $scope.SessionManager.username = newSession.username;
+                $scope.SessionManager.userId = newSession.sessionUserId;
                 $scope.SessionManager.sessionToken = newSession.sessionToken;
-                Logger.test(['PControllers.loginCtrl -- session created', $scope.SessionManager]);
+                Logger.debug(['PControllers.loginCtrl -- session created', $scope.SessionManager]);
+                $state.go('home');
               }
+            })
+            .catch(function() {
+              alert('username and/or password is incorrect');
             });
         }
-
-        å
 
       }
 

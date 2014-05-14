@@ -83,6 +83,16 @@ define(['angular',
               fullscreen: true,
               navigation: false
             }
+          })
+
+          .state('home', {
+            url: '/home',
+            template: '<div>Home</div>',
+            controller: 'homeCtrl',
+            data: {
+              fullscreen: false,
+              navigation: true
+            }
           });
 
     }]);

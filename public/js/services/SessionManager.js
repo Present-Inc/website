@@ -13,26 +13,32 @@
     *   @dependency {Present} ApiClientResponseHandler -- handles the raw api response
     */
 
-    return PServices.factory('SessionManager', ['$q', 'Logger', 'UserContextApiClient', 'ApiClientResponseHandler'
+    return PServices.factory('SessionManager', ['$q', 'Logger', 'UserContextApiClient', 'ApiClientResponseHandler',
 
     function($q, Logger, UserContextApiClient) {
 
-      function SessionManager(Logger, UserContextApiClient) {
+      function SessionManager($q, Logger, UserContextApiClient, ApiClientResponseHandler) {
         this.isLoggedIn = false,
-        this.username = '',
-        this.sessionToken = ''sd
+        this.userId = '',
+        this.sessionToken = ''
       };
 
       SessionManager.prototype.createNewSession = function(username, password) {
-        var CreatingSession = $q.defer();
+        var creatingSession = $q.defer();
         UserContextApiClient.createNewUserContext(username, password)
           .then(function(rawApiResponse) {
             Logger.test(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
-
-            defer.resolve();
+            var deserializedUserSession = {
+              sessionToken : rawApiResponse.result.object.sessionToken,
+              sessionUserId : rawApiResponse.result.object.user.object._id
+            };
+            creatingSession.resolve(deserializedUserSession);
+          })
+          .catch(function() {
+            creatingSession.reject();
           });
 
-        return CreatingSession.promise
+        return creatingSession.promise
       };
 
       return new SessionManager;

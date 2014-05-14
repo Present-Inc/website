@@ -103,11 +103,9 @@
               this.profilePicture = rawCreatorData.profile.picture.url;
             }
 
-
             return new deserializedCreator(ApiClientResponseObject);
+            
           }
-
-
         }
       }
 
