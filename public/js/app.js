@@ -59,6 +59,7 @@ define(['angular',
               navigation: false
             }
           })
+
           .state('discover', {
             url: '/discover',
             templateUrl: 'views/discover',
@@ -71,6 +72,16 @@ define(['angular',
               discoverFeed : function(FeedLoader) {
                 return FeedLoader.loadDiscoverFeed();
               }
+            }
+          })
+
+          .state('login', {
+            url: '/login',
+            templateUrl: 'views/login',
+            controller: 'loginCtrl',
+            data: {
+              fullscreen: true,
+              navigation: false
             }
           });
 

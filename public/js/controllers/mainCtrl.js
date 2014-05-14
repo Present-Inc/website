@@ -11,12 +11,16 @@ define(['./module'], function(PControllers) {
  * Acts as a buffer to the rootScope
  *   @dependency {Angular} $scope
  *   @dependency {Present} ApplicationManager
+ *   @dependency {Present} SessionManager
  */
 
- return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager',
+ return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager', 'SessionManager',
 
-   function($scope, ApplicationManager) {
+   function($scope, ApplicationManager, SessionManager) {
+
      $scope.ApplicationManager = ApplicationManager;
+     $scope.SessionManager = SessionManager;
+
 
      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
 
