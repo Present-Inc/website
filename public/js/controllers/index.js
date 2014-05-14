@@ -6,4 +6,5 @@
 
 define(['./mainCtrl',
         './splashCtrl',
+        './loginCtrl',
         './discoverCtrl'], function() {});

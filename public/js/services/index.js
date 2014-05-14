@@ -6,8 +6,10 @@
 
 define(['./ApplicationManager',
         './FeedManager',
+        './SessionManager',
         './FeedLoader',
         './Logger',
-        './ApiClientResponseHandler', 
+        './ApiClientResponseHandler',
         './apiClient/VideosApiClient',
+        './apiClient/UserContextApiClient', 
         './apiClient/ApiClientConfig'], function() {});

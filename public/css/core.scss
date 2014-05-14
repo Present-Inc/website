@@ -50,11 +50,16 @@ body {
   height: 100%;
 }
 
+/* Typography
+===================================*/
 h1 {
   font-weight: 100;
   font-size: $font-size-large;
   color: $main-grey;
 }
+
+/* UI
+===================================*/
 
 .mainBtn {
   outline: none;
@@ -83,4 +88,13 @@ h1 {
 
 .secondaryBtn:hover {
   background-color: transparentize($main-purple, 0.9);
+}
+
+/* Forms
+=================================*/
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px; 
 }
