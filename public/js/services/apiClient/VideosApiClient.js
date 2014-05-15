@@ -44,7 +44,7 @@ define(['../module'], function(PServices) {
               });
 
             return sendingRequest.promise;
-          },
+          }, 
 
           /**
            * Sends a request to the list_home_videos videos resouce
@@ -52,12 +52,13 @@ define(['../module'], function(PServices) {
            */
 
           listHomeVideos: function(session, cursor) {
+
             var sendingRequest = $q.defer();
             var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos/';
             $http({
               method: 'GET',
               url: resourceUrl,
-              params: {limit: ApiConfig.getVideoQueryLimit()}, 
+              params: {limit: ApiConfig.getVideoQueryLimit()},
               headers: {
                 'Present-User-Context-Session-Token' : session.token,
                 'Present-User-Context-User-Id': session.userId

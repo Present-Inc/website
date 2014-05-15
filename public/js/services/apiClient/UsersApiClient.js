@@ -3,7 +3,7 @@
  * Defines a RequireJS modile for the Present User Api Client
  */
 
-define(['./module'], function(PServices) {
+define(['../module'], function(PServices) {
 
   /**
    * PServices.UsersApiClient
@@ -24,26 +24,33 @@ define(['./module'], function(PServices) {
        * Handles success and error blocks and then resolves the API response to somewhere...
        *   @param <String> username -- the user whose profile is being requested
        */
+      return {
 
+         show: function(userId) {
+           var sendingRequest = $q.defer();
+           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
 
-       show: function(username) {
-         var sendingRequest = $q.defer();
-         var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
-         $http({
-           method: 'GET',
-           url: resourceUrl,
-           params: {username: username}
-         })
-           .success(function(data, status, headers) {
-             logger.debug(['PServices.UsersApiClient.show -- http success block', status, data]);
-             sendingRequest.resolve(data);
+           $http({
+             method: 'GET',
+             url: resourceUrl,
+             params: {user_id: userId}
            })
-           .error(function (data, status, headers) {
-             logger.error(['PServices.UsersApiClient.show -- http error block', status, data]);
-             sendingRequest.erject(data);
-           })
-       }
+             .success(function(data, status, headers) {
+               logger.debug(['PServices.UsersApiClient.show -- http success block', status, data]);
+               sendingRequest.resolve(data);
+             })
+             .error(function (data, status, headers) {
+               logger.error(['PServices.UsersApiClient.show -- http error block', status, data]);
+               sendingRequest.reject(data);
+             })
 
-    })
+             return sendingRequest.promise;
+         }
+
+      }
+
+    }
+
+    ]);
 
 })

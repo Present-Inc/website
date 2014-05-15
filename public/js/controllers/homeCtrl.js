@@ -14,12 +14,13 @@ define(['./module'], function(PControllers) {
      *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
      */
 
-     return PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'ProfileLoader', 
+     return PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
 
-       function($scope, logger, FeedManager, homeFeed, ProfileLoader) {
+       function($scope, logger, FeedManager, homeFeed, profile) {
          //Check whether resolved dedpendencies resolved successfully
          if(!homeFeed) alert('Please log in to views the home feed!');
 
+         logger.test(['PControllers.homeCtrl -- initializing Profile Data', profile]); 
          logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
 
          //Initialize Feed Manager on the controller scope

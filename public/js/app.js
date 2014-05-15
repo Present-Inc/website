@@ -108,10 +108,10 @@ define(['angular',
               navigation: true
             },
             resolve: {
-              profile : function() {
-                return true;
-                //return ProfileLoader.loadProfile();
+              profile  : function(ProfileLoader) {
+                return ProfileLoader.loadProfile(); 
               },
+
               homeFeed : function(FeedLoader) {
                 return FeedLoader.loadHomeFeed();
               }

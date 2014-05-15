@@ -10,12 +10,13 @@ define(['./module'], function(PServices) {
      * Parses and prepares the results provided from the UserApiClient
      *   @dependency {Angular} $q
      *   @dependency {Utilities} logger
-     *   @dependency {Present} 
+     *   @dependency {Present} UsersApiClient
+     *   @dependency {Present} Session Manager
      */
 
-     return PServices.factory('ProfileLoader', ['$q', 'logger', 'VidoesApiClient', 'ApiClientResponseHandler', 'SessionManager',
+     return PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'SessionManager',
 
-       function($q, logger, VidoesApiClient, ApiClientResponseHandler, SessionManager) {
+       function($q, logger, UsersApiClient, SessionManager) {
          return {
 
            /**
@@ -25,18 +26,21 @@ define(['./module'], function(PServices) {
 
             loadProfile : function() {
 
-              /*var loadingProfile = $q.defer();
-              UsersApiClient.show()
+              var session = SessionManager.getCurrentSession();
+
+              var loadingProfile = $q.defer();
+              UsersApiClient.show(session.userId)
                 .then(function(rawApiResponse) {
                   var deserializedProfile = {};
                   logger.test(['PServices.ProfileLoader.loadProfile -- loading the profile data', rawApiResponse]);
                   loadingProfile.resolve(rawApiResponse);
                 })
                 .catch(function() {
-                    loadingProfileFeed.resolve(false);
+                  logger.test
+                    loadingProfile.resolve(false);
                 });
 
-                return loadingProfile.promise*/
+                return loadingProfile.promise;
 
             }
 
