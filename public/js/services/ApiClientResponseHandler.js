@@ -104,6 +104,10 @@
             }
 
             return new deserializedCreator(ApiClientResponseObject);
+
+          },
+
+          deserializeUser : function(ApiClientResponseObject) {
             
           }
         }

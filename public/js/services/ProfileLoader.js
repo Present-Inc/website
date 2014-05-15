@@ -14,9 +14,9 @@ define(['./module'], function(PServices) {
      *   @dependency {Present} Session Manager
      */
 
-     return PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'SessionManager',
+     return PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'SessionManager',
 
-       function($q, logger, UsersApiClient, SessionManager) {
+       function($q, logger, UsersApiClient, ApiClientResponseHandler, SessionManager) {
          return {
 
            /**
