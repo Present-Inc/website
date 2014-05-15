@@ -43,7 +43,7 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
            },
            resolve: {
              Feed : ['$stateParams', 'DiscoverService', function($stateParams, DiscoverService) {
-                  return DiscoverService.loadFeed($stateParams.user);
+                  return DiscoverService.loadFeed();
              }],
              Transition : ['Utilities', function(Utilities){
                  return Utilities.transitionComplete(1200);

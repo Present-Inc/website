@@ -172,11 +172,11 @@ header { overflow: hidden; background-color: #a566ff; }
 #home .copy .discoverBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
 @media (max-width: 960px) { #home .copy .discoverBtn { display: none; } }
 #home .copy .downloadBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
-#home footer { color: #c4c4c4; text-align: center; font-size: 11px; height: 80px; }
+#home footer { color: #47525d; text-align: center; font-size: 11px; height: 80px; }
 #home footer .copyright { display: inline-block; margin: 10px; }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
 @media (max-width: 960px) { #home footer .footerNav { width: 100%; } }
-#home footer a { color: #c4c4c4; margin: 0px 15px 0px 20px; }
+#home footer a { color: #47525d; margin: 0px 15px 0px 20px; }
 #home footer a:hover { color: #33aaff; }
 #home footer img { vertical-align: middle; margin: 0px 0px 0px 15px; }
 #home footer .mixpanel { height: 20px; }

@@ -18,30 +18,21 @@ PresentWebApp.config([
       url: '/',
       templateUrl: '/views/home',
       controller: 'homeCtrl',
+      data: {
+        navigation: false,
+        fullsreen: true
+      },
       resolve: {
-        Images: [
-          'Utilities',
-          function (Utilities) {
-            var images = ['http://10.61.32.61:8000/assets/img/left-frame-bg.jpg'];
-            return Utilities.preloadImages(images);
+        AppScreens: [
+          'HomeService',
+          function (HomeService) {
+            return HomeService.preloadPhoneScreens();
           }
         ],
         Transition: [
           'Utilities',
           function (Utilities) {
-            return Utilities.transitionComplete(1600);
-          }
-        ]
-      }
-    }).state('download', {
-      url: '/download',
-      templateUrl: '/views/download',
-      controller: 'downloadCtrl',
-      resolve: {
-        Transition: [
-          'Utilities',
-          function (Utilities) {
-            return Utilities.transitionComplete(1200);
+            return Utilities.transitionComplete(1000);
           }
         ]
       }
@@ -49,10 +40,15 @@ PresentWebApp.config([
       url: '/discover',
       templateUrl: '/views/discover',
       controller: 'discoverCtrl',
+      data: {
+        navigation: true,
+        fullsreen: false
+      },
       resolve: {
         Feed: [
+          '$stateParams',
           'DiscoverService',
-          function (DiscoverService) {
+          function ($stateParams, DiscoverService) {
             return DiscoverService.loadFeed();
           }
         ],
@@ -67,6 +63,10 @@ PresentWebApp.config([
       url: '/:user',
       templateUrl: '/views/profile',
       controller: 'profileCtrl',
+      data: {
+        navigation: true,
+        fullsreen: false
+      },
       resolve: {
         Feed: [
           '$stateParams',
@@ -94,6 +94,10 @@ PresentWebApp.config([
       url: '/:user/p/:video',
       templateUrl: '/views/profile',
       controller: 'individualPresentCtrl',
+      data: {
+        navigation: true,
+        fullsreen: true
+      },
       resolve: {
         Feed: [
           '$stateParams',
@@ -120,6 +124,10 @@ PresentWebApp.config([
       url: '/account/:user/confirm?email_confirmation_token',
       templateUrl: '/views/emailVerification',
       controller: 'verificationCtrl',
+      data: {
+        navigation: false,
+        fullsreen: true
+      },
       resolve: {
         ConfirmMessage: [
           '$stateParams',
@@ -133,6 +141,10 @@ PresentWebApp.config([
       url: '/account/:user/reset_password?password_reset_token',
       templateUrl: '/views/resetPassword',
       controller: 'resetPasswordCtrl',
+      data: {
+        navigation: false,
+        fullsreen: true
+      },
       resolve: {
         ValidParams: [
           '$stateParams',
@@ -140,6 +152,19 @@ PresentWebApp.config([
           function ($stateParams, Utilities) {
             var params = [$stateParams.password_reset_token];
             return Utilities.checkParams(params);
+          }
+        ],
+        Profile: [
+          '$stateParams',
+          'ProfileService',
+          function ($stateParams, ProfileService) {
+            return ProfileService.loadProfile(null, $stateParams.user);
+          }
+        ],
+        Transition: [
+          'Utilities',
+          function (Utilities) {
+            return Utilities.transitionComplete(600);
           }
         ]
       }
@@ -162,8 +187,12 @@ pControllers.controller('mainCtrl', [
   function ($scope) {
     $scope.message = 'Welcome to Present';
     $scope.app = {
+      isReady: false,
       viewAnimation: 'a-fade',
-      isReady: false
+      style: { size: 'fullscreen' },
+      fullscreen: true,
+      navigation: true,
+      downloadModal: false
     };
     $scope.$on('$stateChangeStart', function () {
       $scope.app.isReady = false;
@@ -171,13 +200,54 @@ pControllers.controller('mainCtrl', [
     $scope.$on('$stateChangeSuccess', function () {
       $scope.app.isReady = true;
     });
+    $scope.showModal = function () {
+      $scope.app.downloadModal = true;
+    };
+  }
+]);
+pControllers.controller('downloadModalCtrl', [
+  '$scope',
+  'TextMessageService',
+  function ($scope, TextMessageService) {
+    $scope.phoneNumber = '+1';
+    $scope.feedbackMessage = 'Message and data rates may apply';
+    $scope.sendDownloadLink = function () {
+      console.log('Sending link...');
+      TextMessageService.sendTextMessage($scope.phoneNumber).then(function () {
+        $scope.feedbackMessage = 'Success! The message has been sent.';
+      }).catch(function () {
+        $scope.feedbackMessage = $scope.phoneNumber + ' is not valid';
+      });
+    };
   }
 ]);
 pControllers.controller('homeCtrl', [
   '$scope',
-  function ($scope) {
-    $scope.message = 'Discover the present';
-    $scope.app.viewAnimation = 'a-fade';
+  '$interval',
+  '$timeout',
+  'AppScreens',
+  function ($scope, $interval, $timeout, AppScreens) {
+    $scope.images = AppScreens;
+    $scope.app.fullscreen = true;
+    $scope.viewer = {
+      changing: false,
+      key: 0,
+      source: $scope.images[0]
+    };
+    $interval(function () {
+      $scope.rotateScreens();
+    }, 5000);
+    $scope.rotateScreens = function () {
+      $scope.viewer.changing = true;
+      if ($scope.viewer.key == $scope.images.length) {
+        $scope.viewer.key = 0;
+      } else
+        $scope.viewer.key++;
+      $timeout(function () {
+        $scope.viewer.source = $scope.images[$scope.viewer.key];
+        $scope.viewer.changing = false;
+      }, 1000);
+    };
   }
 ]);
 pControllers.controller('discoverCtrl', [
@@ -186,7 +256,7 @@ pControllers.controller('discoverCtrl', [
   'Feed',
   'DiscoverService',
   function ($scope, $timeout, Feed, DiscoverService) {
-    $scope.app.viewAnimation = 'a-fade';
+    $scope.app.fullscreen = false;
     $scope.feedManager = {
       active: null,
       presents: Feed.videos,
@@ -226,7 +296,7 @@ pControllers.controller('profileCtrl', [
   'Profile',
   'ProfileService',
   function ($scope, $timeout, Feed, Profile, ProfileService) {
-    $scope.app.viewAnimation = 'a-fade';
+    $scope.app.fullscreen = false;
     console.log('Profile Controllers');
     $scope.user = Profile;
     $scope.alternateLayout = {};
@@ -245,16 +315,11 @@ pControllers.controller('profileCtrl', [
       needsRefreshed: false,
       refreshLimit: 1
     };
-    $scope.feedManager.presents.map(function (present) {
-      present.creator.username = $scope.user.username;
-    });
     $scope.loadMoreVideos = function () {
       $scope.feedManager.isLoading = true;
       console.log('Loading more videos...');
       ProfileService.loadFeed($scope.user.username, $scope.feedManager.cursor).then(function (newFeed) {
-        newFeed.videos.map(function (video) {
-          video.creator.username = $scope.user.username;
-        });
+        $scope.mapProfileData(newFeed.videos);
         $scope.feedManager.cursor = newFeed.cursor;
         console.log('Next Cursor: ' + $scope.feedManager.cursor);
         $timeout(function () {
@@ -268,6 +333,18 @@ pControllers.controller('profileCtrl', [
       $scope.feedManager.presents = [];
       $scope.loadMoreVideos();
     };
+    $scope.mapProfileData = function (presents) {
+      presents.map(function (present) {
+        present.creator.profilePicture.url = $scope.user.profilePicture.url;
+        if ($scope.user.fullName) {
+          present.creator.displayName = $scope.user.fullName;
+        } else {
+          present.creator.displayName = $scope.user.username;
+        }
+        present.creator.username = $scope.user.username;
+      });
+    };
+    $scope.mapProfileData($scope.feedManager.presents);
   }
 ]);
 pControllers.controller('individualPresentCtrl', [
@@ -276,7 +353,7 @@ pControllers.controller('individualPresentCtrl', [
   'Profile',
   'ProfileService',
   function ($scope, Feed, Profile, ProfileService) {
-    $scope.app.viewAnimation = 'a-fade';
+    $scope.app.fullscreen = true;
     $scope.user = Profile;
     $scope.feedManager = {
       active: null,
@@ -288,8 +365,6 @@ pControllers.controller('individualPresentCtrl', [
     };
   }
 ]);
-pControllers.controller('downloadCtrl', [function ($scope) {
-  }]);
 pControllers.controller('verificationCtrl', [
   '$scope',
   'ConfirmMessage',
@@ -301,16 +376,21 @@ pControllers.controller('resetPasswordCtrl', [
   '$scope',
   '$stateParams',
   'ValidParams',
+  'Profile',
   'AccountService',
-  function ($scope, $stateParams, ValidParams, AccountService) {
+  function ($scope, $stateParams, ValidParams, Profile, AccountService) {
+    $scope.app.fullscreen = true;
+    $scope.app.navigation = false;
+    console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
-    $scope.minLength = 3;
+    $scope.minLength = 5;
     $scope.error = {
       message: '',
       type: ''
     };
     $scope.userInput = {
+      username: Profile.username,
       password: '',
       confirmation: '',
       valid: false
@@ -318,7 +398,7 @@ pControllers.controller('resetPasswordCtrl', [
     $scope.checkPassword = function () {
       if ($scope.userInput.password == $scope.userInput.confirmation) {
         if ($scope.userInput.password.length < $scope.minLength) {
-          $scope.error.message = 'Password must be at least 4 characters';
+          $scope.error.message = 'Password must be at least 5 characters';
           $scope.error.type = 'short';
         } else if ($scope.userInput.password.length > $scope.maxLength) {
           $scope.error.message = 'Password cannot be more than 120 characters';
@@ -334,7 +414,6 @@ pControllers.controller('resetPasswordCtrl', [
       }
     };
     $scope.sendPassword = function () {
-      console.log('resetting password');
       if ($scope.error.type == 'mismatch') {
         $scope.error.message = 'Passwords do not match';
       }
@@ -346,6 +425,8 @@ pControllers.controller('resetPasswordCtrl', [
           else {
             $scope.error.message = 'We could not reset your password. Please contact support@present.tv';
           }
+        }).catch(function (errorMessage) {
+          $scope.error.message = errorMessage;
         });
       }
     };
@@ -353,67 +434,60 @@ pControllers.controller('resetPasswordCtrl', [
 ]);
 ;
 ;
-var pDirectives = angular.module('p.directives', ['ngAnimate']);
+var pDirectives = angular.module('p.directives', [
+    'ngAnimate',
+    'ui.router'
+  ]);
 pDirectives.directive('viewContainer', [
   '$animate',
   '$window',
+  '$location',
   '$anchorScroll',
-  function ($animate, $window, $anchorScroll) {
+  '$timeout',
+  function ($animate, $window, $location, $anchorScroll) {
     return {
       restrict: 'EA',
       scope: false,
       link: function (scope, element, attrs) {
-        scope.$on('$stateChangeSuccess', function () {
-          $animate.addClass(element, 'dl-enter', function () {
+        scope.$on('$stateChangeSuccess', function (event, toState, fromState) {
+          $animate.addClass(element, 'view-enter', function () {
           });
         });
-        scope.$on('$stateChangeStart', function () {
-          $animate.addClass(element, 'dl-leave', function () {
+        scope.$on('$stateChangeStart', function (event, toState, fromState) {
+          if (toState.data.navigation) {
+            scope.app.navigation = true;
+          } else
+            scope.app.navigation = false;
+          if (toState.data.fullscreen)
+            scope.app.fullscreen = true;
+          else
+            scope.app.fullscreen = false;
+          $animate.addClass(element, 'view-leave', function () {
             $window.scrollTo(0, 0);
           });
         });
-      }
-    };
-  }
-]);
-pDirectives.directive('blockScroll', [
-  '$window',
-  '$anchorScroll',
-  '$state',
-  function ($window, $anchorScroll, $state) {
-    return {
-      restrict: 'EA',
-      link: function (scope, element, attrs) {
         angular.element($window).bind('scroll', function () {
-          if ($state.current.name == 'home') {
-            $anchorScroll();
+          var screenWidth = $window.innerWidth;
+          if (scope.app.fullscreen && screenWidth > 960) {
+            $anchorScroll(null);
           }
+        });
+        element.bind('click', function (event) {
+          var targetElem = angular.element(event.target);
+          var targetClass = targetElem.attr('class');
+          if (targetClass == 'downloadBtn') {
+            scope.app.downloadModal = true;
+          } else {
+            scope.app.downloadModal = false;
+          }
+          scope.$apply();
         });
       }
     };
   }
 ]);
-pDirectives.directive('banner', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: '/views/partials/banner',
-    replace: true
-  };
-});
-pDirectives.directive('presentUser', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'views/partials/presentUser',
-    replace: true
-  };
-});
-pDirectives.directive('presentVideo', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'views/partials/presentVideo',
-    replace: true
-  };
-});
+/* FEED
+ ======================================= */
 pDirectives.directive('presentFeed', function () {
   return {
     restrict: 'EA',
@@ -429,20 +503,43 @@ pDirectives.directive('presentFeed', function () {
     ]
   };
 });
+pDirectives.directive('presentVideo', function () {
+  return {
+    restrict: 'EA',
+    templateUrl: 'views/partials/presentVideo',
+    replace: true,
+    controller: [
+      '$scope',
+      function ($scope) {
+        if ($scope.present.isLive) {
+          $scope.livePlayer = 'livePlayer';
+        } else
+          $scope.livePlayer = '';
+      }
+    ]
+  };
+});
 pDirectives.directive('jwplayer', function () {
   return {
     restrict: 'EA',
     scope: {
       media: '=',
+      islive: '=',
       videoid: '@'
     },
     require: '^presentFeed',
-    template: '<img class="playerPlaceholder a-fade" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
+    template: '<img class="playerPlaceholder a-fade-fast" ng-src="{{media.still}}" ng-hide="video.playerLoaded"/><div></div>',
     controller: [
       '$scope',
       function ($scope) {
+        if ($scope.isLive) {
+          $scope.activePlaylistUrl = $scope.media.live;
+        } else {
+          $scope.activePlaylistUrl = $scope.media.replay;
+        }
+        console.log($scope.activePlaylistUrl);
         $scope.setupProperties = {
-          file: $scope.media.replay,
+          file: $scope.activePlaylistUrl,
           image: $scope.media.still,
           width: '100%',
           height: '100%',
@@ -473,6 +570,11 @@ pDirectives.directive('jwplayer', function () {
         else
           return scope.video.state;
       };
+      /*scope.$on('$destroy', function() {
+                if(scope.video.state == 'playing' || scope.video.state == 'stopped') {
+                  jwplayer(scope.video_id).remove();
+                }
+            });*/
       playerElem.waypoint(function (direction) {
         if (direction == 'down') {
           feedManager.setActiveVideo(scope.video);
@@ -503,10 +605,7 @@ pDirectives.directive('jwplayer', function () {
             }
           }
         }
-      }, { offset: '50%' });
-      playerElem.bind('click', function () {
-        console.log('player element was clicked');
-      });
+      }, { offset: '80%' });
       scope.$on('activeVideoChanged', function (event, active) {
         scope.video.state = scope.checkState();
         if (active._id != scope.video._id && scope.video.state != 'destroyed') {
@@ -524,6 +623,8 @@ pDirectives.directive('jwplayer', function () {
     }
   };
 });
+/* ACCOUNT
+ ======================================= */
 pDirectives.directive('password', [function () {
     return {
       restrict: 'EA',
@@ -611,41 +712,21 @@ pServices.factory('VideosApiResource', [
     };
   }
 ]);
-pServices.factory('CommentsApiResource', [
-  '$http',
-  '$q',
-  function ($http, $q) {
-    return {
-      listVideoComments: function (videoId, apiSuccessCallback) {
-        var methodURL = protocol + developmentServer + '/v1/comments/list_video_comments';
-        var defer = $q.defer();
-        $http({
-          method: 'GET',
-          url: methodURL,
-          params: { video_id: videoId }
-        }).success(function (data, status, headers, config) {
-          defer.resolve(data);
-        }).error(function (data, status, headers, config) {
-          var errorMessage = 'ERROR in commentsService: API returned with response code: ' + status;
-          defer.reject(errorMessage);
-        });
-        return defer.promise;
-      }
-    };
-  }
-]);
 pServices.factory('UsersApiResource', [
   '$http',
   '$q',
   function ($http, $q) {
     return {
-      show: function (username) {
+      show: function (username, userId) {
         var defer = $q.defer();
         var methodUrl = protocol + developmentServer + '/v1/users/show';
         $http({
           method: 'GET',
           url: methodUrl,
-          params: { username: username }
+          params: {
+            username: username,
+            user_id: userId
+          }
         }).success(function (data, status, headers, config) {
           defer.resolve(data);
         }).error(function (data, status, headers, config) {
@@ -673,9 +754,6 @@ pServices.factory('UsersApiResource', [
         return defer.promise;
       },
       resetPassword: function (userId, token, password) {
-        console.log(userId);
-        console.log(token);
-        console.log(password);
         var defer = $q.defer();
         var methodUrl = protocol + developmentServer + '/v1/users/reset_password';
         $http({
@@ -690,7 +768,7 @@ pServices.factory('UsersApiResource', [
           defer.resolve(data);
         }).error(function (data, status, headers, config) {
           var errorMessage = 'ERROR in usersService: API returned with a response code: ' + status;
-          defer.reject(errorMessage);
+          defer.reject(data);
         });
         return defer.promise;
       }
@@ -715,9 +793,15 @@ pServices.factory('DiscoverService', [
           feed.cursor = VideosApiResponse.nextCursor;
           angular.forEach(VideosApiResponse.results, function (video, key) {
             var nextVideo = FeedDelegate.deserializeVideo(video.object);
-            feed.videos.push(nextVideo);
+            if (nextVideo.isAvailable) {
+              feed.videos.push(nextVideo);
+            }
           });
-          loadingFeed.resolve(feed);
+          return feed;
+        }).then(function (feed) {
+          FeedDelegate.preRenderFeed(feed).then(function () {
+            loadingFeed.resolve(feed);
+          });
         }).catch(function (error) {
           loadingFeed.reject(error);
         });
@@ -746,18 +830,24 @@ pServices.factory('ProfileService', [
           angular.forEach(VideosApiResponse.results, function (video, key) {
             feed.cursor = VideosApiResponse.nextCursor;
             var nextVideo = FeedDelegate.deserializeVideo(video.object);
-            feed.videos.push(nextVideo);
+            if (nextVideo.isAvailable) {
+              feed.videos.push(nextVideo);
+            }
           });
-          loadingFeed.resolve(feed);
+          return feed;
+        }).then(function (feed) {
+          FeedDelegate.preRenderFeed(feed).then(function () {
+            loadingFeed.resolve(feed);
+          });
         }).catch(function (error) {
           loadingFeed.reject(error);
         });
         return loadingFeed.promise;
       },
-      loadProfile: function (username) {
+      loadProfile: function (username, user_id) {
         var loadingProfile = $q.defer();
         var profile = {};
-        Users.show(username).then(function (UsersApiResponse) {
+        Users.show(username, user_id).then(function (UsersApiResponse) {
           profile = ProfileDelegate.deserializeProfile(UsersApiResponse.result.object);
           loadingProfile.resolve(profile);
         }).catch(function (error) {
@@ -783,40 +873,61 @@ pServices.factory('ProfileService', [
 ]);
 /*Feed Delegates
 ======================================= */
-pServices.factory('FeedDelegate', function () {
-  return {
-    deserializeVideo: function (video) {
-      var deserializedVideo = {};
-      deserializedVideo._id = video._id;
-      deserializedVideo.title = video.title;
-      deserializedVideo.mediaUrl = {
-        still: video.mediaUrls ? video.mediaUrls.images['480px'] : '',
-        live: video.mediaUrls ? video.mediaUrls.playlists.live.master : '',
-        replay: video.mediaUrls ? video.mediaUrls.playlists.replay.master : ''
-      };
-      deserializedVideo.creator = {
-        _id: video.creatorUser.object ? video.creatorUser.object._id : '',
-        username: video.creatorUser.object ? video.creatorUser.object.username : '',
-        profilePicture: video.creatorUser.object ? video.creatorUser.object.profile.picture : ''
-      };
-      deserializedVideo.likes = video.likes.count;
-      deserializedVideo.start = video.creationTimeRange.startDate;
-      deserializedVideo.end = video.creationTimeRange.endDate;
-      if (video.creationTimeRange.endDate) {
-        deserializedVideo.isLive = false;
-        deserializedVideo.timeAgo = Math.abs(new Date() - new Date(video.creationTimeRange.endDate));
-      } else {
-        deserializedVideo.isLive = true;
-        deserializedVideo.timeAgo = 'Present';
+pServices.factory('FeedDelegate', [
+  '$q',
+  '$interval',
+  function ($q, $interval) {
+    return {
+      deserializeVideo: function (video) {
+        var deserializedVideo = {};
+        deserializedVideo._id = video._id;
+        deserializedVideo.title = video.title;
+        deserializedVideo.isAvailable = video.isAvailable;
+        deserializedVideo.mediaUrl = {
+          still: video.mediaUrls ? video.mediaUrls.images['480px'] : '',
+          live: video.mediaUrls ? video.mediaUrls.playlists.live.master : '',
+          replay: video.mediaUrls ? video.mediaUrls.playlists.replay.master : ''
+        };
+        deserializedVideo.creator = {
+          _id: video.creatorUser.object ? video.creatorUser.object._id : '',
+          username: video.creatorUser.object ? video.creatorUser.object.username : '',
+          fullName: video.creatorUser.object ? video.creatorUser.object.profile.fullName : '',
+          profilePicture: video.creatorUser.object ? video.creatorUser.object.profile.picture : {}
+        };
+        deserializedVideo.likes = video.likes.count;
+        deserializedVideo.start = video.creationTimeRange.startDate;
+        deserializedVideo.end = video.creationTimeRange.endDate;
+        if (video.creationTimeRange.endDate) {
+          deserializedVideo.isLive = false;
+          deserializedVideo.timeAgo = moment(deserializedVideo.end).fromNow();
+        } else {
+          deserializedVideo.isLive = true;
+          deserializedVideo.timeAgo = 'Present';
+        }
+        if (deserializedVideo.creator.fullName) {
+          deserializedVideo.creator.displayName = deserializedVideo.creator.fullName;
+        } else {
+          deserializedVideo.creator.displayName = deserializedVideo.creator.username;
+        }
+        return deserializedVideo;
+      },
+      preRenderFeed: function (Feed) {
+        var promises = [];
+        angular.forEach(Feed.videos, function (source, key) {
+          var still = new Image();
+          still.src = source.mediaUrl.still;
+          var checkImageInterval = $interval(function () {
+              promises.push(checkImageInterval);
+              if (still.complete) {
+                $interval.cancel(checkImageInterval);
+              }
+            }, 100);
+        });
+        return $q.all(promises);
       }
-      deserializedVideo.comments = '';
-      return deserializedVideo;
-    },
-    deserializeComments: function (comments) {
-      return 'comments';
-    }
-  };
-});
+    };
+  }
+]);
 /* PROFILE DELEGATE
 ====================================*/
 pServices.factory('ProfileDelegate', function () {
@@ -839,6 +950,58 @@ pServices.factory('ProfileDelegate', function () {
     }
   };
 });
+/* HOME
+ * =============================================
+ */
+pServices.factory('HomeService', [
+  '$q',
+  function ($q) {
+    return {
+      preloadPhoneScreens: function () {
+        var promises = [];
+        var images = [
+            'assets/img/app-screen.png',
+            'http://placehold.it/250x361/8E03F5/FFF',
+            'http://placehold.it/250x361/CCCCCC/FFF'
+          ];
+        angular.forEach(images, function (source, key) {
+          var img = new Image();
+          img.src = source;
+        });
+        return images;
+      }
+    };
+  }
+]);
+/* DOWNLOAD LINK
+ * ===========================================
+ */
+pServices.factory('TextMessageService', [
+  '$http',
+  '$q',
+  function ($http, $q) {
+    return {
+      sendTextMessage: function (phoneNumber) {
+        var defer = $q.defer();
+        $http({
+          method: 'POST',
+          url: '/send_link/',
+          data: {
+            device: 'iphone',
+            number: phoneNumber
+          }
+        }).success(function (data, status, headers, config) {
+          defer.resolve();
+        }).error(function (data, status, headers, config) {
+          var errorMessage = 'ERROR in TextMessageService: API returned with a response code: ' + status;
+          console.log(errorMessage);
+          defer.reject();
+        });
+        return defer.promise;
+      }
+    };
+  }
+]);
 /* ACCOUNT
  * =============================================
  */
@@ -863,7 +1026,8 @@ pServices.factory('AccountService', [
         Users.resetPassword(userId, token, password).then(function () {
           defer.resolve(true);
         }).catch(function (error) {
-          defer.resolve(false);
+          console.log(error.result);
+          defer.reject(error.result);
         });
         return defer.promise;
       }
@@ -885,16 +1049,6 @@ pServices.factory('Utilities', [
         }, duration);
         return defer.promise;
       },
-      preloadImages: function (images) {
-        var defer = $q.defer();
-        console.log('preloading images');
-        angular.forEach(images, function (source, key) {
-          var img = new Image();
-          img.src = source;
-          defer.resolve();
-        });
-        return defer.promise;
-      },
       checkParams: function (params) {
         var defer = $q.defer();
         angular.forEach(params, function (param, key) {
@@ -903,31 +1057,6 @@ pServices.factory('Utilities', [
           } else if (key == params.length - 1) {
             defer.resolve(true);
           }
-        });
-        return defer.promise;
-      }
-    };
-  }
-]);
-/*
- * ABOUT
- * ===============================================
- */
-pServices.factory('TeamInfo', [
-  '$q',
-  '$http',
-  function ($q, $http) {
-    return {
-      getTeam: function () {
-        var methodURL = '/data/team.json';
-        var defer = $q.defer();
-        $http({
-          method: 'GET',
-          url: methodURL
-        }).success(function (data, status, headers, config) {
-          defer.resolve(data);
-        }).error(function (data, status, headers, config) {
-          defer.reject('Could\'t Load Data');
         });
         return defer.promise;
       }

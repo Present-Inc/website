@@ -13,11 +13,10 @@ function($animate, $window, $location, $anchorScroll) {
             });
 
             scope.$on('$stateChangeStart', function(event, toState, fromState) {
-                console.log(toState.data.navigation);
+
 
                 if(toState.data.navigation) {
                   scope.app.navigation = true;
-                  console.log('enabling navigation..');
                 }
                 else scope.app.navigation = false;
 
@@ -27,7 +26,7 @@ function($animate, $window, $location, $anchorScroll) {
                 $animate.addClass(element, 'view-leave', function(){
                     $window.scrollTo(0,0);
                 });
-                
+
             });
 
             angular.element($window).bind('scroll', function() {
