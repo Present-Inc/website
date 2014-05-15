@@ -184,7 +184,9 @@ PresentWebApp.run([
 var pControllers = angular.module('p.controllers', ['ngAnimate']);
 pControllers.controller('mainCtrl', [
   '$scope',
-  function ($scope) {
+  '$window',
+  '$location',
+  function ($scope, $window, $location) {
     $scope.message = 'Welcome to Present';
     $scope.app = {
       isReady: false,
@@ -199,6 +201,12 @@ pControllers.controller('mainCtrl', [
     });
     $scope.$on('$stateChangeSuccess', function () {
       $scope.app.isReady = true;
+      // Google Analytics Tracking
+      console.log($location.absUrl());
+      $window._gaq.push([
+        '_trackPageview',
+        $location.absUrl()
+      ]);
     });
     $scope.showModal = function () {
       $scope.app.downloadModal = true;
@@ -239,7 +247,7 @@ pControllers.controller('homeCtrl', [
     }, 5000);
     $scope.rotateScreens = function () {
       $scope.viewer.changing = true;
-      if ($scope.viewer.key == $scope.images.length) {
+      if ($scope.viewer.key == $scope.images.length - 1) {
         $scope.viewer.key = 0;
       } else
         $scope.viewer.key++;
@@ -960,9 +968,9 @@ pServices.factory('HomeService', [
       preloadPhoneScreens: function () {
         var promises = [];
         var images = [
-            'assets/img/app-screen.png',
-            'http://placehold.it/250x361/8E03F5/FFF',
-            'http://placehold.it/250x361/CCCCCC/FFF'
+            'assets/img/app-screen-2.png',
+            'assets/img/app-screen-1.png',
+            'assets/img/app-screen-3.png'
           ];
         angular.forEach(images, function (source, key) {
           var img = new Image();

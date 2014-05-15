@@ -2,7 +2,7 @@
 
 var pControllers = angular.module('p.controllers', ['ngAnimate']);
 
-pControllers.controller('mainCtrl', ['$scope', function($scope) {
+pControllers.controller('mainCtrl', ['$scope', '$window', '$location', function($scope, $window, $location) {
     $scope.message = 'Welcome to Present';
     $scope.app = {
         isReady : false,
@@ -21,6 +21,9 @@ pControllers.controller('mainCtrl', ['$scope', function($scope) {
 
     $scope.$on('$stateChangeSuccess', function() {
         $scope.app.isReady = true;
+        // Google Analytics Tracking
+        console.log($location.absUrl());
+        $window._gaq.push(['_trackPageview', $location.absUrl()]);
     });
 
     $scope.showModal = function() {
@@ -34,7 +37,7 @@ pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', fu
   $scope.feedbackMessage = 'Message and data rates may apply';
 
   $scope.sendDownloadLink = function() {
-    console.log('Sending link...');
+    console.log('Sending the Link');
     TextMessageService.sendTextMessage($scope.phoneNumber)
       .then(function(){
         $scope.feedbackMessage = 'Success! The message has been sent.';
@@ -48,6 +51,7 @@ pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', fu
 
 pControllers.controller('homeCtrl', ['$scope', '$interval', '$timeout', 'AppScreens',
 function($scope,  $interval, $timeout, AppScreens) {
+
     $scope.images = AppScreens;
     $scope.app.fullscreen = true;
 
@@ -64,9 +68,10 @@ function($scope,  $interval, $timeout, AppScreens) {
     $scope.rotateScreens = function() {
         $scope.viewer.changing = true;
 
-        if($scope.viewer.key ==  $scope.images.length) {
+        if($scope.viewer.key ==  $scope.images.length - 1) {
           $scope.viewer.key = 0;
         } else $scope.viewer.key++;
+
 
         $timeout(function() {
           $scope.viewer.source = $scope.images[$scope.viewer.key];
@@ -122,8 +127,6 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
 pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile', 'ProfileService',
     function($scope, $timeout, Feed, Profile, ProfileService) {
         $scope.app.fullscreen = false;
-
-        console.log('Profile Controllers');
 
         $scope.user = Profile;
         $scope.alternateLayout = {};

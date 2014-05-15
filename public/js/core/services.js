@@ -297,7 +297,7 @@ pServices.factory('ProfileDelegate', function() {
    return{
      preloadPhoneScreens: function() {
          var promises = [];
-         var images = ['assets/img/app-screen.png', 'http://placehold.it/250x361/8E03F5/FFF', 'http://placehold.it/250x361/CCCCCC/FFF'];
+         var images = ['assets/img/app-screen-2.png', 'assets/img/app-screen-1.png', 'assets/img/app-screen-3.png'];
          angular.forEach(images, function(source, key) {
              var img = new Image();
              img.src = source;
