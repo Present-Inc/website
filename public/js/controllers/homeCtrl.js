@@ -14,9 +14,9 @@ define(['./module'], function(PControllers) {
      *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
      */
 
-     return PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
+     return PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'ProfileLoader', 
 
-       function($scope, logger, FeedManager, homeFeed, profile) {
+       function($scope, logger, FeedManager, homeFeed, ProfileLoader) {
          //Check whether resolved dedpendencies resolved successfully
          if(!homeFeed) alert('Please log in to views the home feed!');
 
@@ -28,7 +28,6 @@ define(['./module'], function(PControllers) {
          $scope.FeedManager.cursor = homeFeed.cursor;
          $scope.FeedManager.videos = homeFeed.videos;
 
-         $scope.Profile = profile; 
 
          $scope.refreshFeed = function() {
            $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
@@ -37,6 +36,7 @@ define(['./module'], function(PControllers) {
                 $scope.FeedManager.cursor = newHomeFeed.cursor;
              })
          }
+
 
        }
 

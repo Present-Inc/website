@@ -108,8 +108,9 @@ define(['angular',
               navigation: true
             },
             resolve: {
-              profile : function(ProfileLoader) {
-                return ProfileLoader.loadProfile();
+              profile : function() {
+                return true;
+                //return ProfileLoader.loadProfile();
               },
               homeFeed : function(FeedLoader) {
                 return FeedLoader.loadHomeFeed();

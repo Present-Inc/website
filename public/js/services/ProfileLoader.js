@@ -2,17 +2,20 @@
  * ProfileLoader.js
  * Defines a RequireJS module the Profile Loader Services
  */
-define(['./module', function(PServices) {
+define(['./module'], function(PServices) {
 
     /**
      * PServices.ProfileLoader
      * Provides and interface to the VideosApiClient to the view controllers
      * Parses and prepares the results provided from the UserApiClient
+     *   @dependency {Angular} $q
+     *   @dependency {Utilities} logger
+     *   @dependency {Present} 
      */
 
-     return Pservices.factory('ProfileLoader', ['$q', 'logger', 'VidoesApiClient', 'ApiClientResponseHandler', 'SerssionManager',
+     return PServices.factory('ProfileLoader', ['$q', 'logger', 'VidoesApiClient', 'ApiClientResponseHandler', 'SessionManager',
 
-       function($q, logger, VidoesApiClient, ApiClientResponseHandler, SerssionManager) {
+       function($q, logger, VidoesApiClient, ApiClientResponseHandler, SessionManager) {
          return {
 
            /**
@@ -21,10 +24,11 @@ define(['./module', function(PServices) {
             */
 
             loadProfile : function() {
-              var loadingProfile = $q.defer();
+
+              /*var loadingProfile = $q.defer();
               UsersApiClient.show()
                 .then(function(rawApiResponse) {
-                  var deserializedProfile = {},
+                  var deserializedProfile = {};
                   logger.test(['PServices.ProfileLoader.loadProfile -- loading the profile data', rawApiResponse]);
                   loadingProfile.resolve(rawApiResponse);
                 })
@@ -32,15 +36,15 @@ define(['./module', function(PServices) {
                     loadingProfileFeed.resolve(false);
                 });
 
-                return loadingProfile.promise 
+                return loadingProfile.promise*/
 
             }
 
          }
        }
 
-     ])
+     ]);
 
 
 
-}]);
+});
