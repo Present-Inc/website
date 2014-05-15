@@ -32,6 +32,7 @@
         </div>
         <button class="refreshFeed"
              ng-show="!feedManager.isLoading"
+             ng-hide="feedManager.singleVideo"
              ng-click="refreshFeed()">
             Load More Videos
         </button>

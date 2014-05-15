@@ -326,7 +326,6 @@ pServices.factory('TextMessageService', ['$http', '$q', function($http, $q) {
         })
         .error(function(data, status, headers, config) {
             var errorMessage = 'ERROR in TextMessageService: API returned with a response code: ' + status;
-            console.log(errorMessage);
             defer.reject();
         });
         return defer.promise;
@@ -345,11 +344,9 @@ pServices.factory('AccountService', ['$q', 'UsersApiResource', function($q, User
             var defer = $q.defer();
             Users.confirmEmail(userId, token)
                 .then(function(data){
-                   console.log(data);
                    defer.resolve('Thank you! Your account is now verified');
                 })
                 .catch(function(error){
-                  console.log(error);
                     defer.resolve('Incorrect Account Information.');
                 });
             return defer.promise;
@@ -361,7 +358,6 @@ pServices.factory('AccountService', ['$q', 'UsersApiResource', function($q, User
                    defer.resolve(true);
                 })
                 .catch(function(error) {
-                   console.log(error.result);
                    defer.reject(error.result);
                 });
                 return defer.promise;

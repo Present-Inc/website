@@ -60,7 +60,6 @@ PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProv
             },
             resolve : {
                 Feed : ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {
-                    console.log($stateParams.user);
                     return ProfileService.loadFeed($stateParams.user);
                 }],
                 Profile : ['$stateParams', 'ProfileService', function($stateParams, ProfileService) {

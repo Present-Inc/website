@@ -22,7 +22,6 @@ pControllers.controller('mainCtrl', ['$scope', '$window', '$location', function(
     $scope.$on('$stateChangeSuccess', function() {
         $scope.app.isReady = true;
         // Google Analytics Tracking
-        console.log($location.absUrl());
         $window._gaq.push(['_trackPageview', $location.absUrl()]);
     });
 
@@ -37,7 +36,6 @@ pControllers.controller('downloadModalCtrl', ['$scope', 'TextMessageService', fu
   $scope.feedbackMessage = 'Message and data rates may apply';
 
   $scope.sendDownloadLink = function() {
-    console.log('Sending the Link');
     TextMessageService.sendTextMessage($scope.phoneNumber)
       .then(function(){
         $scope.feedbackMessage = 'Success! The message has been sent.';
@@ -195,7 +193,8 @@ pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', '
         cursor: null,
         isLoading : false,
         needsRefreshed : false,
-        refreshLimit: 1
+        refreshLimit: 1,
+        singleVideo : true
     };
 }]);
 
@@ -208,7 +207,6 @@ pControllers.controller('resetPasswordCtrl', ['$scope', '$stateParams', 'ValidPa
     function($scope, $stateParams, ValidParams, Profile, AccountService) {
     $scope.app.fullscreen = true;
     $scope.app.navigation = false;
-    console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
     $scope.minLength = 5;

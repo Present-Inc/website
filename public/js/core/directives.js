@@ -103,8 +103,6 @@ pDirectives.directive('jwplayer', function() {
               $scope.activePlaylistUrl = $scope.media.replay;
             }
 
-            console.log($scope.activePlaylistUrl);
-
             $scope.setupProperties = {
                 file : $scope.activePlaylistUrl,
                 image: $scope.media.still,

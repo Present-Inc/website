@@ -72,7 +72,6 @@ PresentWebApp.config([
           '$stateParams',
           'ProfileService',
           function ($stateParams, ProfileService) {
-            console.log($stateParams.user);
             return ProfileService.loadFeed($stateParams.user);
           }
         ],
@@ -202,7 +201,6 @@ pControllers.controller('mainCtrl', [
     $scope.$on('$stateChangeSuccess', function () {
       $scope.app.isReady = true;
       // Google Analytics Tracking
-      console.log($location.absUrl());
       $window._gaq.push([
         '_trackPageview',
         $location.absUrl()
@@ -220,7 +218,6 @@ pControllers.controller('downloadModalCtrl', [
     $scope.phoneNumber = '+1';
     $scope.feedbackMessage = 'Message and data rates may apply';
     $scope.sendDownloadLink = function () {
-      console.log('Sending link...');
       TextMessageService.sendTextMessage($scope.phoneNumber).then(function () {
         $scope.feedbackMessage = 'Success! The message has been sent.';
       }).catch(function () {
@@ -305,7 +302,6 @@ pControllers.controller('profileCtrl', [
   'ProfileService',
   function ($scope, $timeout, Feed, Profile, ProfileService) {
     $scope.app.fullscreen = false;
-    console.log('Profile Controllers');
     $scope.user = Profile;
     $scope.alternateLayout = {};
     if (!$scope.user.fullName) {
@@ -369,7 +365,8 @@ pControllers.controller('individualPresentCtrl', [
       cursor: null,
       isLoading: false,
       needsRefreshed: false,
-      refreshLimit: 1
+      refreshLimit: 1,
+      singleVideo: true
     };
   }
 ]);
@@ -389,7 +386,6 @@ pControllers.controller('resetPasswordCtrl', [
   function ($scope, $stateParams, ValidParams, Profile, AccountService) {
     $scope.app.fullscreen = true;
     $scope.app.navigation = false;
-    console.log(Profile.username);
     $scope.validRequest = ValidParams;
     $scope.maxLength = 128;
     $scope.minLength = 5;
@@ -545,7 +541,6 @@ pDirectives.directive('jwplayer', function () {
         } else {
           $scope.activePlaylistUrl = $scope.media.replay;
         }
-        console.log($scope.activePlaylistUrl);
         $scope.setupProperties = {
           file: $scope.activePlaylistUrl,
           image: $scope.media.still,
@@ -1002,7 +997,6 @@ pServices.factory('TextMessageService', [
           defer.resolve();
         }).error(function (data, status, headers, config) {
           var errorMessage = 'ERROR in TextMessageService: API returned with a response code: ' + status;
-          console.log(errorMessage);
           defer.reject();
         });
         return defer.promise;
@@ -1021,10 +1015,8 @@ pServices.factory('AccountService', [
       confirmEmail: function (userId, token) {
         var defer = $q.defer();
         Users.confirmEmail(userId, token).then(function (data) {
-          console.log(data);
           defer.resolve('Thank you! Your account is now verified');
         }).catch(function (error) {
-          console.log(error);
           defer.resolve('Incorrect Account Information.');
         });
         return defer.promise;
@@ -1034,7 +1026,6 @@ pServices.factory('AccountService', [
         Users.resetPassword(userId, token, password).then(function () {
           defer.resolve(true);
         }).catch(function (error) {
-          console.log(error.result);
           defer.reject(error.result);
         });
         return defer.promise;
