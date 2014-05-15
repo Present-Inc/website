@@ -31,7 +31,7 @@ body { background-color: #fff; font-weight: normal; }
 
 .loading img { height: 100%; width: 100%; }
 
-body { color: #47525d; font-family: "PresentFT", serif; font-size: 13px; }
+body { color: #47525d; font-family: "PresentFT", serif; font-size: 15px; }
 
 /* HEADINGS */
 h1 { font-family: "PresentFT", sans-serif; font-weight: 100; }
@@ -141,11 +141,11 @@ header { overflow: hidden; background-color: #a566ff; }
 .presentWrapper .creator { display: inline-block; width: 75%; float: left; margin: 0px 0px 10px 0px; }
 .presentWrapper .creator .profilePicture { float: left; height: 60px; width: 60px; margin: 0px 15px 10px 0px; vertical-align: middle; -webkit-border-radius: 30px; -moz-border-radius: 30px; -ms-border-radius: 30px; border-radius: 30px; }
 .presentWrapper .creator .displayName { color: #33aaff; display: block; margin: 0px 0px 0px 0px; font-size: 20px; font-weight: bold; }
-.presentWrapper .creator .username { color: #c4c4c4; display: inline; margin: 5px 0px 0px 0px; font-size: 13px; font-weight: 300; font-style: normal; }
+.presentWrapper .creator .username { color: #c4c4c4; display: inline; margin: 5px 0px 0px 0px; font-size: 15px; font-weight: 300; font-style: normal; }
 .presentWrapper .info { padding: 20px 0px 0px 0px; overflow: auto; }
-.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 13px; }
+.presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 15px; }
 @media (max-width: 500px) { .presentWrapper .timeAgo { width: 20%; margin: 0px 5px 0px 0px; } }
-.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 13px; }
+.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 15px; }
 @media (max-width: 500px) { .presentWrapper .title { width: 60%; } }
 .presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
@@ -172,7 +172,7 @@ header { overflow: hidden; background-color: #a566ff; }
 #home .copy .discoverBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
 @media (max-width: 960px) { #home .copy .discoverBtn { display: none; } }
 #home .copy .downloadBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
-#home footer { color: #47525d; text-align: center; font-size: 11px; height: 80px; }
+#home footer { color: #47525d; text-align: center; font-size: 12px; height: 80px; }
 #home footer .copyright { display: inline-block; margin: 10px; }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
 @media (max-width: 960px) { #home footer .footerNav { width: 100%; } }
@@ -224,7 +224,7 @@ header { overflow: hidden; background-color: #a566ff; }
 
 #downloadModal { position: fixed; top: 20%; height: 200px; width: 100%; background-color: rgba(240, 240, 240, 0.95); z-index: 10; }
 
-#downloadModal .content { width: 800px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 13px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 42% center; }
+#downloadModal .content { width: 800px; height: 160px; margin: 0 auto; padding: 50px 0px 0px 0px; color: #474747; font-weight: 600; font-size: 15px; text-transform: uppercase; text-align: center; background-image: url(/assets/img/divider.png); background-size: auto 60%; background-repeat: no-repeat; background-position: 42% center; }
 @media (max-width: 960px) { #downloadModal .content { width: 100%; background-image: none; } }
 #downloadModal .appStore { width: 300px; height: 100px; float: left; margin: 0px 20px 0px 0px; display: inline-block; }
 @media (max-width: 960px) { #downloadModal .appStore { width: 100%; } }
@@ -236,4 +236,4 @@ header { overflow: hidden; background-color: #a566ff; }
 #downloadModal .formContainer { height: 50px; width: 300px; margin: 0 auto; overflow: auto; }
 #downloadModal input[type="text"] { outline: none; display: inline-block; width: 180px; margin: 0px; float: left; }
 #downloadModal .submitBtn { float: left; height: 36px; width: 90px; margin: 0px 0px 0px 5px; vertical-align: top; font-weight: 300; }
-#downloadModal .feedbackMessage { text-transform: none; font-weight: 200; font-size: 12px; display: block; }
+#downloadModal .feedbackMessage { text-transform: none; font-weight: 300; font-size: 13px; letter-spacing: .5px; display: block; }
