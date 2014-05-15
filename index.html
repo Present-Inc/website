@@ -18,8 +18,8 @@
 
 <body class="fullscreen">
 
-    <nav id="mainNavigation" ng-show="ApplicationManager.navigation">
-      <button class="mainBtn">Log Out</button>
+    <nav id="mainNavigation" ng-controller="navCtrl" ng-show="ApplicationManager.navigation">
+      <button class="mainBtn" ng-click="logout()">Log Out</button>
     </nav>
 
     </div>

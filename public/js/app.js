@@ -69,8 +69,9 @@ define(['angular',
             templateUrl: 'views/splash',
             controller: 'splashCtrl',
             data: {
-              fullscreen: true,
-              navigation: false
+              fullscreenEnabled: true,
+              navigationEnabled: false,
+              requireSession: false
             }
           })
 
@@ -79,8 +80,9 @@ define(['angular',
             templateUrl: 'views/discover',
             controller: 'discoverCtrl',
             data: {
-              fullscreen: false,
-              navigation: true
+              fullscreenEnabled: false,
+              navigationEnabled: true,
+              requireSession: false,
             },
             resolve: {
               discoverFeed : function(FeedLoader) {
@@ -94,8 +96,9 @@ define(['angular',
             templateUrl: 'views/login',
             controller: 'loginCtrl',
             data: {
-              fullscreen: true,
-              navigation: false
+              fullscreenEnabled: true,
+              navigationEnabled: false,
+              requireSession: false,
             }
           })
 
@@ -104,12 +107,13 @@ define(['angular',
             templateUrl: 'views/home',
             controller: 'homeCtrl',
             data: {
-              fullscreen: false,
-              navigation: true
+              fullscreenEnabled: false,
+              navigationEnabled: true,
+              requireSession: true
             },
             resolve: {
               profile  : function(ProfileLoader) {
-                return ProfileLoader.loadProfile(); 
+                return ProfileLoader.loadProfile();
               },
 
               homeFeed : function(FeedLoader) {

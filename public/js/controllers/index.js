@@ -5,6 +5,7 @@
  */
 
 define(['./mainCtrl',
+        './navCtrl', 
         './splashCtrl',
         './loginCtrl',
         './homeCtrl',

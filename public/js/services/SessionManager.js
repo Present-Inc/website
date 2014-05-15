@@ -18,11 +18,12 @@
       function($q, localStorageService, logger, UserContextApiClient) {
 
         return {
+
           createNewSession : function(username, password) {
             var creatingSession = $q.defer();
             UserContextApiClient.createNewUserContext(username, password)
               .then(function(rawApiResponse) {
-                logger.test(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
+                logger.debug(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
                 localStorageService.set('sessionToken', rawApiResponse.result.object.sessionToken);
                 localStorageService.set('userId', rawApiResponse.result.object.user.object._id);
                 creatingSession.resolve();
@@ -37,9 +38,29 @@
             var session = {
               token : localStorageService.get('sessionToken'),
               userId: localStorageService.get('userId')
-            }
-
+            };
             return session;
+          },
+
+          destroyCurrentSession : function() {
+            var deletingSession = $q.defer();
+            var session = {
+              token : localStorageService.get('sessionToken'),
+              userId: localStorageService.get('userId')
+            };
+            logger.debug(['PServices.SessionManager.destroyCurrentSession -- destroying user session']);
+            UserContextApiClient.destroyUserContext(session)
+               .then(function() {
+                 localStorageService.clearAll();
+                 deletingSession.resolve();
+               })
+               .catch(function() {
+                 localStorageService.clearAll();
+                 logger.error(['PServices.SessionManager.destroyCurrentSession -- user context deletion failed, session data being deleted regardless']);
+                 deletingSession.resolve();
+               });
+
+            return deletingSession.promise;
           }
 
         }
@@ -47,4 +68,5 @@
       }
 
     ]);
+
  });

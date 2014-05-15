@@ -17,11 +17,15 @@ define(['./module'], function(PControllers) {
      return PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
 
        function($scope, logger, FeedManager, homeFeed, profile) {
-         //Check whether resolved dedpendencies resolved successfully
-         if(!homeFeed) alert('Please log in to views the home feed!');
 
-         logger.test(['PControllers.homeCtrl -- initializing Profile Data', profile]); 
+         //Check whether resolved dedpendencies resolved successfully
+         if(!homeFeed) alert('the home feed could not be loaded');
+
+         logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
          logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
+
+         //Initialize Profile
+         $scope.Profile = profile;
 
          //Initialize Feed Manager on the controller scope
          $scope.FeedManager = FeedManager;

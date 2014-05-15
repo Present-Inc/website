@@ -107,9 +107,27 @@
 
           },
 
-          deserializeUser : function(ApiClientResponseObject) {
-            
+          deserializeProfile : function(ApiClientResponseObject) {
+
+            function deserializedProfile(rawUserData) {
+              this._id = rawUserData._id;
+              this.username = rawUserData.username;
+              this.fullName = rawUserData.profile.fullName;
+              this.profilePicture = rawUserData.profile.picture.url;
+              this.description = rawUserData.profile.description;
+              this.counts = {
+                videos    : rawUserData.videos,
+                views     : rawUserData.views,
+                likes     : rawUserData.likes,
+                followers : rawUserData.followers,
+                friends   : rawUserData.friends
+              }
+            }
+
+            return new deserializedProfile(ApiClientResponseObject);
+
           }
+
         }
       }
 

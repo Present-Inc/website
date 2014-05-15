@@ -32,8 +32,9 @@ define(['./module'], function(PServices) {
               UsersApiClient.show(session.userId)
                 .then(function(rawApiResponse) {
                   var deserializedProfile = {};
-                  logger.test(['PServices.ProfileLoader.loadProfile -- loading the profile data', rawApiResponse]);
-                  loadingProfile.resolve(rawApiResponse);
+                  deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
+                  logger.test(['PServices.ProfileLoader.loadProfile -- loading the profile data', deserializedProfile]);
+                  loadingProfile.resolve(deserializedProfile);
                 })
                 .catch(function() {
                   logger.test
