@@ -1,6 +1,6 @@
 
-var accountSid = 'ACc40bb29c3e0fbcd68a7c93d069a66e39',
-    authToken = '1845d658d4a043de42317139382321e3';
+var accountSid = 'AC8e4eaedd245bfc56ada19e1a1f2595b8',
+    authToken = '2634f93c75b41875453b73c067f7155d';
 
 var client = require('twilio')(accountSid, authToken);
 
@@ -11,7 +11,7 @@ module.exports = {
         var link = 'https://itunes.apple.com/us/app/present-share-the-present/id813743986?mt=8'
         client.messages.create({
         	to: targetPhone,
-        	from: "+17248265155",
+        	from: "+12673295134",
         	body: link,
         }, function(error, success) {
         	 if (error)  res.send(400, error);
