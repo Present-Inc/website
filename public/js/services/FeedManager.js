@@ -8,11 +8,11 @@ define(['./module'], function(PServices) {
   /*
    * PServices.FeedManager
    * Provides properties and methods to manage the state of Video Feeds
-   *   @dependency {Present} Logger
+   *   @dependency {Present} logger
    *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
    */
 
-   return PServices.factory('FeedManager', ['Logger', 'FeedLoader', function(Logger, FeedLoader) {
+   return PServices.factory('FeedManager', ['logger', 'FeedLoader', function(logger, FeedLoader) {
 
          function FeedManager() {
            //Set default properties for the FeedManager
@@ -33,7 +33,7 @@ define(['./module'], function(PServices) {
            this.videos = [];
            this.isLoading = true;
 
-           Logger.test(['PServices.FeedManager -- refreshing feed' , feedType, cursor, username]);
+           logger.test(['PServices.FeedManager -- refreshing feed' , feedType, cursor, username]);
 
            if(feedType == 'discover') return FeedLoader.loadDiscoverFeed(cursor);
 
@@ -41,7 +41,7 @@ define(['./module'], function(PServices) {
 
            else if(feedType == 'profile') return FeedLoader.loadProfileFeed(cursor, username);
 
-           else  Logger.error('PServices.FeedManager -- no feed type provided');
+           else  logger.error('PServices.FeedManager -- no feed type provided');
 
          };
 

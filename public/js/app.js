@@ -18,29 +18,43 @@
 
 define(['angular',
         'ui-router',
+        'local-storage',
         'controllers/index',
         'services/index',
         'directives/index'], function(angular) {
 
-    var PresentWebApp = angular.module('PresentWebApp', ['ui.router', 'PControllers', 'PServices', 'PDirectives']);
+    var PresentWebApp = angular.module('PresentWebApp',
+      ['ui.router', 'LocalStorageModule', 'PControllers', 'PServices', 'PDirectives']);
 
-    /*
+    /**
      * PresentWebApp State Configureation
      * Define routes with ui-router's $stateProvider
      * @dependency {ui-router} $stateProvider
      * @dependency {Angular}   $locationProvider
      */
 
-    PresentWebApp.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
+    PresentWebApp.config(['$stateProvider', '$locationProvider', 'localStorageServiceProvider',
 
-      /*
+      function($stateProvider, $locationProvider, localStorageServiceProvider) {
+
+      /**
        * Enable client side routing by enabling the html5 history API
        * Removes the '#' from url's
        */
 
        $locationProvider.html5Mode(true);
 
-       /*
+
+       /**
+        * Configure localStorage
+        * Set the storage type to 'sessionStorage' and define a custom prefix
+        */
+
+        localStorageServiceProvider.setPrefix('present');
+
+        localStorageServiceProvider.setStorageType('sessionStorage');
+
+       /**
         * Configure Application states using ui router
         * State data -- sets properties of the applicationManageer
         *   @property <Boolean> fullscreen  -- when true  state is full screen (i.e doens't scroll)
@@ -87,11 +101,19 @@ define(['angular',
 
           .state('home', {
             url: '/home',
-            template: '<div>Home</div>',
+            templateUrl: 'views/home',
             controller: 'homeCtrl',
             data: {
               fullscreen: false,
               navigation: true
+            },
+            resolve: {
+              profile : function(ProfileLoader) {
+                return ProfileLoader.loadProfile();
+              },
+              homeFeed : function(FeedLoader) {
+                return FeedLoader.loadHomeFeed();
+              }
             }
           });
 

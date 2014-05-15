@@ -1,19 +1,19 @@
 /*
- * Logger.js
+ * logger.js
  * Defines a RequireJS Module for the Utilities Service
  */
 
 
-define(['./module'], function(PServices) {
+define(['./module'], function(PUtilities) {
 
-  /* PServices.DevLogger
-   * Configurable Logger for development
+  /* PUtilities.logger
+   * Configurable logger for development
    */
 
    var debugModeEnabled = true;
    var testModeEnabled  = true;
 
-   return PServices.factory('Logger', [function() {
+   return PUtilities.factory('logger', [function() {
     return {
       debug: function(content) {
         if(debugModeEnabled) {

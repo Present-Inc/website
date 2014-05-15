@@ -8,42 +8,43 @@
    /*
     * PServices.SessionManager
     *   @dependency {Angular} $q
-    *   @dependency {Present} Logger
+    *   @dependency {Present} logger -- configurable logger for development
     *   @dependency {Present} UserContextApiClient -- interacts directly with the User Contexts Api Client
     *   @dependency {Present} ApiClientResponseHandler -- handles the raw api response
     */
 
-    return PServices.factory('SessionManager', ['$q', 'Logger', 'UserContextApiClient', 'ApiClientResponseHandler',
+    return PServices.factory('SessionManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ApiClientResponseHandler',
 
-    function($q, Logger, UserContextApiClient) {
+      function($q, localStorageService, logger, UserContextApiClient) {
 
-      function SessionManager($q, Logger, UserContextApiClient, ApiClientResponseHandler) {
-        this.isLoggedIn = false,
-        this.userId = '',
-        this.sessionToken = ''
-      };
+        return {
+          createNewSession : function(username, password) {
+            var creatingSession = $q.defer();
+            UserContextApiClient.createNewUserContext(username, password)
+              .then(function(rawApiResponse) {
+                logger.test(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
+                localStorageService.set('sessionToken', rawApiResponse.result.object.sessionToken);
+                localStorageService.set('userId', rawApiResponse.result.object.user.object._id);
+                creatingSession.resolve();
+              })
+              .catch(function() {
+                creatingSession.reject();
+              });
+            return creatingSession.promise
+          },
 
-      SessionManager.prototype.createNewSession = function(username, password) {
-        var creatingSession = $q.defer();
-        UserContextApiClient.createNewUserContext(username, password)
-          .then(function(rawApiResponse) {
-            Logger.test(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
-            var deserializedUserSession = {
-              sessionToken : rawApiResponse.result.object.sessionToken,
-              sessionUserId : rawApiResponse.result.object.user.object._id
-            };
-            creatingSession.resolve(deserializedUserSession);
-          })
-          .catch(function() {
-            creatingSession.reject();
-          });
+          getCurrentSession : function() {
+            var session = {
+              token : localStorageService.get('sessionToken'),
+              userId: localStorageService.get('userId')
+            }
 
-        return creatingSession.promise
-      };
+            return session;
+          }
 
-      return new SessionManager;
+        }
 
-    }
+      }
 
     ]);
  });

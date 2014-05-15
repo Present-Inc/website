@@ -11,18 +11,15 @@ define(['./module'], function(PControllers) {
  * Acts as a buffer to the rootScope
  *   @dependency {Angular} $scope
  *   @dependency {Present} ApplicationManager
- *   @dependency {Present} SessionManager
  */
 
- return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager', 'SessionManager',
+ return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager',
 
-   function($scope, ApplicationManager, SessionManager) {
+   function($scope, ApplicationManager) {
 
      $scope.ApplicationManager = ApplicationManager;
-     $scope.SessionManager = SessionManager;
 
-
-     $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+     $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
 
       //Apply state data to the Application Manager on the stateChangeStart event
       if(toState.data.fullscreen)

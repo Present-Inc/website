@@ -1,5 +1,13 @@
+<!--
+|
+| index.html
+| Main HTML file for Present Web App
+|
+-->
+
 <!DOCTYPE html>
 <html ng-controller="mainCtrl" class="fullscreen">
+
 <head>
     <meta charset="utf-8">
     <base href="/">
@@ -7,7 +15,15 @@
     <title>Present -- Share the Present</title>
     <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
 </head>
+
 <body class="fullscreen">
+
+    <nav id="mainNavigation" ng-show="ApplicationManager.navigation">
+      <button class="mainBtn">Log Out</button>
+    </nav>
+
+    </div>
+
     <div ui-view class="fullscreen">
         <!--INJECTED TEMPLATES GO HERE -->
     </div>

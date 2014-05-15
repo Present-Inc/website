@@ -8,12 +8,12 @@
    /*PServices.ApiClientResponseHandler
     * Handles the raw API responses from the ApiClients and constructs new objects
     * which are injected into the view controllers
-    *   @dependency {Present} Logger
+    *   @dependency {Present} logger
     */
 
-    PServices.factory('ApiClientResponseHandler', ['Logger',
+    PServices.factory('ApiClientResponseHandler', ['logger',
 
-      function(Logger) {
+      function(logger) {
         return {
 
           /* deserializeVideo
@@ -52,7 +52,7 @@
 
            }
 
-           //Logger.debug(['PServices.ApiClientResponseHandler -- deserializing new video', VideosApiClientResponse]);
+           //logger.debug(['PServices.ApiClientResponseHandler -- deserializing new video', VideosApiClientResponse]);
            return new deserializedVideo(ApiClientResponseObject);
          },
 
@@ -75,7 +75,7 @@
 
             var comments = [];
 
-            //Logger.debug(['PServices.ApiClientResponseHandler.deserializeComments -- raw comments object', ApiClientResponseObject]);
+            //logger.debug(['PServices.ApiClientResponseHandler.deserializeComments -- raw comments object', ApiClientResponseObject]);
             for(var i=0; i < ApiClientResponseObject.results.length; i++) {
               comments.push(new deserializedComment(ApiClientResponseObject.results[i].object));
             }

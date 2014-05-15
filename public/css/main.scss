@@ -21,13 +21,17 @@
 //Sets all sass variables and provides global styles
 @import 'core';
 
+//navbar.scss
+//Sets all styles for the main navigation
+@import 'navbar'; 
+
 //videoCell.scss
 //Sets all styles for the video cells
 @import 'videoCell';
 
 //login.scss
 //Sets all styles for the login page
-@import 'login'; 
+@import 'login';
 
 //splash.scss
 //Sets all styles for the splash view
@@ -36,3 +40,7 @@
 //discover.scss
 //Sets all styles for the discover view
 @import 'discover';
+
+//home.scss
+//Sets all styles for the discover view
+@import 'home';

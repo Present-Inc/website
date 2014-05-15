@@ -4,4 +4,4 @@
  * Combines all directices into one requireJS module to be injected into PresentWebApp
  */
 
-define(['./viewContainer'], function() {});
+define(['./viewContainer', './feed'], function() {});

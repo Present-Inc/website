@@ -3,27 +3,24 @@
  * Defines RequireJS module for discoverCtrl Controller
  */
 
-
 define(['./module'], function(PControllers) {
 
   /*
    * PControllers.discoverCtrl
-   * Controller for the discover state
+   * View Controller for the discover state
    *   @dependency {Angular} $scope
-   *   @dependency {Present} Logger   -- Configurable log for development
+   *   @dependency {Present} logger   -- Configurable log for development
    *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
    *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
-   *
-   *
    */
 
-  var discoverCtrl = PControllers.controller('discoverCtrl', ['$scope', 'Logger', 'FeedManager', 'discoverFeed',
+  return PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'discoverFeed',
 
-    function($scope, Logger, FeedManager, discoverFeed) {
+    function($scope, logger, FeedManager, discoverFeed) {
       //Check whether resolved dependencies resolved successfully
       if(!discoverFeed) alert('Sorry, it appears that the application has lost connection, please try again');
 
-      Logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', discoverFeed]);
+      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', discoverFeed]);
 
       //Initialize Feed Manager on the controller scope
       $scope.FeedManager = FeedManager;
