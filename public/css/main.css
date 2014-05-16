@@ -73,4 +73,5 @@ nav button { float: right; }
 #home { text-align: center; width: 960px; margin: 0 auto; padding: 0px 0px 20px 0px; }
 
 #home .feed { width: 480px; margin: 0 auto; }
+#home .profile { margin-bottom: 25px; }
 #home .loadMoreVidoes { display: block; margin: 0 auto; }

@@ -116,11 +116,11 @@
               this.profilePicture = rawUserData.profile.picture.url;
               this.description = rawUserData.profile.description;
               this.counts = {
-                videos    : rawUserData.videos,
-                views     : rawUserData.views,
-                likes     : rawUserData.likes,
-                followers : rawUserData.followers,
-                friends   : rawUserData.friends
+                videos    : rawUserData.videos.count,
+                views     : rawUserData.views.count,
+                likes     : rawUserData.likes.count,
+                followers : rawUserData.followers.count,
+                friends   : rawUserData.friends.count
               }
             }
 

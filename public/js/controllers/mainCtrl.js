@@ -24,14 +24,14 @@ define(['./module'], function(PControllers) {
 
       //Apply state data to the Application Manager on the stateChangeStart event
       if(toState.data.fullscreenEnabled)
-        $scope.ApplicationManager.fullscreenMode(true);
+        $scope.ApplicationManager.fullscreenEnabled = true;
       else
-        $scope.ApplicationManager.fullscreenMode(false);
+        $scope.ApplicationManager.fullscreenEnabled = false;
 
       if(toState.data.navigationEnabled)
-        $scope.ApplicationManager.navigationMode(true);
+        $scope.ApplicationManager.navigationEnabled = true;
       else
-        $scope.ApplicationManager.navigationMode(false);
+        $scope.ApplicationManager.navigationEnabled = false; 
      });
 
   }

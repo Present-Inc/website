@@ -3,6 +3,22 @@
 
   <h1>Home</h1>
 
+  <div class="profile">
+    <div ng-bind="Profile.fullName"></div>
+    <div ng-bind="Profile.username"></div>
+    <img ng-src="{{Profile.profilePicture}}" height="70px" width="70px"/>
+
+    <div class="counts">
+      <span ng-bind="Profile.counts.videos"></span>
+      <span ng-bind="Profile.counts.views"></span>
+      <span ng-bind="Profile.counts.likes"></span>
+      <span ng-bind="Profile.counts.followers"></span>
+      <span ng-bind="Profile.counts.friends"></span>
+    </div>
+
+    <div ng-bind="Profile.description"></div>
+  </div>
+
   <div feed class="feed"></div>
-  
+
 </div>

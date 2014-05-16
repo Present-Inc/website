@@ -1,3 +1,4 @@
+
 #home {
   text-align: center;
   width: 960px;
@@ -6,10 +7,14 @@
 }
 
 #home {
-  
+
   .feed {
     width: 480px;
     margin: 0 auto;
+  }
+
+  .profile {
+    margin-bottom: 25px;
   }
 
   .loadMoreVidoes {

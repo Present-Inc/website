@@ -11,24 +11,15 @@ define(['./module'], function(PServices) {
   * Only injected one per application, usually on the highest level scope
   */
 
-  return PServices.service('ApplicationManager', [function() {
+  return PServices.factory('ApplicationManager', [function() {
 
-    //define default application properties
-      this.fullscreen = false;
-      this.navigation = false;
-      this.status = 'Application is currently running';
+      function ApplicationManager() {
+        this.fullscreenEnabled = false;
+        this.navigation = false;
+        this.status = 'Application is currently running';
+      }
 
-      this.fullscreenMode = function(value) {
-        if(value)
-        this.fullscreen = value;
-        else return this.fullscreen;
-      };
-
-      this.navigationMode = function(value) {
-        if(value)
-        this.navigation = value;
-        else return this.navigationMode;
-      };
+      return new ApplicationManager();
 
   }]);
 
