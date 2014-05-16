@@ -115,6 +115,7 @@
               this.fullName = rawUserData.profile.fullName;
               this.profilePicture = rawUserData.profile.picture.url;
               this.description = rawUserData.profile.description;
+
               this.counts = {
                 videos    : rawUserData.videos.count,
                 views     : rawUserData.views.count,
@@ -122,6 +123,9 @@
                 followers : rawUserData.followers.count,
                 friends   : rawUserData.friends.count
               }
+
+              this.phoneNumber = rawUserData.phoneNumber ? rawUserData.phoneNumber : '';
+              this.email = rawUserData.email ? rawUserData.email : '';
             }
 
             return new deserializedProfile(ApiClientResponseObject);

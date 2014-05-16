@@ -19,6 +19,7 @@ define(['./module'], function(PServices) {
    return PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'SessionManager',
 
      function($q, logger, VideosApiClient, ApiClientResponseHandler, SessionManager) {
+
        return {
 
            /**

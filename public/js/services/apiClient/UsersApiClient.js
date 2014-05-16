@@ -45,7 +45,31 @@ define(['../module'], function(PServices) {
              })
 
              return sendingRequest.promise;
-         }
+         },
+
+        showMe: function(session) {
+         var sendingRequest = $q.defer();
+         var resourceUrl = ApiConfig.getAddress() + '/v1/users/show_me';
+
+         $http({
+          method: 'GET',
+          url: resourceUrl,
+          headers: {
+            'Present-User-Context-Session-Token' : session.token,
+            'Present-User-Context-User-Id': session.userId
+          }
+         })
+           .success(function(data, status, headers) {
+             logger.debug(['PServices.UsersApiClient.showMe -- http success block', status, data]);
+             sendingRequest.resolve(data);
+           })
+           .error(function (data, status, headers) {
+             logger.error(['PServices.UsersApiClient.showMe -- http error block', status, data]);
+             sendingRequest.reject(data);
+           })
+
+           return sendingRequest.promise;
+        }
 
       }
 

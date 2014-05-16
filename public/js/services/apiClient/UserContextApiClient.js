@@ -60,12 +60,12 @@ define(['../module'], function(PServices) {
               logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, headers]);
               sendingRequest.resolve();
             })
-            .error(function() {
+            .error(function(data, status, headers) {
               logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
               sendingRequest.reject();
             })
 
-            return sendingRequest.promise; 
+            return sendingRequest.promise;
           }
 
 

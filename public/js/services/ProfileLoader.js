@@ -17,6 +17,7 @@ define(['./module'], function(PServices) {
      return PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'SessionManager',
 
        function($q, logger, UsersApiClient, ApiClientResponseHandler, SessionManager) {
+
          return {
 
            /**
@@ -24,25 +25,46 @@ define(['./module'], function(PServices) {
             * Prepares the data from UserApiClient.show to be injected into the view controllers
             */
 
-            loadProfile : function() {
-
-              var session = SessionManager.getCurrentSession();
+            loadOwnProfile : function() {
 
               var loadingProfile = $q.defer();
-              UsersApiClient.show(session.userId)
+              var session = SessionManager.getCurrentSession();
+
+              if(session.token && session.userId) {
+                  UsersApiClient.showMe(session)
+                    .then(function(rawApiResponse) {
+                      var deserializedProfile = {};
+                      deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
+                      logger.test(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
+                      loadingProfile.resolve(deserializedProfile);
+                    })
+                    .catch(function() {
+                      loadingProfile.resolve(false);
+                    });
+              }
+
+              return loadingProfile.promise;
+
+            },
+
+            loadUserProfile : function(username) {
+
+              var loadingProfile = $q.defer();
+              var session = SessionManager.getCurrentSession();
+
+              UsersApiClient.show(username, session)
                 .then(function(rawApiResponse) {
                   var deserializedProfile = {};
                   deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-                  logger.test(['PServices.ProfileLoader.loadProfile -- loading the profile data', deserializedProfile]);
+                  logger.debug(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
                   loadingProfile.resolve(deserializedProfile);
                 })
                 .catch(function() {
-                  logger.test
-                    loadingProfile.resolve(false);
+                  loadingProfile.resolve(false);
                 });
 
-                return loadingProfile.promise;
-
+              return loadingProfile.promise;
+              
             }
 
          }

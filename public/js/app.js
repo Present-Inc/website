@@ -57,8 +57,8 @@ define(['angular',
        /**
         * Configure Application states using ui router
         * State data -- sets properties of the applicationManageer
-        *   @property <Boolean> fullscreen  -- when true  state is full screen (i.e doens't scroll)
-        *   @property <Boolean> navigation  -- when true navigation bar is visible
+        *   @property <Boolean> fullscreen  -- When true  state is full screen (i.e doens't scroll)
+        *   @property <Boolean> navigation  -- When true navigation bar is visible
         */
 
 
@@ -68,7 +68,7 @@ define(['angular',
             url: '/',
             templateUrl: 'views/splash',
             controller: 'splashCtrl',
-            data: {
+            metaData: {
               fullscreenEnabled: true,
               navigationEnabled: false,
               requireSession: false
@@ -79,7 +79,7 @@ define(['angular',
             url: '/discover',
             templateUrl: 'views/discover',
             controller: 'discoverCtrl',
-            data: {
+            metaData: {
               fullscreenEnabled: false,
               navigationEnabled: true,
               requireSession: false,
@@ -95,7 +95,7 @@ define(['angular',
             url: '/login',
             templateUrl: 'views/login',
             controller: 'loginCtrl',
-            data: {
+            metaData: {
               fullscreenEnabled: true,
               navigationEnabled: false,
               requireSession: false,
@@ -106,19 +106,18 @@ define(['angular',
             url: '/home',
             templateUrl: 'views/home',
             controller: 'homeCtrl',
-            data: {
+            metaData: {
               fullscreenEnabled: false,
               navigationEnabled: true,
               requireSession: true
             },
             resolve: {
               profile  : function(ProfileLoader) {
-                return ProfileLoader.loadProfile();
+                return ProfileLoader.loadOwnProfile();
               },
               homeFeed : function(FeedLoader) {
-                return FeedLoader.loadHomeFeed(); 
+                return FeedLoader.loadHomeFeed();
               }
-
             }
           });
 

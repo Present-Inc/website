@@ -25,7 +25,7 @@ define(['./module'], function(PControllers) {
     $scope.$on('$stateChangeStart', function(event, toState, fromState) {
 
       //Check to see if requested state requires a valid session
-      if(toState.data.requireSession) {
+      if(toState.metaData.requireSession) {
         var sessionIsValid = SessionManager.checkForValidSession();
         if(!sessionIsValid) {
           logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', sessionIsValid]);
@@ -39,10 +39,10 @@ define(['./module'], function(PControllers) {
     $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
 
       //Apply state data to the Application Manager on the stateChangeStart event
-      if(toState.data.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
+      if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
       else $scope.ApplicationManager.fullscreenEnabled = false;
 
-      if(toState.data.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
+      if(toState.metaData.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
       else $scope.ApplicationManager.navigationEnabled = false;
 
     });
