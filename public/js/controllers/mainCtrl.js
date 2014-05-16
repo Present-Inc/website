@@ -18,7 +18,7 @@ define(['./module'], function(PControllers) {
 
  return PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
 
-   function($scope, $location, logger, ApplicationManager, SessionManager) {
+  function($scope, $location, logger, ApplicationManager, SessionManager) {
 
     $scope.ApplicationManager = ApplicationManager;
 

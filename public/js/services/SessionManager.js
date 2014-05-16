@@ -20,7 +20,9 @@
         return {
 
           createNewSession : function(username, password) {
+
             var creatingSession = $q.defer();
+
             UserContextApiClient.createNewUserContext(username, password)
               .then(function(rawApiResponse) {
                 logger.debug(['PServices.SessionManager.login -- creating new session token'], rawApiResponse);
@@ -31,16 +33,22 @@
               .catch(function() {
                 creatingSession.reject();
               });
+
             return creatingSession.promise
+
           },
 
           destroyCurrentSession : function() {
+
             var deletingSession = $q.defer();
+
             var session = {
               token : localStorageService.get('sessionToken'),
               userId: localStorageService.get('userId')
             };
+
             logger.debug(['PServices.SessionManager.destroyCurrentSession -- destroying user session']);
+
             UserContextApiClient.destroyUserContext(session)
                .then(function() {
                  localStorageService.clearAll();
@@ -53,17 +61,22 @@
                });
 
             return deletingSession.promise;
+
           },
 
           getCurrentSession : function() {
+
             var session = {
               token : localStorageService.get('sessionToken'),
               userId: localStorageService.get('userId')
             };
+
             return session;
+
           },
 
           checkForValidSession : function() {
+
             var session = {
               token: localStorageService.get('sessionToken'),
               userId: localStorageService.get('userId')
@@ -74,7 +87,6 @@
 
             logger.test(['PServices.SessionManager -- checking for valid session', session]);
 
-            return true;
           }
 
         }

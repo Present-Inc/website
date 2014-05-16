@@ -26,26 +26,30 @@ define(['../module'], function(PServices) {
        */
       return {
 
-         show: function(userId) {
-           var sendingRequest = $q.defer();
-           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
+        show: function(userId, session) {
+          var sendingRequest = $q.defer();
+          var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
 
-           $http({
-             method: 'GET',
-             url: resourceUrl,
-             params: {user_id: userId}
+          $http({
+           method: 'GET',
+           url: resourceUrl,
+           params: {user_id: userId},
+           headers: {
+             'Present-User-Context-Session-Token' : session.token,
+             'Present-User-Context-User-Id': session.userId
+           }
+          })
+           .success(function(data, status, headers) {
+             logger.debug(['PServices.UsersApiClient.show -- http success block', status, data]);
+             sendingRequest.resolve(data);
            })
-             .success(function(data, status, headers) {
-               logger.debug(['PServices.UsersApiClient.show -- http success block', status, data]);
-               sendingRequest.resolve(data);
-             })
-             .error(function (data, status, headers) {
-               logger.error(['PServices.UsersApiClient.show -- http error block', status, data]);
-               sendingRequest.reject(data);
-             })
+           .error(function (data, status, headers) {
+             logger.error(['PServices.UsersApiClient.show -- http error block', status, data]);
+             sendingRequest.reject(data);
+           })
 
-             return sendingRequest.promise;
-         },
+          return sendingRequest.promise;
+       },
 
         showMe: function(session) {
          var sendingRequest = $q.defer();

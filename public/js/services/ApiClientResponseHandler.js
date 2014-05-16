@@ -5,10 +5,11 @@
 
  define(['./module'], function(PServices) {
 
-   /*PServices.ApiClientResponseHandler
+   /**
+    * PServices.ApiClientResponseHandler
     * Handles the raw API responses from the ApiClients and constructs new objects
     * which are injected into the view controllers
-    *   @dependency {Present} logger
+    *   @dependency {Present} logger -- configurable logger for development
     */
 
     PServices.factory('ApiClientResponseHandler', ['logger',
@@ -16,24 +17,25 @@
       function(logger) {
         return {
 
-          /* deserializeVideo
+          /**
+           * deserializeVideo
            * Deserialzes the raw api video response object
-           *   @params <Object> VideosApiClientResponse -- raw response object
+           *   @params <Object> VideosApiClientResponse -- Raw response object
            */
 
           deserializeVideo : function(ApiClientResponseObject) {
 
-           function deserializedVideo(rawVideoData) {
-             this._id = rawVideoData._id;
-             this.title = rawVideoData.title;
-             this.isAvailable = rawVideoData.isAvailable;
-             this.media = {
+            function deserializedVideo(rawVideoData) {
+              this._id = rawVideoData._id;
+              this.title = rawVideoData.title;
+              this.isAvailable = rawVideoData.isAvailable;
+              this.media = {
                still: rawVideoData.mediaUrls.images['480px'],
                replayPlaylist: rawVideoData.mediaUrls.playlists.replay.master
-             }
+            }
 
-             //Check to see if the video is live
-             if(!rawVideoData.creationTimeRange.endDate) {
+            //Check to see if the video is live
+            if(!rawVideoData.creationTimeRange.endDate) {
                this.isLive = true;
                this.media.livePlaylist = rawVideoData.mediaUrls.playlists.live.master;
                this.timeAgo = 'Present';
@@ -50,16 +52,18 @@
 
              this.comments = [];
 
-           }
+            }
 
-           //logger.debug(['PServices.ApiClientResponseHandler -- deserializing new video', VideosApiClientResponse]);
-           return new deserializedVideo(ApiClientResponseObject);
-         },
+            logger.debug(['PServices.ApiClientResponseHandler -- deserializing new video', ApiClientResponseObject]);
 
-         /* deserializeComments
-          * Deserialzes the raw api comments response object
-          *   @params <Object> ApiClientResponseObject -- raw response object
-          */
+            return new deserializedVideo(ApiClientResponseObject);
+          },
+
+          /**
+           * deserializeComments
+           * Deserialzes the raw api comments response object
+           *   @params <Object> ApiClientResponseObject -- Raw response object
+           */
 
           deserializeComments : function(ApiClientResponseObject) {
 
@@ -70,12 +74,12 @@
                 profilePicture: rawCommentsData.sourceUser.object.profile.picture.url
               };
               this.timeAgo = '5 min';
-
             }
 
             var comments = [];
 
-            //logger.debug(['PServices.ApiClientResponseHandler.deserializeComments -- raw comments object', ApiClientResponseObject]);
+            logger.debug(['PServices.ApiClientResponseHandler.deserializeComments -- raw comments object', ApiClientResponseObject]);
+
             for(var i=0; i < ApiClientResponseObject.results.length; i++) {
               comments.push(new deserializedComment(ApiClientResponseObject.results[i].object));
             }
@@ -84,9 +88,10 @@
 
           },
 
-          /* deserializeCreator
+          /**
+           * deserializeCreator
            * Deserialized the raw creator response object
-           * @params <Object> ApiClientResponseObject -- raw response object
+           *   @params <Object> ApiClientResponseObject -- Raw response object
            */
 
           deserializeCreator : function(ApiClientResponseObject) {
@@ -106,6 +111,12 @@
             return new deserializedCreator(ApiClientResponseObject);
 
           },
+
+          /**
+           * deserializeProfile
+           * Deserialized the raw profile response object
+           *   @params <Object> ApiClientResponseObject -- Raw response object
+           */
 
           deserializeProfile : function(ApiClientResponseObject) {
 

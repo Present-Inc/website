@@ -10,14 +10,18 @@ define(['./module'], function(PControllers) {
   * PControllers.splashController
   * Controller for splashing state
   *   @dependency {Angular} $scope
+  *   @dependency {Utilities} logger
   *   @dependency {Present} ApplicationManager
   */
 
-  return PControllers.controller('splashCtrl', ['$scope', 'ApplicationManager',
+  return PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
 
-    function($scope, ApplicationManager) {
+    function($scope, logger, ApplicationManager) {
+
+      logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
       $scope.message = 'Present!';
+
       $scope.staticContent = {
         title: "Present",
         appIcon: {
@@ -25,6 +29,7 @@ define(['./module'], function(PControllers) {
           alt: 'Present app icon'
         }
       };
+      
     }
 
   ]);

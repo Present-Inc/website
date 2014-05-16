@@ -20,12 +20,19 @@
 
         logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
+        $scope.Navbar = {
+          sessionMode : SessionManager.checkForValidSession()
+        };
+
+        $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+          $scope.Navbar.sessionMode = SessionManager.checkForValidSession();
+        });
+
         $scope.logout = function() {
           SessionManager.destroyCurrentSession()
             .then(function() {
                 $state.go('splash');
-            }); 
-
+            });
         }
 
       }
