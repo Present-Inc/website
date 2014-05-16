@@ -17,7 +17,7 @@ define(['./module'], function(PServices) {
         this.fullscreenEnabled = false;
         this.navigation = false;
         this.status = 'Application is currently running';
-      }
+      };
 
       return new ApplicationManager();
 

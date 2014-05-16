@@ -49,42 +49,51 @@ define(['./module'], function(PServices) {
 
                  })
                  .catch(function(rawApiResponse) {
-                   //controller is watching for false return value to display an error feedback message
+                   //TODO better error handling
                    loadingDiscoverFeed.resolve(false)
                  })
 
                return loadingDiscoverFeed.promise;
            },
 
-           /* loadHomeFeed
-            * Prepares the data from the UsersApiClient.listHomeVideos
+           /**
+            * loadHomeFeed
+            * Prepares the data from UsersApiClient.listHomeVideos
+            *   @params <Number> cursor -- video cursor provided to the API
             */
 
             loadHomeFeed : function(cursor) {
               var loadingHomeFeed = $q.defer();
               var currentSession = SessionManager.getCurrentSession();
-              VideosApiClient.listHomeVideos(currentSession, cursor)
-                .then(function(rawApiResponse) {
 
-                   var deserializedFeed = {
-                     cursor: rawApiResponse.nextCursor,
-                     videos: []
-                   };
+              if(currentSession.token && currentSession.userId) {
 
-                   for(var i=0; i < rawApiResponse.results.length; i++) {
-                     var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                     deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                     deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                     deserializedFeed.videos.push(deserializedVideo);
-                   };
+                VideosApiClient.listHomeVideos(currentSession, cursor)
+                  .then(function(rawApiResponse) {
 
-                   logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
-                   loadingHomeFeed.resolve(deserializedFeed);
+                     var deserializedFeed = {
+                       cursor: rawApiResponse.nextCursor,
+                       videos: []
+                     };
 
-                })
-                .catch(function(rawApiResponse) {
-                  loadingHomeFeed.resolve(false);
-                });
+                     for(var i=0; i < rawApiResponse.results.length; i++) {
+                       var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
+                       deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
+                       deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
+                       deserializedFeed.videos.push(deserializedVideo);
+                     };
+
+                     logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
+                     loadingHomeFeed.resolve(deserializedFeed);
+
+                  })
+                  .catch(function(rawApiResponse) {
+                    //TODO better error handling
+                    loadingHomeFeed.resolve(false);
+                  });
+
+              }
+              else loadingHomeFeed.resolve(false);
 
               return loadingHomeFeed.promise;
 

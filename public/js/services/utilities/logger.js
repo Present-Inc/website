@@ -1,12 +1,13 @@
-/*
+/**
  * logger.js
- * Defines a RequireJS Module for the Utilities Service
+ * Defines a RequireJS module for the logger utility
  */
 
 
-define(['./module'], function(PUtilities) {
+define(['../module'], function(PUtilities) {
 
-  /* PUtilities.logger
+  /** 
+   * PUtilities.logger
    * Configurable logger for development
    */
 

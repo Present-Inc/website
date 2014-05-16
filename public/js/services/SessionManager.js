@@ -34,14 +34,6 @@
             return creatingSession.promise
           },
 
-          getCurrentSession : function() {
-            var session = {
-              token : localStorageService.get('sessionToken'),
-              userId: localStorageService.get('userId')
-            };
-            return session;
-          },
-
           destroyCurrentSession : function() {
             var deletingSession = $q.defer();
             var session = {
@@ -61,6 +53,28 @@
                });
 
             return deletingSession.promise;
+          },
+
+          getCurrentSession : function() {
+            var session = {
+              token : localStorageService.get('sessionToken'),
+              userId: localStorageService.get('userId')
+            };
+            return session;
+          },
+
+          checkForValidSession : function() {
+            var session = {
+              token: localStorageService.get('sessionToken'),
+              userId: localStorageService.get('userId')
+            };
+
+            if(session.token && session.userId) return true
+            else return false;
+
+            logger.test(['PServices.SessionManager -- checking for valid session', session]);
+
+            return true;
           }
 
         }

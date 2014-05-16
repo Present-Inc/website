@@ -1,4 +1,4 @@
-/*
+/**
  * index.js
  * PServices
  * Combines all services into one requireJS module to be injected into PresentWebApp
@@ -9,9 +9,9 @@ define(['./ApplicationManager',
         './SessionManager',
         './FeedLoader',
         './ProfileLoader',
-        './logger',
         './ApiClientResponseHandler',
         './apiClient/VideosApiClient',
-        './apiClient/UsersApiClient', 
+        './apiClient/UsersApiClient',
         './apiClient/UserContextApiClient',
-        './apiClient/ApiClientConfig'], function() {});
+        './apiClient/ApiClientConfig',
+        './utilities/logger'], function() {});

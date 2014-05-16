@@ -5,34 +5,51 @@
 
 define(['./module'], function(PControllers) {
 
-/*
+/**
  * PControllers.mainCtrl
  * Highest level controller PresentWebApp
  * Acts as a buffer to the rootScope
  *   @dependency {Angular} $scope
+ *   @dependency {ui-router} $state
+ *   @dependency {Utilities} logger
  *   @dependency {Present} ApplicationManager -- Provides properties and methods to manage the application state
  *   @dependency {Present} SessionManager -- Provides methods to manage user sessions
  */
 
- return PControllers.controller('mainCtrl', ['$scope', 'ApplicationManager',
+ return PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
 
-   function($scope, ApplicationManager) {
+   function($scope, $location, logger, ApplicationManager, SessionManager) {
 
-     $scope.ApplicationManager = ApplicationManager;
+    $scope.ApplicationManager = ApplicationManager;
 
-     $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+    $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+
+      //Check to see if requested state requires a valid session
+      if(toState.data.requireSession) {
+        var sessionIsValid = SessionManager.checkForValidSession();
+        if(!sessionIsValid) {
+          logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', sessionIsValid]);
+          $location.path('/login');
+        }
+        else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', sessionIsValid]);
+      }
+
+    });
+
+    $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
 
       //Apply state data to the Application Manager on the stateChangeStart event
-      if(toState.data.fullscreenEnabled)
-        $scope.ApplicationManager.fullscreenEnabled = true;
-      else
-        $scope.ApplicationManager.fullscreenEnabled = false;
+      if(toState.data.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
+      else $scope.ApplicationManager.fullscreenEnabled = false;
 
-      if(toState.data.navigationEnabled)
-        $scope.ApplicationManager.navigationEnabled = true;
-      else
-        $scope.ApplicationManager.navigationEnabled = false; 
-     });
+      if(toState.data.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
+      else $scope.ApplicationManager.navigationEnabled = false;
+
+    });
+
+
+
+
 
   }
 

@@ -115,10 +115,10 @@ define(['angular',
               profile  : function(ProfileLoader) {
                 return ProfileLoader.loadProfile();
               },
-
               homeFeed : function(FeedLoader) {
-                return FeedLoader.loadHomeFeed();
+                return FeedLoader.loadHomeFeed(); 
               }
+
             }
           });
 

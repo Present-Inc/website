@@ -18,15 +18,18 @@ define(['../module'], function(PServices) {
    return PServices.factory('VideosApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
      function($http, $q, logger, ApiConfig) {
+
         return {
 
           /**
            * Sends a request to the list_brand_new_videos videos resouce
            * Handles success and error blocks then resolves the api response to the FeedLoader
            *   @param <Number> cursor -- active video cursor
+           *   @param <Object> session -- user session object for methods that require user context or
+           *                              respond with subjective meta data
            */
 
-          listBrandNewVideos: function(cursor) {
+          listBrandNewVideos: function(cursor, session) {
             var sendingRequest = $q.defer();
             var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
             $http({
@@ -44,7 +47,7 @@ define(['../module'], function(PServices) {
               });
 
             return sendingRequest.promise;
-          }, 
+          },
 
           /**
            * Sends a request to the list_home_videos videos resouce
