@@ -26,12 +26,12 @@ define(['./module'], function(PControllers) {
 
       //Check to see if requested state requires a valid session
       if(toState.metaData.requireSession) {
-        var sessionIsValid = SessionManager.checkForValidSession();
-        if(!sessionIsValid) {
-          logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', sessionIsValid]);
+        var session = SessionManager.getCurrentSession();
+        if(!session) {
+          logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', session]);
           $location.path('/login');
         }
-        else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', sessionIsValid]);
+        else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', session]);
       }
 
     });

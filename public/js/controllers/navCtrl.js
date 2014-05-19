@@ -21,11 +21,12 @@
         logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
         $scope.Navbar = {
-          sessionMode : SessionManager.checkForValidSession()
+          sessionMode : SessionManager.getCurrentSession()
         };
 
         $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-          $scope.Navbar.sessionMode = SessionManager.checkForValidSession();
+          $scope.Navbar.sessionMode = SessionManager.getCurrentSession();
+
         });
 
         $scope.logout = function() {

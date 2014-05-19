@@ -22,86 +22,89 @@ define(['./module'], function(PServices) {
 
        return {
 
-           /**
-            * loadDiscoverFeed
-            * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view controllers
-            *   @params <Number> cursor -- video cursor provided to the API
-            */
+          /**
+           * loadDiscoverFeed
+           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view controllers
+           *   @params <Number> cursor -- video cursor provided to the API
+           */
 
-           loadDiscoverFeed : function(cursor) {
-               var loadingDiscoverFeed = $q.defer();
-               VideosApiClient.listBrandNewVideos(cursor)
-                 .then(function(rawApiResponse) {
+          loadDiscoverFeed : function(cursor) {
 
-                   var deserializedFeed = {
-                     cursor: rawApiResponse.nextCursor,
-                     videos: []
-                   };
+            var loadingDiscoverFeed = $q.defer();
+            var currentSession = SessionManager.getCurrentSession();
 
-                   for(var i=0; i < rawApiResponse.results.length; i++) {
-                     var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                     deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                     deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                     deserializedFeed.videos.push(deserializedVideo);
-                   };
+            VideosApiClient.listBrandNewVideos(cursor, currentSession)
+              .then(function(rawApiResponse) {
 
-                   logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
-                   loadingDiscoverFeed.resolve(deserializedFeed);
+                var deserializedFeed = {
+                  cursor: rawApiResponse.nextCursor,
+                  videos: []
+                };
 
-                 })
-                 .catch(function(rawApiResponse) {
-                   //TODO better error handling
-                   loadingDiscoverFeed.resolve(false)
-                 })
+                for(var i=0; i < rawApiResponse.results.length; i++) {
+                  var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
+                  deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
+                  deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
+                  deserializedFeed.videos.push(deserializedVideo);
+                };
 
-               return loadingDiscoverFeed.promise;
-           },
+                logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
+                loadingDiscoverFeed.resolve(deserializedFeed);
 
-           /**
-            * loadHomeFeed
-            * Prepares the data from UsersApiClient.listHomeVideos
-            *   @params <Number> cursor -- video cursor provided to the API
-            */
+               })
+              .catch(function(rawApiResponse) {
+                //TODO better error handling
+                loadingDiscoverFeed.resolve(false)
+              });
 
-            loadHomeFeed : function(cursor) {
-              var loadingHomeFeed = $q.defer();
-              var currentSession = SessionManager.getCurrentSession();
+            return loadingDiscoverFeed.promise;
 
-              if(currentSession.token && currentSession.userId) {
+          },
 
-                VideosApiClient.listHomeVideos(currentSession, cursor)
-                  .then(function(rawApiResponse) {
+          /**
+           * loadHomeFeed
+           * Prepares the data from UsersApiClient.listHomeVideos
+           *   @params <Number> cursor -- video cursor provided to the API
+           */
 
-                     var deserializedFeed = {
-                       cursor: rawApiResponse.nextCursor,
-                       videos: []
-                     };
+          loadHomeFeed : function(cursor) {
+            var loadingHomeFeed = $q.defer();
+            var currentSession = SessionManager.getCurrentSession();
 
-                     for(var i=0; i < rawApiResponse.results.length; i++) {
-                       var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                       deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                       deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                       deserializedFeed.videos.push(deserializedVideo);
-                     };
+            if(currentSession.token && currentSession.userId) {
 
-                     logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
-                     loadingHomeFeed.resolve(deserializedFeed);
+              VideosApiClient.listHomeVideos(currentSession, cursor)
+                .then(function(rawApiResponse) {
 
-                  })
-                  .catch(function(rawApiResponse) {
-                    //TODO better error handling
-                    loadingHomeFeed.resolve(false);
-                  });
+                  var deserializedFeed = {
+                    cursor: rawApiResponse.nextCursor,
+                    videos: []
+                  };
 
-              }
-              else loadingHomeFeed.resolve(false);
+                  for(var i=0; i < rawApiResponse.results.length; i++) {
+                    var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
+                    deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
+                    deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
+                    deserializedFeed.videos.push(deserializedVideo);
+                  };
 
-              return loadingHomeFeed.promise;
+                  logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
+                  loadingHomeFeed.resolve(deserializedFeed);
 
-            }
-       }
-     }
+                })
+                .catch(function(rawApiResponse) {
+                  //TODO better error handling
+                  loadingHomeFeed.resolve(false);
+                });
 
-   ]);
+            } else loadingHomeFeed.resolve(false);
+
+            return loadingHomeFeed.promise;
+
+          }
+        }
+      }
+
+  ]);
 
 });
