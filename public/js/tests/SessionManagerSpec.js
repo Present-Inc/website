@@ -4,6 +4,8 @@
  */
 
 
+define(['SessionManager'])
+
   describe('SessionManager', function() {
 
     it('should work', function() {

@@ -29,7 +29,6 @@ module.exports = function(grunt) {
               tasks: ['sass']
           }
         }
-
     });
 
 
@@ -37,8 +36,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-requirejs');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('sass', ['watch:scss']);
-    grunt.registerTask('karma', ['karma']);
+    grunt.registerTask('run-sass', ['watch:scss']);
+    grunt.registerTask('run-karma', ['karma']);
 };

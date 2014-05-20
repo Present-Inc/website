@@ -6,13 +6,15 @@
 
 require.config({
 
+  baseUrl: '/base',
+
   //create aliases for library components
   paths: {
-    'domReady'        : '../components/requirejs-domready/domReady',
-    'angular'         : '../components/angular/angular',
-    'ui-router'       : '../components/angular-ui-router/release/angular-ui-router',
-    'local-storage'   : '../components/angular-local-storage/angular-local-storage',
-    'jquery'          : '../components/jquery/dist/jquery'
+    'domReady'        : '../../components/requirejs-domready/domReady',
+    'angular'         : '../../components/angular/angular',
+    'ui-router'       : '../../components/angular-ui-router/release/angular-ui-router',
+    'local-storage'   : '../../components/angular-local-storage/angular-local-storage',
+    'jquery'          : '../../components/jquery/dist/jquery'
   },
 
   //Place angular in a shim

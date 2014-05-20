@@ -6,30 +6,32 @@
 module.exports = function(config) {
   config.set({
 
-    /**
-     * Base Path
-     * Root of the working directory
-     */
-    basePath: '../../',
 
-    /**
-     * Framework -- Jasmine
-     */
-    frameworks: ['jasmine'],
 
     /**
      * Files to include in tests
      */
-    files: [
-      'tests/SessionManager.test.js'
-    ],
+
+    files = [
+      JASMINE,
+      JASMINE_ADAPTER,
+      REQUIRE,
+      REQUIRE_ADAPTER,
+
+      {pattern: 'public/components/**/*.js', included: false},
+      {pattern: 'public/js/**/*.js', included: false},
+      {pattern: 'public/tests/**/Spec*.js', included: false},
+
+      'tests/test-main.js'
+    ];
+
+    // list of files to exclude
+    exclude = ['public/js/main.js'];
 
     /**
      * Files to exlude in tests
      */
-    exclude: [
-
-    ],
+    exclude: [],
 
     /**
      * Reporter -- Progress
