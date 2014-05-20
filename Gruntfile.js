@@ -1,39 +1,12 @@
+/**
+ * Gruntfile.js
+ * Defines custom Grunt tasks for my workflow
+ */
+
 module.exports = function(grunt) {
+
     grunt.initConfig({
-
         pkg: grunt.file.readJSON('package.json'),
-
-        concat: {
-            options: {
-                separator: ';'
-            },
-            dist: {
-                src: ['public/js/core/*.js'],
-                dest: 'public/js/core/dist/<%= pkg.name %>.js'
-            }
-        },
-
-
-        ngmin: {
-            dist: {
-                src: ['<%= concat.dist.dest %>'],
-                dest: '<%= concat.dist.dest %>'
-            }
-        },
-
-
-        uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-            },
-            dist: {
-                files: {
-                    'public/js/core/dist/<%= pkg.name %>.min.js': ['<%= ngmin.dist.dest %>']
-                }
-            }
-        },
-
-
         sass: {
             dist: {
                 options: {
@@ -45,8 +18,11 @@ module.exports = function(grunt) {
                 }
             }
         },
-
-
+        karma: {
+          unit: {
+            configFile: 'tests/runner/karma.config.js'
+          }
+        },
         watch: {
           scss: {
               files: ['public/css/*.scss'],
@@ -54,16 +30,15 @@ module.exports = function(grunt) {
           }
         }
 
-
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
+
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('build', ['concat', 'ngmin', 'uglify']);
-    grunt.registerTask('watch-scss', ['watch:scss']);
+    grunt.registerTask('sass', ['watch:scss']);
+    grunt.registerTask('karma', ['karma']);
 };

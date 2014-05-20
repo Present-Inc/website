@@ -2,6 +2,5 @@
 node_modules/
 public/dist/
 Dockerfile
-tests/
 docs/
 .DS_Store
