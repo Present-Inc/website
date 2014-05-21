@@ -4,7 +4,7 @@
  */
 
 
-define(['SessionManager'])
+define(['SessionManager'], function() {
 
   describe('SessionManager', function() {
 
@@ -13,3 +13,6 @@ define(['SessionManager'])
     });
 
   });
+
+
+}
