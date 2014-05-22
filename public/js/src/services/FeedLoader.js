@@ -1,9 +1,3 @@
-/**
- * FeedLoader.js
- * Defines a RequireJS Module for the Feed Loader Service
- */
-
-define(['./module'], function(PServices) {
 
   /**
    * PServices.FeedLoader
@@ -16,7 +10,7 @@ define(['./module'], function(PServices) {
    *    @dependency {Present} SessionManager -- Manages the user session data
    */
 
-   return PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'SessionManager',
+  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'SessionManager',
 
      function($q, logger, VideosApiClient, ApiClientResponseHandler, SessionManager) {
 
@@ -107,5 +101,3 @@ define(['./module'], function(PServices) {
       }
 
   ]);
-
-});

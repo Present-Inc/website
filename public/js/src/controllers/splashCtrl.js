@@ -1,11 +1,3 @@
-/*
- * spashController.js
- * Defines requireJS module for SplashCtrl Controller
- *
- */
-
-define(['./module'], function(PControllers) {
-
  /*
   * PControllers.splashController
   * Controller for splashing state
@@ -14,7 +6,7 @@ define(['./module'], function(PControllers) {
   *   @dependency {Present} ApplicationManager
   */
 
-  return PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
+  PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
 
     function($scope, logger, ApplicationManager) {
 
@@ -29,9 +21,7 @@ define(['./module'], function(PControllers) {
           alt: 'Present app icon'
         }
       };
-      
+
     }
-
-  ]);
-
-});
+    
+  });

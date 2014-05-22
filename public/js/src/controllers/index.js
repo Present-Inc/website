@@ -1,12 +1,7 @@
 /*
- * index.js
+ * module.js
  * PControllers
- * Combines all controllers into one requireJS module to be injected into PresentWebApp
+ * AngularJS module in which controllers will be added to
  */
 
-define(['./mainCtrl',
-        './navCtrl', 
-        './splashCtrl',
-        './loginCtrl',
-        './homeCtrl',
-        './discoverCtrl'], function() {});
+  var PControllers = angular.module('PControllers', []);

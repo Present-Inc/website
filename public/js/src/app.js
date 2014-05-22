@@ -10,117 +10,108 @@
  * Initialize Angular Application
  *   @dependency {Angular}   Angular           -- It's AngularJS
  *   @dependency {ui-router} ui-router         -- Handles application state and view loading
- *   @dependency {Present}   controllers/index -- Module loader for all the applicaiton controllers
- *   @dependency {Present}   services/index    -- Module loader for all the application services
- *   @dependency {Present}   directives/index  -- Module loader for all the application directives
- *   @dependency {Present}   apiClient/index   -- Modle loader for all the application directives
+ *   @dependency {Present}   PControllers -- Module loader for all the applicaiton controllers
+ *   @dependency {Present}   PServices    -- Module loader for all the application services
+ *   @dependency {Present}   PDirectives  -- Module loader for all the application directives
  */
 
-define(['angular',
-        'ui-router',
-        'local-storage',
-        'controllers/index',
-        'services/index',
-        'directives/index'], function(angular) {
 
-    var PresentWebApp = angular.module('PresentWebApp',
-      ['ui.router', 'LocalStorageModule', 'PControllers', 'PServices', 'PDirectives']);
+var PresentWebApp = angular.module('PresentWebApp',
+  ['ui.router', 'LocalStorageModule', 'PControllers', 'PServices', 'PDirectives']);
 
-    /**
-     * PresentWebApp State Configureation
-     * Define routes with ui-router's $stateProvider
-     * @dependency {ui-router} $stateProvider
-     * @dependency {Angular}   $locationProvider
-     */
+/**
+ * PresentWebApp State Configureation
+ * Define routes with ui-router's $stateProvider
+ * @dependency {ui-router} $stateProvider
+ * @dependency {Angular}   $locationProvider
+ */
 
-    PresentWebApp.config(['$stateProvider', '$locationProvider', 'localStorageServiceProvider',
+PresentWebApp.config(['$stateProvider', '$locationProvider', 'localStorageServiceProvider',
 
-      function($stateProvider, $locationProvider, localStorageServiceProvider) {
+  function($stateProvider, $locationProvider, localStorageServiceProvider) {
 
-      /**
-       * Enable client side routing by enabling the html5 history API
-       * Removes the '#' from url's
-       */
+  /**
+   * Enable client side routing by enabling the html5 history API
+   * Removes the '#' from url's
+   */
 
-       $locationProvider.html5Mode(true);
+   $locationProvider.html5Mode(true);
 
 
-       /**
-        * Configure localStorage
-        * Set the storage type to 'sessionStorage' and define a custom prefix
-        */
+   /**
+    * Configure localStorage
+    * Set the storage type to 'sessionStorage' and define a custom prefix
+    */
 
-        localStorageServiceProvider.setPrefix('present');
+    localStorageServiceProvider.setPrefix('present');
 
-        localStorageServiceProvider.setStorageType('sessionStorage');
+    localStorageServiceProvider.setStorageType('sessionStorage');
 
-       /**
-        * Configure Application states using ui router
-        * State data -- sets properties of the applicationManageer
-        *   @property <Boolean> fullscreen  -- When true  state is full screen (i.e doens't scroll)
-        *   @property <Boolean> navigation  -- When true navigation bar is visible
-        */
+   /**
+    * Configure Application states using ui router
+    * State data -- sets properties of the applicationManageer
+    *   @property <Boolean> fullscreen  -- When true  state is full screen (i.e doens't scroll)
+    *   @property <Boolean> navigation  -- When true navigation bar is visible
+    */
 
 
-        $stateProvider
+    $stateProvider
 
-          .state('splash', {
-            url: '/',
-            templateUrl: 'views/splash',
-            controller: 'splashCtrl',
-            metaData: {
-              fullscreenEnabled: true,
-              navigationEnabled: false,
-              requireSession: false
-            }
-          })
+      .state('splash', {
+        url: '/',
+        templateUrl: 'views/splash',
+        controller: 'splashCtrl',
+        metaData: {
+          fullscreenEnabled: true,
+          navigationEnabled: false,
+          requireSession: false
+        }
+      })
 
-          .state('discover', {
-            url: '/discover',
-            templateUrl: 'views/discover',
-            controller: 'discoverCtrl',
-            metaData: {
-              fullscreenEnabled: false,
-              navigationEnabled: true,
-              requireSession: false,
-            },
-            resolve: {
-              discoverFeed : function(FeedLoader) {
-                return FeedLoader.loadDiscoverFeed();
-              }
-            }
-          })
+      .state('discover', {
+        url: '/discover',
+        templateUrl: 'views/discover',
+        controller: 'discoverCtrl',
+        metaData: {
+          fullscreenEnabled: false,
+          navigationEnabled: true,
+          requireSession: false,
+        },
+        resolve: {
+          discoverFeed : function(FeedLoader) {
+            return FeedLoader.loadDiscoverFeed();
+          }
+        }
+      })
 
-          .state('login', {
-            url: '/login',
-            templateUrl: 'views/login',
-            controller: 'loginCtrl',
-            metaData: {
-              fullscreenEnabled: true,
-              navigationEnabled: false,
-              requireSession: false,
-            }
-          })
+      .state('login', {
+        url: '/login',
+        templateUrl: 'views/login',
+        controller: 'loginCtrl',
+        metaData: {
+          fullscreenEnabled: true,
+          navigationEnabled: false,
+          requireSession: false,
+        }
+      })
 
-          .state('home', {
-            url: '/home',
-            templateUrl: 'views/home',
-            controller: 'homeCtrl',
-            metaData: {
-              fullscreenEnabled: false,
-              navigationEnabled: true,
-              requireSession: true
-            },
-            resolve: {
-              profile  : function(ProfileLoader) {
-                return ProfileLoader.loadOwnProfile();
-              },
-              homeFeed : function(FeedLoader) {
-                return FeedLoader.loadHomeFeed();
-              }
-            }
-          });
+      .state('home', {
+        url: '/home',
+        templateUrl: 'views/home',
+        controller: 'homeCtrl',
+        metaData: {
+          fullscreenEnabled: false,
+          navigationEnabled: true,
+          requireSession: true
+        },
+        resolve: {
+          profile  : function(ProfileLoader) {
+            return ProfileLoader.loadOwnProfile();
+          },
+          homeFeed : function(FeedLoader) {
+            return FeedLoader.loadHomeFeed();
+          }
+        }
+      });
 
-    }]);
-
-});
+}]);

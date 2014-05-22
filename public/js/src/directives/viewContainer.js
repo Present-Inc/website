@@ -1,20 +1,11 @@
-/*
- * viewContainer.js
- * Defines requireJS module for viewContainer Directive
+/**
+ * PDirectives.viewContainer
+ * Directive that controlles the main view container
+ * I.E custom extension for ui-view
  */
 
- define(['./module'], function(PDirectives) {
+return PDirectives.directive('viewContainer',
 
-   /*
-    * PDirectives.viewContainer
-    * Directive that controlles the main view container
-    * I.E custom extension for ui-view
-    */
+function() {
 
-    return PDirectives.directive('viewContainer',
-
-    function() {
-
-    });
-
- });
+});

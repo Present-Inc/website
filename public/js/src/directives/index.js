@@ -1,7 +1,7 @@
 /*
- * index.js
+ * module.js
  * PDirectives
- * Combines all directices into one requireJS module to be injected into PresentWebApp
+ * AngularJS module in which directives will be added to
  */
 
-define(['./viewContainer', './feed'], function() {});
+  var PDirectives = angular.module('PDirectives', []); 

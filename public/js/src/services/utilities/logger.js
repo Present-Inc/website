@@ -1,20 +1,13 @@
-/**
- * logger.js
- * Defines a RequireJS module for the logger utility
- */
-
-
-define(['../module'], function(PUtilities) {
 
   /**
    * PUtilities.logger
    * Configurable logger for development
    */
 
-   var debugModeEnabled = true;
-   var testModeEnabled  = true;
+  var debugModeEnabled = true;
+  var testModeEnabled  = true;
 
-   return PUtilities.factory('logger', [function() {
+  PUtilities.factory('logger', [function() {
     return {
       debug: function(content) {
         if(debugModeEnabled) {
@@ -29,5 +22,3 @@ define(['../module'], function(PUtilities) {
       }
     }
    }]);
-
-});

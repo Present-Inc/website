@@ -1,10 +1,3 @@
-/**
- * UsersApiClient
- * Defines a RequireJS modile for the Present User Api Client
- */
-
-define(['../module'], function(PServices) {
-
   /**
    * PServices.UsersApiClient
    * Sends API requests directed at the Users API resource and handles the raw API response.
@@ -15,7 +8,7 @@ define(['../module'], function(PServices) {
    *
    */
 
-   return PServices.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
+  PServices.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
     function($http, $q, logger, ApiConfig) {
 
@@ -79,6 +72,4 @@ define(['../module'], function(PServices) {
 
     }
 
-    ]);
-
-})
+  ]);

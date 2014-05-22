@@ -1,10 +1,3 @@
-/*
- * mainCtrl
- * Defines requireJS module for the mainCtrl Controller
- */
-
-define(['./module'], function(PControllers) {
-
 /**
  * PControllers.mainCtrl
  * Highest level controller PresentWebApp
@@ -16,43 +9,37 @@ define(['./module'], function(PControllers) {
  *   @dependency {Present} SessionManager -- Provides methods to manage user sessions
  */
 
- return PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
 
-  function($scope, $location, logger, ApplicationManager, SessionManager) {
+    function($scope, $location, logger, ApplicationManager, SessionManager) {
 
-    $scope.ApplicationManager = ApplicationManager;
+      $scope.ApplicationManager = ApplicationManager;
 
-    $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
 
-      //Check to see if requested state requires a valid session
-      if(toState.metaData.requireSession) {
-        var session = SessionManager.getCurrentSession();
-        if(!session) {
-          logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', session]);
-          $location.path('/login');
+        //Check to see if requested state requires a valid session
+        if(toState.metaData.requireSession) {
+          var session = SessionManager.getCurrentSession();
+          if(!session) {
+            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', session]);
+            $location.path('/login');
+          }
+          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', session]);
         }
-        else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', session]);
-      }
 
-    });
+      });
 
-    $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
 
-      //Apply state data to the Application Manager on the stateChangeStart event
-      if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
-      else $scope.ApplicationManager.fullscreenEnabled = false;
+        //Apply state data to the Application Manager on the stateChangeStart event
+        if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
+        else $scope.ApplicationManager.fullscreenEnabled = false;
 
-      if(toState.metaData.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
-      else $scope.ApplicationManager.navigationEnabled = false;
+        if(toState.metaData.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
+        else $scope.ApplicationManager.navigationEnabled = false;
 
-    });
+      });
 
-
-
-
-
-  }
+    }
 
  ]);
-
-});

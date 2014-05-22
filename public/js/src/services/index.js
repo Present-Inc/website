@@ -1,17 +1,7 @@
-/**
- * index.js
+/*
+ * module.js
  * PServices
- * Combines all services into one requireJS module to be injected into PresentWebApp
+ * AngularJS module in which services will be added to
  */
 
-define(['./ApplicationManager',
-        './FeedManager',
-        './SessionManager',
-        './FeedLoader',
-        './ProfileLoader',
-        './ApiClientResponseHandler',
-        './apiClient/VideosApiClient',
-        './apiClient/UsersApiClient',
-        './apiClient/UserContextApiClient',
-        './apiClient/ApiClientConfig',
-        './utilities/logger'], function() {});
+  var PServices = angular.module('PServices', []);

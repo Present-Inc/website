@@ -3,9 +3,6 @@
  * Jasmine unit tests for PServices.SessionManager
  */
 
-
-define(['../src/services/index.js'], function(PServices) {
-
   describe('SessionManagerSuite', function() {
 
     it('should work', function() {
@@ -14,5 +11,3 @@ define(['../src/services/index.js'], function(PServices) {
     });
 
   });
-
-});

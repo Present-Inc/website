@@ -1,42 +1,34 @@
 /**
- * navCtrl.js
- * Defines a RequireJS module for the Navbar controller
+ * PControllers.navCtrl
+ * Controller for the navigation bar
+ *   @dependency {Angular} $scope
+ *   @dependency {ui-router} $state
+ *   @dependency {Utilities} logger
+ *   @dependency {Present} SessionManager -- Provides methods for session management
  */
 
- define(['./module'], function(PControllers) {
+  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'SessionManager',
 
-    /**
-     * PControllers.navCtrl
-     * Controller for the navigation bar
-     *   @dependency {Angular} $scope
-     *   @dependency {ui-router} $state
-     *   @dependency {Utilities} logger
-     *   @dependency {Present} SessionManager -- Provides methods for session management
-     */
+    function($scope, $state, logger, SessionManager) {
 
-    return PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'SessionManager',
+      logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
-      function($scope, $state, logger, SessionManager) {
+      $scope.Navbar = {
+        sessionMode : SessionManager.getCurrentSession()
+      };
 
-        logger.test(['PControllers.navCtrl -- navigation controller initialized']);
+      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+        $scope.Navbar.sessionMode = SessionManager.getCurrentSession();
 
-        $scope.Navbar = {
-          sessionMode : SessionManager.getCurrentSession()
-        };
+      });
 
-        $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-          $scope.Navbar.sessionMode = SessionManager.getCurrentSession();
-
-        });
-
-        $scope.logout = function() {
-          SessionManager.destroyCurrentSession()
-            .then(function() {
-                $state.go('splash');
-            });
-        }
-
+      $scope.logout = function() {
+        SessionManager.destroyCurrentSession()
+          .then(function() {
+              $state.go('splash');
+          });
       }
 
-    ]);
- });
+    }
+
+  ]);
