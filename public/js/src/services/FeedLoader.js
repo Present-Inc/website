@@ -68,7 +68,7 @@ define(['./module'], function(PServices) {
            */
 
           loadHomeFeed : function(cursor) {
-            
+
             var loadingHomeFeed = $q.defer();
             var currentSession = SessionManager.getCurrentSession();
 

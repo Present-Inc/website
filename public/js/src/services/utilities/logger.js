@@ -6,7 +6,7 @@
 
 define(['../module'], function(PUtilities) {
 
-  /** 
+  /**
    * PUtilities.logger
    * Configurable logger for development
    */

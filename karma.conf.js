@@ -12,21 +12,20 @@ module.exports = function(config) {
      * Files to include in tests
      */
 
-    files = [
-      JASMINE,
-      JASMINE_ADAPTER,
-      REQUIRE,
-      REQUIRE_ADAPTER,
 
-      {pattern: 'public/components/**/*.js', included: false},
-      {pattern: 'public/js/**/*.js', included: false},
-      {pattern: 'public/tests/**/Spec*.js', included: false},
+    basePath: '',
 
-      'tests/test-main.js'
-    ];
+    frameworks: ['jasmine', 'requirejs'],
 
-    // list of files to exclude
-    exclude = ['public/js/main.js'];
+    files: [
+      'public/js/test/test-main.js',
+      {pattern: 'public/js/lib/**/*.js', included: false},
+      {pattern: 'public/js/test/**/*Spec.js', included: false},
+      {pattern: 'public/js/src/**/*.js', included: false},
+    ],
+
+
+    exclude : ['public/js/main.js'],
 
     /**
      * Files to exlude in tests

@@ -4,15 +4,15 @@
  */
 
 
-define(['SessionManager'], function() {
+define(['../src/services/index.js'], function(PServices) {
 
-  describe('SessionManager', function() {
+  describe('SessionManagerSuite', function() {
 
     it('should work', function() {
+      console.log(PServices);
       expect(testValue).toBe(true);
     });
 
   });
 
-
-}
+});

@@ -64,7 +64,7 @@ define(['./module'], function(PServices) {
                 });
 
               return loadingProfile.promise;
-              
+
             }
 
          }
