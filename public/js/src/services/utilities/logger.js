@@ -7,7 +7,7 @@
   var debugModeEnabled = true;
   var testModeEnabled  = true;
 
-  PUtilities.factory('logger', [function() {
+  PServices.factory('logger', [function() {
     return {
       debug: function(content) {
         if(debugModeEnabled) {

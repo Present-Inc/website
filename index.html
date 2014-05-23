@@ -6,7 +6,7 @@
 -->
 
 <!DOCTYPE html>
-<html ng-controller="mainCtrl" class="fullscreen">
+<html ng-controller="mainCtrl" ng-app ="PresentWebApp" class="fullscreen">
 
 <head>
     <meta charset="utf-8">
@@ -30,7 +30,13 @@
     </div>
 
     <!--Load Dependencies -->
-    <script src="js/lib/requirejs/require.js" data-main="js/src/main.js"></script>
+    <script src="js/lib/angular/angular.js"></script>
+    <script src="js/lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="js/lib/angular-local-storage/angular-local-storage.js"></script>
+
+    <!-- Load Application -->
+    <script src="js/dist/app.js"></script>
+
 
 </body>
 

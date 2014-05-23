@@ -7,7 +7,27 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        con
+        concat: {
+          services: {
+            src: ['public/js/src/services/**/*.js'],
+            dest: 'public/js/dist/services.js'
+          },
+          controllers: {
+            src: ['public/js/src/controllers/**/*.js'],
+            dest: 'public/js/dist/controllers.js'
+          },
+          directives: {
+            src: ['public/js/src/directives/**/*.js'],
+            dest: 'public/js/dist/directives.js'
+          },
+          app: {
+            src: ['public/js/src/app.js',
+                  'public/js/dist/services.js',
+                  'public/js/dist/controllers.js',
+                  'public/js/dist/directives.js'],
+            dest: 'public/js/dist/app.js'
+          },
+        },
         sass: {
             dist: {
                 options: {
@@ -21,7 +41,7 @@ module.exports = function(grunt) {
         },
         karma: {
           unit: {
-            configFile: 'tests/runner/karma.config.js'
+            configFile: 'public/js/test/karma.conf.js'
           }
         },
         watch: {
@@ -42,4 +62,5 @@ module.exports = function(grunt) {
 
     grunt.registerTask('run-sass', ['watch:scss']);
     grunt.registerTask('run-karma', ['karma']);
+    grunt.registerTask('run-build', ['concat:services', 'concat:controllers', 'concat:directives', 'concat:app']);
 };

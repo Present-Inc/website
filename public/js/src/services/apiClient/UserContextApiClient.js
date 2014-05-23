@@ -20,7 +20,7 @@
         createNewUserContext : function(username, password) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/create';
-          logger.debug(['PServices.UserContextApiClient.createNewUserContext -- prepping request', username, password])
+          console.log(resourceUrl);
           $http({
             method: 'POST',
             url: resourceUrl,

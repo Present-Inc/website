@@ -6,22 +6,25 @@
 module.exports = function(config) {
   config.set({
 
+    /**
+     * Set the base path the js directory
+     */
 
+    basePath: '../',
+
+    frameworks: ['jasmine'],
 
     /**
      * Files to include in tests
      */
 
-
-    basePath: '',
-
-    frameworks: ['jasmine', 'requirejs'],
-
     files: [
-      'public/js/test/test-main.js',
-      {pattern: 'public/js/lib/**/*.js', included: false},
-      {pattern: 'public/js/test/**/*Spec.js', included: false},
-      {pattern: 'public/js/src/**/*.js', included: false},
+      'lib/angular/angular.js',
+      'lib/angular-ui-router/release/angular-ui-router.js',
+      'lib/angular-local-storage/angular-local-storage.js',
+      'lib/angular-mocks/angular-mocks.js',
+      'dist/app.js',
+      'test/**/*.js'
     ],
 
 
@@ -30,7 +33,7 @@ module.exports = function(config) {
     /**
      * Files to exlude in tests
      */
-    exclude: [],
+    exclude: ['test/karma.conf.js'],
 
     /**
      * Reporter -- Progress
