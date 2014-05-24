@@ -173,6 +173,7 @@ describe('UserContextManager', function() {
 
 
   describe('getActiveUserContext', function() {
+
     it('should return the active user context if it is saved in local storage', function() {
       spyOn(localStorageService, 'get').and.returnValue('123');
       var userContext = UserContextManager.getActiveUserContext();
@@ -184,7 +185,8 @@ describe('UserContextManager', function() {
       spyOn(localStorageService, 'get').and.returnValue(undefined);
       var userContext = UserContextManager.getActiveUserContext();
       expect(userContext).not.toBeDefined();
-    });;
+    });
+    
   })
 
 });

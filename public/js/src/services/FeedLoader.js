@@ -45,7 +45,7 @@
                 logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
                 loadingDiscoverFeed.resolve(deserializedFeed);
 
-               })
+              })
               .catch(function(rawApiResponse) {
                 //TODO better error handling
                 loadingDiscoverFeed.resolve(false)
