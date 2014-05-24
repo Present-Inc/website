@@ -17,46 +17,55 @@
         * @param <String> password
         */
 
-        createNewUserContext : function(username, password) {
+        create : function(username, password) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/create';
-          console.log(resourceUrl);
           $http({
             method: 'POST',
             url: resourceUrl,
             data: {username: username, password: password}
           })
             .success(function(data, status, headers) {
-              logger.debug(['PServices.UserContextApiClient.createNewUserContext -- http success block', status, data]);
+              logger.debug(['PServices.UserContextApiClient.createNewUserContext', 'http success block', status, data]);
               sendingRequest.resolve(data);
             })
             .error(function(data, status, headers) {
-              logger.error(['PServices.UserContextApiClient.createNewUserContext -- http error block', status, data]);
-              sendingRequest.reject();
+              logger.error(['PServices.UserContextApiClient.createNewUserContext', 'http error block', status, data]);
+              sendingRequest.reject(data);
             });
 
           return sendingRequest.promise;
         },
 
-        destroyUserContext: function(session) {
+        destroy: function(session) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/destroy';
-          $http({
-            method: 'POST',
-            url: resourceUrl,
-            headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
-            }
-          })
-          .success(function(data, status, headers) {
-            logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, headers]);
-            sendingRequest.resolve();
-          })
-          .error(function(data, status, headers) {
-            logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
-            sendingRequest.reject();
-          })
+          if(session) {
+              $http({
+                method: 'POST',
+                url: resourceUrl,
+                headers: {
+                  'Present-User-Context-Session-Token' : session.token,
+                  'Present-User-Context-User-Id': session.userId
+                }
+              })
+              .success(function(data, status, headers) {
+                logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, headers]);
+                sendingRequest.resolve(data);
+              })
+              .error(function(data, status, headers) {
+                logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
+                sendingRequest.reject(data);
+              })
+          } else {
+            var mockResponse = {
+              status: 'ERROR',
+              result: 'Please log in and try again',
+              mock: true
+            };
+            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid session']);
+            sendingRequest.reject(mockResponse);
+          }
 
           return sendingRequest.promise;
         }

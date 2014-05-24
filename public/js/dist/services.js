@@ -382,95 +382,102 @@ PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClient
 
 
 /**
- * PServices.SessionManager
+ * PServices.UserContextManager
  *   @dependency {Angular} $q
  *   @dependency {Present} logger -- configurable logger for development
- *   @dependency {Present} UserContextApiClient -- interacts directly with the User Contexts Api Client
+ *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PServices.factory('SessionManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
 
   function($q, localStorageService, logger, UserContextApiClient) {
 
     return {
 
       /**
-       * createNewSession
+       * createNewUserContext
        * Sends a request to create a new user context and stores it to local storage on success
        *   @param <String> username -- username in which the user context will be created with
        *   @param <String> password -- password to validate the user
        */
 
-      createNewSession : function(username, password) {
+      createNewUserContext : function(username, password) {
 
-        var creatingSession = $q.defer();
+        var creatingNewUserContext = $q.defer();
 
-        UserContextApiClient.createNewUserContext(username, password)
+        UserContextApiClient.create(username, password)
           .then(function(rawApiResponse) {
-            logger.debug(['PServices.SessionManager.creatingNew Session -- creating new session token'], rawApiResponse);
-            localStorageService.set('sessionToken', rawApiResponse.result.object.sessionToken);
-            localStorageService.set('userId', rawApiResponse.result.object.user.object._id);
-            creatingSession.resolve();
+            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context'], rawApiResponse);
+            var userContext = {
+              sessionToken: rawApiResponse.result.object.sessionToken,
+              userId: rawApiResponse.result.object.user.object._id
+            };
+            localStorageService.set('sessionToken', userContext.sessionToken);
+            localStorageService.set('userId', userContext.userId);
+            creatingNewUserContext.resolve(userContext);
           })
-          .catch(function() {
-            logger.error(['PServices.SessionManager.creatingNewSession -- couldn\'t create session token'])
-            creatingSession.reject();
+          .catch(function(error) {
+            logger.error(['PServices.UserContextManager.createNewUserContext', 'couldn\'t create user context']);
+            creatingNewUserContext.reject(error);
           });
 
-        return creatingSession.promise
+        return creatingNewUserContext.promise
 
       },
 
       /**
-       * destroyCurrentSession
+       * destroyActiveUserContext
        * Sends a request to delete the user context and clears session token from local storage
        */
 
-      destroyCurrentSession : function() {
+      destroyActiveUserContext : function() {
 
-        var deletingSession = $q.defer();
+        var destroyingUserContext = $q.defer();
 
-        var session = {
-          token : localStorageService.get('sessionToken'),
+        var userContext = {
+          sessionToken : localStorageService.get('sessionToken'),
           userId: localStorageService.get('userId')
         };
 
-        if(session.token && session.userId) {
+        if(userContext.sessionToken && userContext.userId) {
 
-          UserContextApiClient.destroyUserContext(session)
+          UserContextApiClient.destroy(userContext)
             .then(function() {
-              logger.debug(['PServices.SessionManager.destroyCurrentSession', 'User context deleted. Destroying current session']);
+              logger.debug(['PServices.UserContextManager.destroyActiveUserContext',
+                            'User context deleted. User context data being deleted from local storage']);
               localStorageService.clearAll();
-              deletingSession.resolve();
+              destroyingUserContext.resolve();
             })
-            .catch(function() {
-              logger.error(['PServices.SessionManager.destroyCurrentSession', 'User context deletion failed, session data being deleted regardless']);
+            .catch(function(error) {
+              logger.error(['PServices.UserContextManager.destroyActiveUserContext',
+                            'User context deletion failed. User context data being deleted from local storage']);
               localStorageService.clearAll();
-              deletingSession.reject();
+              destroyingUserContext.reject(error);
             });
+
         } else {
-          logger.error(['PServices.SessionManager.destroyCurrentSession -- no session set. ']);
-          deletingSession.reject();
+          logger.error(['PServices.UserContextManager.destroyActiveUserContext', 'no user context defined']);
+          destroyingUserContext.reject('The user context is not defined');
         }
 
-        return deletingSession.promise;
+        return destroyingUserContext.promise;
 
       },
 
       /**
-       * getCurrentSession
+       * getActiveUserContext
        * Returns the session token if it exists. Returns false if the session token is invalid
        */
 
-      getCurrentSession : function() {
+      getActiveUserContext : function() {
 
-        var session = {
-          token : localStorageService.get('sessionToken'),
+        var userContext = {
+          sessionToken : localStorageService.get('sessionToken'),
           userId: localStorageService.get('userId')
         };
 
-        if(session.token && session.userId) return session;
-        else return false;
+        if(userContext.sessionToken && userContext.userId) return userContext;
+        else return undefined;
 
       }
 
@@ -515,46 +522,55 @@ PServices.factory('SessionManager', ['$q', 'localStorageService', 'logger', 'Use
         * @param <String> password
         */
 
-        createNewUserContext : function(username, password) {
+        create : function(username, password) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/create';
-          console.log(resourceUrl);
           $http({
             method: 'POST',
             url: resourceUrl,
             data: {username: username, password: password}
           })
             .success(function(data, status, headers) {
-              logger.debug(['PServices.UserContextApiClient.createNewUserContext -- http success block', status, data]);
+              logger.debug(['PServices.UserContextApiClient.createNewUserContext', 'http success block', status, data]);
               sendingRequest.resolve(data);
             })
             .error(function(data, status, headers) {
-              logger.error(['PServices.UserContextApiClient.createNewUserContext -- http error block', status, data]);
-              sendingRequest.reject();
+              logger.error(['PServices.UserContextApiClient.createNewUserContext', 'http error block', status, data]);
+              sendingRequest.reject(data);
             });
 
           return sendingRequest.promise;
         },
 
-        destroyUserContext: function(session) {
+        destroy: function(session) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/destroy';
-          $http({
-            method: 'POST',
-            url: resourceUrl,
-            headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
-            }
-          })
-          .success(function(data, status, headers) {
-            logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, headers]);
-            sendingRequest.resolve();
-          })
-          .error(function(data, status, headers) {
-            logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
-            sendingRequest.reject();
-          })
+          if(session) {
+              $http({
+                method: 'POST',
+                url: resourceUrl,
+                headers: {
+                  'Present-User-Context-Session-Token' : session.token,
+                  'Present-User-Context-User-Id': session.userId
+                }
+              })
+              .success(function(data, status, headers) {
+                logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, headers]);
+                sendingRequest.resolve(data);
+              })
+              .error(function(data, status, headers) {
+                logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
+                sendingRequest.reject(data);
+              })
+          } else {
+            var mockResponse = {
+              status: 'ERROR',
+              result: 'Please log in and try again',
+              mock: true
+            };
+            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid session']);
+            sendingRequest.reject(mockResponse);
+          }
 
           return sendingRequest.promise;
         }
