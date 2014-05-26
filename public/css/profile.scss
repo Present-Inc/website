@@ -46,7 +46,6 @@
     @media (max-width: $break-small) {
       width: 100%;
       min-height: 300px;
-      background-color: #ccc;
       height: auto;
     }
   }
@@ -79,6 +78,7 @@
       margin: $center;
       border-right: none;
       text-align: center;
+      padding: 10px; 
     }
 
     @media (max-width: $break-small) {
