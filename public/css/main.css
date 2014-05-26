@@ -124,7 +124,7 @@ a:hover { cursor: pointer; color: #33aaff; text-decoration: none; }
 .mainHeader section, header section { height: 60px; margin: 0 auto; width: 960px; }
 @media (max-width: 960px) { .mainHeader section, header section { width: 80%; } }
 .mainHeader .logo, header .logo { float: left; margin: 0px 0px 0px 0px; height: 30px; width: 30px; }
-@media (max-width: 630px) { .mainHeader .logo, header .logo { display: block; float: none; margin: 5px auto 0px auto; } }
+@media (max-width: 630px) { .mainHeader .logo, header .logo { display: block; float: none; margin: 2px auto 0px auto; } }
 .mainHeader .logo img, header .logo img { height: 100%; width: 100%; }
 .mainHeader nav, header nav { float: right; color: #fff; margin: 8px 0px 0px 0px; font-weight: 100; letter-spacing: 1px; font-size: 16px; }
 @media (max-width: 630px) { .mainHeader nav, header nav { display: none; } }
