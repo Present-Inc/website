@@ -87,10 +87,10 @@
   .title {
     color: $main-grey;
     display: block;
-    margin: 5px 0px 0px 0px;
+    margin: 5px 0px 0px 75px;
     font-size: $font-size-small;
     @media (max-width: $break-small) {
-      width: 60%;
+      width: 100%;
     }
   }
 

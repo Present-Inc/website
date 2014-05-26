@@ -145,8 +145,8 @@ header { overflow: hidden; background-color: #a566ff; }
 .presentWrapper .info { padding: 20px 0px 0px 0px; overflow: auto; }
 .presentWrapper .timeAgo { width: 20%; float: right; text-align: right; font-size: 15px; }
 @media (max-width: 500px) { .presentWrapper .timeAgo { width: 20%; margin: 0px 5px 0px 0px; } }
-.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 0px; font-size: 15px; }
-@media (max-width: 500px) { .presentWrapper .title { width: 60%; } }
+.presentWrapper .title { color: #47525d; display: block; margin: 5px 0px 0px 75px; font-size: 15px; }
+@media (max-width: 500px) { .presentWrapper .title { width: 100%; } }
 .presentWrapper .commentsIcon { vertical-align: middle; margin: 0px 3px 0px 0px; height: 14px; }
 
 /* VIEW CSS Files css files that style specific views */
@@ -198,7 +198,7 @@ header { overflow: hidden; background-color: #a566ff; }
 #discoverFeed .refreshFeed { display: block; height: 40px; width: 160px; margin: 0 auto; }
 
 #profile { margin: 0px auto 0px auto; padding: 100px 20px; width: 920px; color: #47525d; }
-@media (max-width: 960px) { #profile { width: 100%; padding: 0px; margin: 100px 0px; } }
+@media (max-width: 960px) { #profile { width: 100%; padding: 0px; margin: 100px 0px 0px 0px; } }
 
 #profileFeed { width: 480px; margin: 0px 0px 60px 440px; padding: 0px 0px 40px 0px; }
 @media (max-width: 960px) { #profileFeed { margin: 0px auto; } }
