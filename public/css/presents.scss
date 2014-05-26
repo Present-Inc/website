@@ -20,6 +20,9 @@
   .playerPlaceholder {
     position: absolute;
     z-index: 5;
+    @media (max-width: $break-small) {
+      display: none; 
+    }
   }
 
   .player {
