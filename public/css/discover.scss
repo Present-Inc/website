@@ -17,7 +17,7 @@
 
   .presentWrapper{
     margin: 10px 0px 60px 0px;
-    min-height: 480px; 
+    min-height: 400px;
     font-weight: $font-weight-light;
     border-bottom: solid 1px #f5f5f5;
     padding: 0px 0px 20px 0px;
@@ -32,12 +32,20 @@
     width: $video-width;
     @media (max-width: $break-small) {
       width: 100%;
+      min-height: 200px;
+      background-color: #ccc;
       height: auto;
     }
   }
 
   .videoContainer img {
     width: 100%;
+  }
+
+  .playerPlaceholder {
+    @media (max-width: $break-small) {
+      display: none;
+    }
   }
 
   .refreshFeed {
