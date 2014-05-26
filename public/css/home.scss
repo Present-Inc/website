@@ -130,12 +130,19 @@
     text-align: center;
     font-size: 12px;
     height: 80px;
+    @media (max-width: $break-small) {
+      height: auto;
+    }
   }
 
   footer {
     .copyright {
       display: inline-block;
       margin: 10px;
+      @media (max-width: $break-small) {
+        margin: 0px;
+        text-align: center;
+      }
     }
 
     .footerNav {
@@ -143,6 +150,7 @@
       margin: 100px auto 50px auto;
       display: inline-block;
       @media (max-width: $break-large) {
+        margin: 10px 0px 10px 0px;
         width: 100%;
       }
     }
@@ -150,6 +158,12 @@
     a {
       color: $main-grey;
       margin: 0px 15px 0px 20px;
+      @media (max-width: $break-small) {
+        margin: 10px 0px 10px 0px;
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
     }
 
     a:hover {
@@ -159,6 +173,9 @@
     img {
       vertical-align: middle;
       margin: 0px 0px 0px 15px;
+      @media (max-width: $break-small) {
+          margin: 0px 0px 10px 0px; 
+      }
     }
 
     .mixpanel {

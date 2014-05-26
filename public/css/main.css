@@ -173,12 +173,16 @@ header { overflow: hidden; background-color: #a566ff; }
 @media (max-width: 960px) { #home .copy .discoverBtn { display: none; } }
 #home .copy .downloadBtn { height: 40px; width: 160px; margin: 10px 10px 0px 0px; }
 #home footer { color: #47525d; text-align: center; font-size: 12px; height: 80px; }
+@media (max-width: 500px) { #home footer { height: auto; } }
 #home footer .copyright { display: inline-block; margin: 10px; }
+@media (max-width: 500px) { #home footer .copyright { margin: 0px; text-align: center; } }
 #home footer .footerNav { width: 500px; margin: 100px auto 50px auto; display: inline-block; }
-@media (max-width: 960px) { #home footer .footerNav { width: 100%; } }
+@media (max-width: 960px) { #home footer .footerNav { margin: 10px 0px 10px 0px; width: 100%; } }
 #home footer a { color: #47525d; margin: 0px 15px 0px 20px; }
+@media (max-width: 500px) { #home footer a { margin: 10px 0px 10px 0px; display: block; width: 100%; text-align: center; } }
 #home footer a:hover { color: #33aaff; }
 #home footer img { vertical-align: middle; margin: 0px 0px 0px 15px; }
+@media (max-width: 500px) { #home footer img { margin: 0px 0px 10px 0px; } }
 #home footer .mixpanel { height: 20px; }
 
 #discover { background-color: #c4c4c4; }
