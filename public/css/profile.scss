@@ -45,7 +45,7 @@
     width: $video-width;
     @media (max-width: $break-small) {
       width: 100%;
-      min-height: 200px;
+      min-height: 300px;
       background-color: #ccc;
       height: auto;
     }
@@ -56,7 +56,7 @@
       display: none;
     }
   }
-  
+
 }
 
 
