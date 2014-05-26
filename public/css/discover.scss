@@ -10,6 +10,7 @@
   z-index: $zContent;
   @media (max-width: $break-small) {
     width: 100%;
+    min-width: 315px;
   }
 }
 
@@ -34,6 +35,7 @@
       width: 100%;
       min-height: 315px;
       height: auto;
+      background-color: #ccc;
     }
   }
 

@@ -24,6 +24,7 @@
     @media (max-width: $break-small) {
       margin: 0px 0px;
       width: 100%;
+      min-width: 315px;
       height: auto;
     }
 }
@@ -47,6 +48,7 @@
       width: 100%;
       min-height: 300px;
       height: auto;
+      background-color: #ccc;
     }
   }
 
@@ -78,7 +80,7 @@
       margin: $center;
       border-right: none;
       text-align: center;
-      padding: 10px; 
+      padding: 10px;
     }
 
     @media (max-width: $break-small) {
