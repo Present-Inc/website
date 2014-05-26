@@ -78,6 +78,10 @@ body {
   font-weight: normal;
 }
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 //Controls Angular View Injections
 #viewContainer {
   padding: 0px;

@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div ng-controller="downloadModalCtrl" id="downloadModal" class="a-slide" ng-show="app.downloadModal">
+    <div ng-controller="downloadModalCtrl" id="downloadModal" class="a-slide" ng-show="app.downloadModal" ng-cloak>
       <div class="content">
           <div class="appStore">
             <p>Available for the iPhone</p>
@@ -50,18 +50,18 @@
       </div>
     </div>
 
-    <header id="header" class="fixed a-slide" ng-show="app.navigation">
-            <section>
-                <div class="logo">
-                    <a ui-sref="discover"><img src="../assets/img/logo-small.png" alt="Present" /></a>
-                </div>
-                <nav>
-                  <ul>
-                    <li ui-sref="home">Home</li>
-                    <li ng-click="showModal()">Download</li>
-                  </ul>
-                </nav>
-            </section>
+    <header id="header" class="fixed a-slide" ng-show="app.navigation" ng-cloak>
+      <section>
+          <div class="logo">
+              <a ui-sref="discover"><img src="../assets/img/logo-small.png" alt="Present" /></a>
+          </div>
+          <nav>
+            <ul>
+              <li ui-sref="home">Home</li>
+              <li ng-click="showModal()">Download</li>
+            </ul>
+          </nav>
+      </section>
     </header>
 
     <div ui-view
