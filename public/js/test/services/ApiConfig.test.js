@@ -1,6 +1,6 @@
 /**
- * SessionManager.test.js
- * Jasmine unit tests for PServices.SessionManager
+ * UserContextManager.test.js
+ * Jasmine unit tests for PServices.UserContextManager
  */
 
   describe('ApiConfig', function() {

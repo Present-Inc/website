@@ -79,20 +79,20 @@
  *   @dependency {Angular} $scope
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger -- configurable logger for development
- *   @dependency {Present} SessionManager
+ *   @dependency {Present} UserContextManager
  */
 
-  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'SessionManager',
+  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
-    function($scope, $state, logger, SessionManager) {
+    function($scope, $state, logger, UserContextManager) {
 
       $scope.username = '';
       $scope.password = '';
 
       $scope.login = function() {
-        SessionManager.createNewSession($scope.username, $scope.password)
-          .then(function(newSession) {
-              logger.debug(['PControllers.loginCtrl -- session created', $scope.SessionManager]);
+        UserContextManager.createNewUserContext($scope.username, $scope.password)
+          .then(function(newUserContext) {
+              logger.debug(['PControllers.loginCtrl -- userContext created', newUserContext]);
               $state.go('home');
           })
           .catch(function() {
@@ -112,25 +112,25 @@
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
  *   @dependency {Present} ApplicationManager -- Provides properties and methods to manage the application state
- *   @dependency {Present} SessionManager -- Provides methods to manage user sessions
+ *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'UserContextManager',
 
-    function($scope, $location, logger, ApplicationManager, SessionManager) {
+    function($scope, $location, logger, ApplicationManager, UserContextManager) {
 
       $scope.ApplicationManager = ApplicationManager;
 
       $scope.$on('$stateChangeStart', function(event, toState, fromState) {
 
-        //Check to see if requested state requires a valid session
+        //Check to see if requested state requires a valid userContext
         if(toState.metaData.requireSession) {
-          var session = SessionManager.getCurrentSession();
-          if(!session) {
-            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', session]);
+          var userContext = UserContextManager.getActiveUserContext();
+          if(!userContext) {
+            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is invalid', userContext]);
             $location.path('/login');
           }
-          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', session]);
+          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is valid', userContext]);
         }
 
       });
@@ -156,26 +156,26 @@
  *   @dependency {Angular} $scope
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
- *   @dependency {Present} SessionManager -- Provides methods for session management
+ *   @dependency {Present} UserContextManager -- Provides methods for userContext management
  */
 
-  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'SessionManager',
+  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
-    function($scope, $state, logger, SessionManager) {
+    function($scope, $state, logger, UserContextManager) {
 
       logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
       $scope.Navbar = {
-        sessionMode : SessionManager.getCurrentSession()
+        userContextMode : UserContextManager.getActiveUserContext()
       };
 
       $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-        $scope.Navbar.sessionMode = SessionManager.getCurrentSession();
+        $scope.Navbar.userContextMode = UserContextManager.getActiveUserContext();
 
       });
 
       $scope.logout = function() {
-        SessionManager.destroyCurrentSession()
+        UserContextManager.destroyActiveUserContext()
           .then(function() {
               $state.go('splash');
           });

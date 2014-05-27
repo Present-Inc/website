@@ -37,16 +37,16 @@
           return sendingRequest.promise;
         },
 
-        destroy: function(session) {
+        destroy: function(userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/destroy';
-          if(session) {
+          if(userContext) {
               $http({
                 method: 'POST',
                 url: resourceUrl,
                 headers: {
-                  'Present-User-Context-Session-Token' : session.token,
-                  'Present-User-Context-User-Id': session.userId
+                  'Present-User-Context-Session-Token' : userContext.token,
+                  'Present-User-Context-User-Id': userContext.userId
                 }
               })
               .success(function(data, status, headers) {
@@ -63,7 +63,7 @@
               result: 'Please log in and try again',
               mock: true
             };
-            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid session']);
+            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid userContext']);
             sendingRequest.reject(mockResponse);
           }
 

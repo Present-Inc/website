@@ -169,12 +169,12 @@
    *    @dependency {Utilities} logger
    *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
    *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
-   *    @dependency {Present} SessionManager -- Manages the user session data
+   *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
-  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'SessionManager',
+  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'UserContextManager',
 
-     function($q, logger, VideosApiClient, ApiClientResponseHandler, SessionManager) {
+     function($q, logger, VideosApiClient, ApiClientResponseHandler, UserContextManager) {
 
        return {
 
@@ -187,7 +187,7 @@
           loadDiscoverFeed : function(cursor) {
 
             var loadingDiscoverFeed = $q.defer();
-            var currentSession = SessionManager.getCurrentSession();
+            var currentSession = UserContextManager.getActiveUserContext();
 
             VideosApiClient.listBrandNewVideos(cursor, currentSession)
               .then(function(rawApiResponse) {
@@ -207,7 +207,7 @@
                 logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
                 loadingDiscoverFeed.resolve(deserializedFeed);
 
-               })
+              })
               .catch(function(rawApiResponse) {
                 //TODO better error handling
                 loadingDiscoverFeed.resolve(false)
@@ -226,7 +226,7 @@
           loadHomeFeed : function(cursor) {
 
             var loadingHomeFeed = $q.defer();
-            var currentSession = SessionManager.getCurrentSession();
+            var currentSession = UserContextManager.getActiveUserContext();
 
             if(currentSession.token && currentSession.userId) {
 
@@ -322,9 +322,9 @@
  *   @dependency {Present} Session Manager
  */
 
-PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'SessionManager',
+PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ApiClientResponseHandler, SessionManager) {
+   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
 
      return {
 
@@ -336,10 +336,10 @@ PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClient
         loadOwnProfile : function() {
 
           var loadingProfile = $q.defer();
-          var session = SessionManager.getCurrentSession();
+          var userContext = UserContextManager.getActiveUserContext();
 
-          if(session.token && session.userId) {
-              UsersApiClient.showMe(session)
+          if(userContext.token && userContext.userId) {
+              UsersApiClient.showMe(userContext)
                 .then(function(rawApiResponse) {
                   var deserializedProfile = {};
                   deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
@@ -358,9 +358,9 @@ PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClient
         loadUserProfile : function(username) {
 
           var loadingProfile = $q.defer();
-          var session = SessionManager.getCurrentSession();
+          var userContext = UserContextManager.getActiveUserContext();
 
-          UsersApiClient.show(username, session)
+          UsersApiClient.show(username, userContext)
             .then(function(rawApiResponse) {
               var deserializedProfile = {};
               deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
@@ -407,12 +407,13 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         UserContextApiClient.create(username, password)
           .then(function(rawApiResponse) {
-            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context'], rawApiResponse);
             var userContext = {
-              sessionToken: rawApiResponse.result.object.sessionToken,
-              userId: rawApiResponse.result.object.user.object._id
+              token  : rawApiResponse.result.object.sessionToken,
+              userId : rawApiResponse.result.object._id
             };
-            localStorageService.set('sessionToken', userContext.sessionToken);
+            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
+            localStorageService.clearAll(); 
+            localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
             creatingNewUserContext.resolve(userContext);
           })
@@ -427,7 +428,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       /**
        * destroyActiveUserContext
-       * Sends a request to delete the user context and clears session token from local storage
+       * Sends a request to delete the user context and clears userContext token from local storage
        */
 
       destroyActiveUserContext : function() {
@@ -435,11 +436,11 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         var destroyingUserContext = $q.defer();
 
         var userContext = {
-          sessionToken : localStorageService.get('sessionToken'),
-          userId: localStorageService.get('userId')
+          token  : localStorageService.get('token'),
+          userId : localStorageService.get('userId')
         };
 
-        if(userContext.sessionToken && userContext.userId) {
+        if(userContext.token && userContext.userId) {
 
           UserContextApiClient.destroy(userContext)
             .then(function() {
@@ -466,17 +467,17 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       /**
        * getActiveUserContext
-       * Returns the session token if it exists. Returns false if the session token is invalid
+       * Returns the userContext token if it exists. Returns false if the userContext token is invalid
        */
 
       getActiveUserContext : function() {
 
         var userContext = {
-          sessionToken : localStorageService.get('sessionToken'),
+          token : localStorageService.get('token'),
           userId: localStorageService.get('userId')
         };
 
-        if(userContext.sessionToken && userContext.userId) return userContext;
+        if(userContext.token && userContext.userId) return userContext;
         else return undefined;
 
       }
@@ -542,16 +543,16 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
           return sendingRequest.promise;
         },
 
-        destroy: function(session) {
+        destroy: function(userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/destroy';
-          if(session) {
+          if(userContext) {
               $http({
                 method: 'POST',
                 url: resourceUrl,
                 headers: {
-                  'Present-User-Context-Session-Token' : session.token,
-                  'Present-User-Context-User-Id': session.userId
+                  'Present-User-Context-Session-Token' : userContext.token,
+                  'Present-User-Context-User-Id': userContext.userId
                 }
               })
               .success(function(data, status, headers) {
@@ -568,7 +569,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
               result: 'Please log in and try again',
               mock: true
             };
-            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid session']);
+            logger.error(['PServices.UserContextApiClient.destroyUserContext', 'request not sent: invalid userContext']);
             sendingRequest.reject(mockResponse);
           }
 
@@ -602,7 +603,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
        */
       return {
 
-        show: function(userId, session) {
+        show: function(userId, userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
 
@@ -611,8 +612,8 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
            url: resourceUrl,
            params: {user_id: userId},
            headers: {
-             'Present-User-Context-Session-Token' : session.token,
-             'Present-User-Context-User-Id': session.userId
+             'Present-User-Context-Session-Token' : userContext.token,
+             'Present-User-Context-User-Id': userContext.userId
            }
           })
            .success(function(data, status, headers) {
@@ -627,7 +628,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
           return sendingRequest.promise;
        },
 
-        showMe: function(session) {
+        showMe: function(userContext) {
          var sendingRequest = $q.defer();
          var resourceUrl = ApiConfig.getAddress() + '/v1/users/show_me';
 
@@ -635,8 +636,8 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
           method: 'GET',
           url: resourceUrl,
           headers: {
-            'Present-User-Context-Session-Token' : session.token,
-            'Present-User-Context-User-Id': session.userId
+            'Present-User-Context-Session-Token' : userContext.token,
+            'Present-User-Context-User-Id': userContext.userId
           }
          })
            .success(function(data, status, headers) {
@@ -677,11 +678,11 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
          * Sends a request to the list_brand_new_videos videos resouce
          * Handles success and error blocks then resolves the api response to the FeedLoader
          *   @param <Number> cursor -- active video cursor
-         *   @param <Object> session -- user session object for methods that require user context or
+         *   @param <Object> userContext -- user userContext object for methods that require user context or
          *                              respond with subjective meta data
          */
 
-        listBrandNewVideos: function(cursor, session) {
+        listBrandNewVideos: function(cursor, userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
           $http({
@@ -689,8 +690,8 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
             url: resourceUrl,
             params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null},
             headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
+              'Present-User-Context-Session-Token' : userContext.token,
+              'Present-User-Context-User-Id': userContext.userId
             }
           })
             .success(function(data, status, headers) {
@@ -710,7 +711,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
          * Handles success and error blocks then resolves the api response to the FeedLoader
          */
 
-        listHomeVideos: function(session, cursor) {
+        listHomeVideos: function(userContext, cursor) {
 
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos/';
@@ -719,8 +720,8 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
             url: resourceUrl,
             params: {limit: ApiConfig.getVideoQueryLimit()},
             headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
+              'Present-User-Context-Session-Token' : userContext.token,
+              'Present-User-Context-User-Id': userContext.userId
             }
 
           })

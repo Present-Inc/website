@@ -7,12 +7,12 @@
    *    @dependency {Utilities} logger
    *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
    *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
-   *    @dependency {Present} SessionManager -- Manages the user session data
+   *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
-  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'SessionManager',
+  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'UserContextManager',
 
-     function($q, logger, VideosApiClient, ApiClientResponseHandler, SessionManager) {
+     function($q, logger, VideosApiClient, ApiClientResponseHandler, UserContextManager) {
 
        return {
 
@@ -25,7 +25,7 @@
           loadDiscoverFeed : function(cursor) {
 
             var loadingDiscoverFeed = $q.defer();
-            var currentSession = SessionManager.getCurrentSession();
+            var currentSession = UserContextManager.getActiveUserContext();
 
             VideosApiClient.listBrandNewVideos(cursor, currentSession)
               .then(function(rawApiResponse) {
@@ -64,7 +64,7 @@
           loadHomeFeed : function(cursor) {
 
             var loadingHomeFeed = $q.defer();
-            var currentSession = SessionManager.getCurrentSession();
+            var currentSession = UserContextManager.getActiveUserContext();
 
             if(currentSession.token && currentSession.userId) {
 

@@ -19,7 +19,7 @@
        */
       return {
 
-        show: function(userId, session) {
+        show: function(userId, userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
 
@@ -28,8 +28,8 @@
            url: resourceUrl,
            params: {user_id: userId},
            headers: {
-             'Present-User-Context-Session-Token' : session.token,
-             'Present-User-Context-User-Id': session.userId
+             'Present-User-Context-Session-Token' : userContext.token,
+             'Present-User-Context-User-Id': userContext.userId
            }
           })
            .success(function(data, status, headers) {
@@ -44,7 +44,7 @@
           return sendingRequest.promise;
        },
 
-        showMe: function(session) {
+        showMe: function(userContext) {
          var sendingRequest = $q.defer();
          var resourceUrl = ApiConfig.getAddress() + '/v1/users/show_me';
 
@@ -52,8 +52,8 @@
           method: 'GET',
           url: resourceUrl,
           headers: {
-            'Present-User-Context-Session-Token' : session.token,
-            'Present-User-Context-User-Id': session.userId
+            'Present-User-Context-Session-Token' : userContext.token,
+            'Present-User-Context-User-Id': userContext.userId
           }
          })
            .success(function(data, status, headers) {

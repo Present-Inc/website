@@ -37,7 +37,7 @@ describe('UserContextManager', function() {
 
   });
 
-  describe('createNewSession', function() {
+  describe('createNewUserContext', function() {
 
     var mockApiResponse = {
       success: {
@@ -70,8 +70,10 @@ describe('UserContextManager', function() {
         spyOn(returnedPromise, 'then').and.callThrough();
         $rootScope.$apply(function() {
             returnedPromise.then(function(userContext) {
-              expect(localStorageService.set).toHaveBeenCalledWith('sessionToken', userContext.sessionToken);
-              expect(localStorageService.set).toHaveBeenCalledWith('userId', userContext._id);
+              expect(userContext.token).toEqual('456');
+              expect(userContext.userId).toEqual('123');
+              expect(localStorageService.set).toHaveBeenCalledWith('token', userContext.token);
+              expect(localStorageService.set).toHaveBeenCalledWith('userId', userContext.userId);
             });
         });
         expect(returnedPromise.then).toHaveBeenCalled();
@@ -177,7 +179,7 @@ describe('UserContextManager', function() {
     it('should return the active user context if it is saved in local storage', function() {
       spyOn(localStorageService, 'get').and.returnValue('123');
       var userContext = UserContextManager.getActiveUserContext();
-      expect(userContext.sessionToken).toEqual('123');
+      expect(userContext.token).toEqual('123');
       expect(userContext.userId).toEqual('123');
     });
 
@@ -186,7 +188,7 @@ describe('UserContextManager', function() {
       var userContext = UserContextManager.getActiveUserContext();
       expect(userContext).not.toBeDefined();
     });
-    
+
   })
 
 });

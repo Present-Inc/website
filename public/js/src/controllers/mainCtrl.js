@@ -6,25 +6,25 @@
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
  *   @dependency {Present} ApplicationManager -- Provides properties and methods to manage the application state
- *   @dependency {Present} SessionManager -- Provides methods to manage user sessions
+ *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'SessionManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'UserContextManager',
 
-    function($scope, $location, logger, ApplicationManager, SessionManager) {
+    function($scope, $location, logger, ApplicationManager, UserContextManager) {
 
       $scope.ApplicationManager = ApplicationManager;
 
       $scope.$on('$stateChangeStart', function(event, toState, fromState) {
 
-        //Check to see if requested state requires a valid session
+        //Check to see if requested state requires a valid userContext
         if(toState.metaData.requireSession) {
-          var session = SessionManager.getCurrentSession();
-          if(!session) {
-            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is invalid', session]);
+          var userContext = UserContextManager.getActiveUserContext();
+          if(!userContext) {
+            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is invalid', userContext]);
             $location.path('/login');
           }
-          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- session is valid', session]);
+          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is valid', userContext]);
         }
 
       });

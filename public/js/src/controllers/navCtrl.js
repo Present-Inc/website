@@ -4,26 +4,26 @@
  *   @dependency {Angular} $scope
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
- *   @dependency {Present} SessionManager -- Provides methods for session management
+ *   @dependency {Present} UserContextManager -- Provides methods for userContext management
  */
 
-  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'SessionManager',
+  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
-    function($scope, $state, logger, SessionManager) {
+    function($scope, $state, logger, UserContextManager) {
 
       logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
       $scope.Navbar = {
-        sessionMode : SessionManager.getCurrentSession()
+        userContextMode : UserContextManager.getActiveUserContext()
       };
 
       $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-        $scope.Navbar.sessionMode = SessionManager.getCurrentSession();
+        $scope.Navbar.userContextMode = UserContextManager.getActiveUserContext();
 
       });
 
       $scope.logout = function() {
-        SessionManager.destroyCurrentSession()
+        UserContextManager.destroyActiveUserContext()
           .then(function() {
               $state.go('splash');
           });

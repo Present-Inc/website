@@ -3,20 +3,20 @@
  *   @dependency {Angular} $scope
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger -- configurable logger for development
- *   @dependency {Present} SessionManager
+ *   @dependency {Present} UserContextManager
  */
 
-  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'SessionManager',
+  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
-    function($scope, $state, logger, SessionManager) {
+    function($scope, $state, logger, UserContextManager) {
 
       $scope.username = '';
       $scope.password = '';
 
       $scope.login = function() {
-        SessionManager.createNewSession($scope.username, $scope.password)
-          .then(function(newSession) {
-              logger.debug(['PControllers.loginCtrl -- session created', $scope.SessionManager]);
+        UserContextManager.createNewUserContext($scope.username, $scope.password)
+          .then(function(newUserContext) {
+              logger.debug(['PControllers.loginCtrl -- userContext created', newUserContext]);
               $state.go('home');
           })
           .catch(function() {

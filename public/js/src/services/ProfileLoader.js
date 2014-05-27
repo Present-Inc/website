@@ -8,9 +8,9 @@
  *   @dependency {Present} Session Manager
  */
 
-PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'SessionManager',
+PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ApiClientResponseHandler, SessionManager) {
+   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
 
      return {
 
@@ -22,10 +22,10 @@ PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClient
         loadOwnProfile : function() {
 
           var loadingProfile = $q.defer();
-          var session = SessionManager.getCurrentSession();
+          var userContext = UserContextManager.getActiveUserContext();
 
-          if(session.token && session.userId) {
-              UsersApiClient.showMe(session)
+          if(userContext.token && userContext.userId) {
+              UsersApiClient.showMe(userContext)
                 .then(function(rawApiResponse) {
                   var deserializedProfile = {};
                   deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
@@ -44,9 +44,9 @@ PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClient
         loadUserProfile : function(username) {
 
           var loadingProfile = $q.defer();
-          var session = SessionManager.getCurrentSession();
+          var userContext = UserContextManager.getActiveUserContext();
 
-          UsersApiClient.show(username, session)
+          UsersApiClient.show(username, userContext)
             .then(function(rawApiResponse) {
               var deserializedProfile = {};
               deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);

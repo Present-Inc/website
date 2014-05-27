@@ -61,6 +61,6 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('run-sass', ['watch:scss']);
-    grunt.registerTask('run-karma', ['karma']);
-    grunt.registerTask('run-build', ['concat:services', 'concat:controllers', 'concat:directives', 'concat:app']);
+    grunt.registerTask('run-tests', ['karma']);
+    grunt.registerTask('run-build', ['concat:services', 'concat:controllers', 'concat:directives', 'concat:app', 'karma']);
 };

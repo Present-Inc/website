@@ -18,11 +18,11 @@
          * Sends a request to the list_brand_new_videos videos resouce
          * Handles success and error blocks then resolves the api response to the FeedLoader
          *   @param <Number> cursor -- active video cursor
-         *   @param <Object> session -- user session object for methods that require user context or
+         *   @param <Object> userContext -- user userContext object for methods that require user context or
          *                              respond with subjective meta data
          */
 
-        listBrandNewVideos: function(cursor, session) {
+        listBrandNewVideos: function(cursor, userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
           $http({
@@ -30,8 +30,8 @@
             url: resourceUrl,
             params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null},
             headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
+              'Present-User-Context-Session-Token' : userContext.token,
+              'Present-User-Context-User-Id': userContext.userId
             }
           })
             .success(function(data, status, headers) {
@@ -51,7 +51,7 @@
          * Handles success and error blocks then resolves the api response to the FeedLoader
          */
 
-        listHomeVideos: function(session, cursor) {
+        listHomeVideos: function(userContext, cursor) {
 
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos/';
@@ -60,8 +60,8 @@
             url: resourceUrl,
             params: {limit: ApiConfig.getVideoQueryLimit()},
             headers: {
-              'Present-User-Context-Session-Token' : session.token,
-              'Present-User-Context-User-Id': session.userId
+              'Present-User-Context-Session-Token' : userContext.token,
+              'Present-User-Context-User-Id': userContext.userId
             }
 
           })

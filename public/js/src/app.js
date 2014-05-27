@@ -1,6 +1,6 @@
 /*
  * Present Web App
- * Version 2
+ * V - 2.0.0
  * Present Inc.
  * Written by Daniel Lucas
  *
@@ -18,8 +18,8 @@
 
  /**
   * Initialize Angular Application
-  *   @dependency {Angular}   Angular           -- It's AngularJS
-  *   @dependency {ui-router} ui-router         -- Handles application state and view loading
+  *   @dependency {Angular}   Angular      -- It's AngularJS
+  *   @dependency {ui-router} ui-router    -- Handles application state and view loading
   *   @dependency {Present}   PControllers -- Module loader for all the applicaiton controllers
   *   @dependency {Present}   PServices    -- Module loader for all the application services
   *   @dependency {Present}   PDirectives  -- Module loader for all the application directives
@@ -59,7 +59,7 @@
      /**
       * Configure Application states using ui router
       * State data -- sets properties of the applicationManageer
-      *   @property <Boolean> fullscreen  -- When true  state is full screen (i.e doens't scroll)
+      *   @property <Boolean> fullscreen  -- When true state is full screen (i.e doens't scroll)
       *   @property <Boolean> navigation  -- When true navigation bar is visible
       */
 

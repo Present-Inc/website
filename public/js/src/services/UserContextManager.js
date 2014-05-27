@@ -25,12 +25,13 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         UserContextApiClient.create(username, password)
           .then(function(rawApiResponse) {
-            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context'], rawApiResponse);
             var userContext = {
-              sessionToken: rawApiResponse.result.object.sessionToken,
-              userId: rawApiResponse.result.object.user.object._id
+              token  : rawApiResponse.result.object.sessionToken,
+              userId : rawApiResponse.result.object._id
             };
-            localStorageService.set('sessionToken', userContext.sessionToken);
+            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
+            localStorageService.clearAll(); 
+            localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
             creatingNewUserContext.resolve(userContext);
           })
@@ -45,7 +46,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       /**
        * destroyActiveUserContext
-       * Sends a request to delete the user context and clears session token from local storage
+       * Sends a request to delete the user context and clears userContext token from local storage
        */
 
       destroyActiveUserContext : function() {
@@ -53,11 +54,11 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         var destroyingUserContext = $q.defer();
 
         var userContext = {
-          sessionToken : localStorageService.get('sessionToken'),
-          userId: localStorageService.get('userId')
+          token  : localStorageService.get('token'),
+          userId : localStorageService.get('userId')
         };
 
-        if(userContext.sessionToken && userContext.userId) {
+        if(userContext.token && userContext.userId) {
 
           UserContextApiClient.destroy(userContext)
             .then(function() {
@@ -84,17 +85,17 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       /**
        * getActiveUserContext
-       * Returns the session token if it exists. Returns false if the session token is invalid
+       * Returns the userContext token if it exists. Returns false if the userContext token is invalid
        */
 
       getActiveUserContext : function() {
 
         var userContext = {
-          sessionToken : localStorageService.get('sessionToken'),
+          token : localStorageService.get('token'),
           userId: localStorageService.get('userId')
         };
 
-        if(userContext.sessionToken && userContext.userId) return userContext;
+        if(userContext.token && userContext.userId) return userContext;
         else return undefined;
 
       }
