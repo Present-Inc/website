@@ -25,7 +25,7 @@
           loadDiscoverFeed : function(cursor) {
 
             var loadingDiscoverFeed = $q.defer();
-            var currentSession = UserContextManager.getActiveUserContext();
+            var userContext = UserContextManager.getActiveUserContext();
 
             VideosApiClient.listBrandNewVideos(cursor, currentSession)
               .then(function(rawApiResponse) {

@@ -1,0 +1,50 @@
+{
+  "status": "OK",
+  "result": {
+    "object": {
+      "__v": 0,
+      "_creationDate": "2014-05-15T05:09:08.846Z",
+      "_id": "53744bf4650762a97c8c94f2",
+      "_lastUpdateDate": "2014-05-25T18:55:23.076Z",
+      "_objectId": "dUakwDkunh",
+      "displayUsername": "ddluc32",
+      "username": "ddluc32",
+      "views": {
+        "count": 317
+      },
+      "videos": {
+        "count": 31
+      },
+      "profile": {
+        "description": "It's a push party",
+        "fullName": "Daniel Lucas",
+        "picture": {
+          "url": "http://files.parse.com/516d5a23-7e80-4e04-a26e-249579cca1de/9dff654a-9b4e-4441-8229-18ae0b1c431d-file"
+        },
+        "location": "Princeton NJ "
+      },
+      "likes": {
+        "count": 105
+      },
+      "friends": {
+        "count": 37
+      },
+      "followers": {
+        "count": 28
+      },
+      "demands": {
+        "count": 3
+      }
+    },
+    "subjectiveObjectMeta": {
+      "friendship": {
+        "forward": false,
+        "backward": false
+      },
+      "demand": {
+        "forward": false,
+        "backward": false
+      }
+    }
+  }
+}

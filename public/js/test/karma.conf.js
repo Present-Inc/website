@@ -23,8 +23,11 @@ module.exports = function(config) {
       'lib/angular-ui-router/release/angular-ui-router.js',
       'lib/angular-local-storage/angular-local-storage.js',
       'lib/angular-mocks/angular-mocks.js',
+      'lib/jquery/dist/jquery.js',
+      'lib/jasmine-jquery/lib/jasmine-jquery.js',
       'dist/app.js',
-      'test/**/*.js'
+      'test/**/*.js',
+      {pattern: 'test/fixtures/**/*.json', included: false}
     ],
 
 

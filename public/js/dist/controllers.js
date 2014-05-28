@@ -166,12 +166,11 @@
       logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
       $scope.Navbar = {
-        userContextMode : UserContextManager.getActiveUserContext()
+        mode: 'default'
       };
 
       $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-        $scope.Navbar.userContextMode = UserContextManager.getActiveUserContext();
-
+        $scope.setMode();
       });
 
       $scope.logout = function() {
@@ -179,6 +178,18 @@
           .then(function() {
               $state.go('splash');
           });
+      };
+
+      $scope.setMode = function() {
+        var userContext = UserContextManager.getActiveUserContext();
+        if(userContext) {
+          $scope.Navbar.mode.default = false;
+          $scope.Navbar.mode.loggedIn = true;
+
+        } else {
+          $scope.Navbar.mode.loggedIn = false;
+          $scope.Navbar.mode.default = true;
+        }
       }
 
     }

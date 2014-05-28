@@ -27,8 +27,8 @@ describe('UserContextManager', function() {
       $httpBackend = $injector.get('$httpBackend');
       $rootScope = $injector.get('$rootScope');
 
-      spyOn(logger, 'debug').and.callThrough();
-      spyOn(logger, 'error').and.callThrough();
+      spyOn(logger, 'debug').and.stub();
+      spyOn(logger, 'error').and.stub();
 
       spyOn(localStorageService, 'set').and.stub();
       spyOn(localStorageService, 'clearAll').and.stub();
@@ -44,10 +44,10 @@ describe('UserContextManager', function() {
         status: 'OK',
         result: {
           object: {
-            _id: '123',
+            _id: '789',
             sessionToken: '456',
             user: {
-              object: {username: 'ddluc32'}
+              object: {_id: '123', username: 'ddluc32'}
             }
           }
         }

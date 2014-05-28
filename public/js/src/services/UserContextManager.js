@@ -27,10 +27,10 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
           .then(function(rawApiResponse) {
             var userContext = {
               token  : rawApiResponse.result.object.sessionToken,
-              userId : rawApiResponse.result.object._id
+              userId : rawApiResponse.result.object.user.object._id
             };
             logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
-            localStorageService.clearAll(); 
+            localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
             creatingNewUserContext.resolve(userContext);
@@ -71,7 +71,7 @@ PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
               logger.error(['PServices.UserContextManager.destroyActiveUserContext',
                             'User context deletion failed. User context data being deleted from local storage']);
               localStorageService.clearAll();
-              destroyingUserContext.reject(error);
+              destroyingUserContext.resolve();
             });
 
         } else {

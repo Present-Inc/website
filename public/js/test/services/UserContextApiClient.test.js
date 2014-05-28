@@ -9,9 +9,9 @@
 
   beforeEach(function() {
 
-   angular.mock.module('PServices');
+    angular.mock.module('PServices');
 
-   inject(function($injector) {
+    inject(function($injector) {
 
     //Service being tested in suite
     UserContextApiClient = $injector.get('UserContextApiClient');
@@ -24,7 +24,7 @@
     spyOn(logger, 'debug').and.stub();
     spyOn(logger, 'error').and.stub();
 
-   });
+    });
 
   });
 
