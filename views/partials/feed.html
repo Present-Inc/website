@@ -1,11 +1,11 @@
-<div ng-repeat="video in FeedManager.videos">
+<div ng-repeat="videoCell in FeedManager.videoCells">
 
   <!-- videoCell -->
   <div video-cell class="videoCell">
     <!-- videoPlayer -->
     <div class="videoPlayer">
       <span class="videoLocation"></span>
-      <img class="still" ng-src="{{video.media.still}}" />
+      <img class="still" ng-src="{{videoCell.video.media.still}}" />
       <div class="jwplayer"></div>
     </div>
     <!-- end videoPlayer -->
@@ -13,32 +13,31 @@
     <!-- videoMetaData -->
     <div class="videoMetaData">
 
-      <div class="timeAgo" ng-bind="video.timeAgo"></div>
+      <div class="timeAgo" ng-bind="videoCell.video.timeAgo"></div>
 
       <!-- creator -->
       <div class="creator">
-        <img class="profilePicture" ng-src="{{video.creator.profilePicture}}" height="70px" width="70px"/>
-        <div class="displayName" ng-bind="video.creator.displayName"></div>
-        <div class="userName" ng-bind="video.creator.username"></div>
-        <div class="title" ng-bind="video.title"></div>
+        <img class="profilePicture" ng-src="{{videoCell.video.creator.profilePicture}}" height="70px" width="70px"/>
+        <div class="displayName" ng-bind="videoCell.video.creator.displayName"></div>
+        <div class="userName" ng-bind="videoCell.video.creator.username"></div>
+        <div class="title" ng-bind="videoCell.video.title"></div>
       </div>
       <!-- end creator -->
-
 
       <!-- counts -->
       <div class="counts">
         <label class="repliesLabel">Replies: </label>
-        <div class="replies" ng-bind="video.counts.replies"></div>
+        <div class="replies" ng-bind="videoCell.replies.count"></div>
         <label class="likesLabel">Likes: </label>
-        <div class="likes"   ng-bind="video.counts.likes"></div>
+        <div class="likes"   ng-bind="videoCell.likes.count"></div>
         <label class="commentsLabel">Comments: </label>
-        <div class="comments" ng-bind="video.counts.comments"></div>
+        <div class="comments" ng-bind="videoCell.comments.counts"></div>
       </div>
       <!-- end counts -->
 
       <!-- commentsPreview -->
       <div class="commentsPreview">
-        <div ng-repeat="comment in video.comments">
+        <div ng-repeat="comment in videoCell.comments">
           <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
           <div class="commentBody" ng-bind="comment.body"></div>
         </div>
@@ -50,5 +49,5 @@
     <!-- end videoMetaData -->
   </div>
   <!-- end videoCell -->
-  
+
 </div>

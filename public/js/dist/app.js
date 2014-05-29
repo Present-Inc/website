@@ -100,7 +100,8 @@
           },
           resolve: {
             discoverFeed : function(FeedLoader) {
-              return FeedLoader.loadDiscoverFeed();
+                return FeedLoader.loadDiscoverFeed();
+                //return {}
             }
           }
         })
@@ -413,16 +414,47 @@
   ]);
 
 /**
- * PConstructors.Feed
+ * PConstructors.FeedConstructor
+ * Constructs the Feed, which is composed of Video Cells
+ *   @dependency {Present} VideoCellConstructor
+ */
+
+  PConstructors.factory('FeedConstructor', ['VideoCellConstructor',
+
+    function(VideoCellConstructor) {
+      return {
+        create: function(apiResponse) {
+
+          var Feed = {
+            cursor: apiResponse.nextCursor,
+            videoCells: []
+          }
+
+          for(var i=0, length=apiResponse.results.length; i < length; i++) {
+            var VideoCell = {
+              video    : VideoCellConstructor.Video.create(apiResponse.results[i].object),
+              comments : VideoCellConstructor.Comments.create(apiResponse.results[i].object.comments),
+              likes    : VideoCellConstructor.Likes.create(apiResponse.results[i].object.likes),
+              replies  : VideoCellConstructor.Replies.create(apiResponse.results[i].object.replies)
+            };
+            Feed.videoCells.push(VideoCell);
+          }
+
+          return Feed;
+
+        }
+      }
+    }
+
+ ]);
 
 
 /**
  * PConstructors.VideoCellConstructor
  *  Constructs the individial components of a video cell
- *   @dependency {Utilities} logger
  */
 
- PConstructors.factory('VideoCellConstructor', ['logger', function() {
+ PConstructors.factory('VideoCellConstructor', [function() {
    return {
     Video : {
       create : function(apiVideoObject) {
@@ -432,8 +464,8 @@
           this.title = apiVideoObject.title;
           this.isAvailable = apiVideoObject.isAvailable;
           this.media = {
-            still          : apiVideoObject.mediaUrls.images['480px'],
-            replayPlaylist : apiVideoObject.mediaUrls.playlists.replay.master
+            still          : apiVideoObject.mediaUrls.images['480px'] || null,
+            replayPlaylist : apiVideoObject.mediaUrls.playlists.replay.master || null
           }
           //Check to see if the video is live
           if(!apiVideoObject.creationTimeRange.endDate) {
@@ -453,18 +485,18 @@
           };
 
           this.creator = {
-            _id             : creatorUser.object._id,
-            username        : creatorUser.object.username,
-            fullName        : creatorUser.obect.fullName,
-            profilePicture  : creatorUser.object.profile.picture.url,
+            _id             : apiVideoObject.creatorUser.object._id,
+            username        : apiVideoObject.creatorUser.object.username,
+            fullName        : apiVideoObject.creatorUser.object.profile.fullName,
+            profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
           }
 
           //Determine the display name(s)
-          if(this.creator.fullname) {
-            this.displayName = this.creator.fullName;
-            this.altName = this.creator.username;
+          if(apiVideoObject.creatorUser.object.fullName) {
+            this.displayName = apiVideoObject.creatorUser.object.fullName;
+            this.altName = apiVideoObject.creatorUser.object.username;
           } else {
-            this.displayName = this.creator.username;
+            this.displayName = apiVideoObject.creatorUser.object.username;
             this.altName = null;
           }
         }
@@ -474,13 +506,13 @@
       }
      },
      Comments: {
-      create: function(apiCommentResults) {
+      create: function(apiCommentsObject) {
 
        function Comment(apiCommentObject) {
          this.body = apiCommentObject.body,
          this.sourceUser = {
            username: apiCommentObject.sourceUser.object.username,
-           profilePicture: apiCommentObjectx.sourceUser.object.profile.picture
+           profilePicture: apiCommentObject.sourceUser.object.profile.picture
          }
          //TODO: implement momentsjs to generate formatted time from apiCommentObject
          this.timeAgo = '5 min'
@@ -488,20 +520,20 @@
 
        var comments = [];
 
-       for(var i=0, length=apiCommentResults.length; i < length; i++) {
-           var newComment = new Comment(apiCommentResults[i]);
+       for(var i=0, length=apiCommentsObject.results.length; i < length; i++) {
+           var newComment = new Comment(apiCommentsObject.results[i].object);
            comments.push(newComment);
        }
 
-         return comments;
+       return comments;
 
        }
      },
      Replies: {
        create: function(apiRepliesObject) {
 
-        function Reply(ApiRepliesObject) {
-           count: ApiRepliesObject
+        function Reply(apiRepliesObject) {
+           this.count = apiRepliesObject.count
         };
 
         return new Reply(apiRepliesObject);
@@ -509,19 +541,176 @@
        }
      },
      Likes: {
-      create: function(ApiLikesObject) {
+      create: function(apiLikesObject) {
 
-       function Likes() {
-          count: ApiLikesObject.count
+       function Likes(apiLikesObject) {
+          this.count = apiLikesObject.count
        }
 
-       return new Likes();
+       return new Likes(apiLikesObject);
 
       }
      }
 
    }
  }]);
+
+  /**
+   * PLoaders.FeedLoader
+   * Provides and interface to the VideosApiClint to the view Controllers
+   * Parses and prepares the results provided from the VideoApiClient
+   *    @dependency {Angular} $q
+   *    @dependency {Utilities} logger
+   *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
+   *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
+   *    @dependency {Present} UserContextManager -- Manages the user userContext data
+   */
+
+  PLoaders.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'FeedConstructor', 'UserContextManager',
+
+     function($q, logger, VideosApiClient, FeedConstructor, UserContextManager) {
+
+       return {
+
+          /**
+           * loadDiscoverFeed
+           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view controllers
+           *   @params <Number> cursor -- video cursor provided to the API
+           */
+
+          loadDiscoverFeed : function(cursor) {
+
+            var loadingDiscoverFeed = $q.defer();
+            var userContext = UserContextManager.getActiveUserContext();
+
+            VideosApiClient.listBrandNewVideos(cursor, userContext)
+              .then(function(apiResponse) {
+                var Feed = FeedConstructor.create(apiResponse);
+                loadingDiscoverFeed.resolve(Feed);
+              })
+              .catch(function(apiResponse) {
+                //TODO better error handling
+                loadingDiscoverFeed.resolve(false)
+              });
+
+            return loadingDiscoverFeed.promise;
+
+          },
+
+          /**
+           * loadHomeFeed
+           * Prepares the data from UsersApiClient.listHomeVideos
+           *   @params <Number> cursor -- video cursor provided to the API
+           */
+
+          loadHomeFeed : function(cursor) {
+
+            var loadingHomeFeed = $q.defer();
+            var currentSession = UserContextManager.getActiveUserContext();
+
+            if(currentSession.token && currentSession.userId) {
+
+              VideosApiClient.listHomeVideos(cursor, currentSession)
+                .then(function(rawApiResponse) {
+
+                  var deserializedFeed = {
+                    cursor: rawApiResponse.nextCursor,
+                    videos: []
+                  };
+
+                  for(var i=0; i < rawApiResponse.results.length; i++) {
+                    var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
+                    deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
+                    deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
+                    deserializedFeed.videos.push(deserializedVideo);
+                  };
+
+                  logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
+                  loadingHomeFeed.resolve(deserializedFeed);
+
+                })
+                .catch(function(rawApiResponse) {
+                  //TODO better error handling
+                  loadingHomeFeed.resolve(false);
+                });
+
+            } else loadingHomeFeed.resolve(false);
+
+            return loadingHomeFeed.promise;
+
+          }
+        }
+      }
+
+  ]);
+
+/**
+ * PLoaders.ProfileLoader
+ * Provides and interface to the VideosApiClient to the view controllers
+ * Parses and prepares the results provided from the UserApiClient
+ *   @dependency {Angular} $q
+ *   @dependency {Utilities} logger
+ *   @dependency {Present} UsersApiClient
+ *   @dependency {Present} Session Manager
+ */
+
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+
+   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
+
+     return {
+
+       /**
+        * loadProfile
+        * Prepares the data from UserApiClient.show to be injected into the view controllers
+        */
+
+        loadOwnProfile : function() {
+
+          var loadingProfile = $q.defer();
+          var userContext = UserContextManager.getActiveUserContext();
+
+          if(userContext.token && userContext.userId) {
+              UsersApiClient.showMe(userContext)
+                .then(function(rawApiResponse) {
+                  var deserializedProfile = {};
+                  deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
+                  logger.test(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
+                  loadingProfile.resolve(deserializedProfile);
+                })
+                .catch(function() {
+                  loadingProfile.resolve(false);
+                });
+          }
+
+          return loadingProfile.promise;
+
+        },
+
+        loadUserProfile : function(username) {
+
+          var loadingProfile = $q.defer();
+          var userContext = UserContextManager.getActiveUserContext();
+
+          UsersApiClient.show(username, userContext)
+            .then(function(rawApiResponse) {
+              var deserializedProfile = {};
+              deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
+              logger.debug(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
+              loadingProfile.resolve(deserializedProfile);
+            })
+            .catch(function() {
+              loadingProfile.resolve(false);
+            });
+
+          return loadingProfile.promise;
+
+        }
+
+     }
+   }
+
+]);
 
 /*
 * PManagers.applicationManager
@@ -556,10 +745,10 @@
          //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
-         this.videos = [];
          this.cursor = -1;
          this.isLoading = false;
          this.errorMessage = '';
+         this.videoCells = [];
        };
 
       /* FeedManager.loadMoreVideos
@@ -741,7 +930,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       $scope.FeedManager = FeedManager;
       $scope.FeedManager.type = 'discover';
       $scope.FeedManager.cursor = discoverFeed.cursor;
-      $scope.FeedManager.videos = discoverFeed.videos;
+      $scope.FeedManager.videoCells = discoverFeed.videoCells;
 
       //Refreshes the discoverFeed
       $scope.refreshFeed = function() {

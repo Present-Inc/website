@@ -19,7 +19,7 @@
       $scope.FeedManager = FeedManager;
       $scope.FeedManager.type = 'discover';
       $scope.FeedManager.cursor = discoverFeed.cursor;
-      $scope.FeedManager.videos = discoverFeed.videos;
+      $scope.FeedManager.videoCells = discoverFeed.videoCells;
 
       //Refreshes the discoverFeed
       $scope.refreshFeed = function() {

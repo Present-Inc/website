@@ -13,10 +13,10 @@
          //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
-         this.videos = [];
          this.cursor = -1;
          this.isLoading = false;
          this.errorMessage = '';
+         this.videoCells = [];
        };
 
       /* FeedManager.loadMoreVideos

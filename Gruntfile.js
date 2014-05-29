@@ -8,13 +8,25 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
-          services: {
-            src: ['public/js/src/apiClient/**/*.js',
-                  'public/js/src/constructors/**/*.js',
-                  'pubnlic/js/src/loaders/**/*.js',
-                  'public/js/src/managers/**/*.js',
-                  'public/js/src/utilities/**/*.js'],
-            dest: 'public/js/dist/services.js'
+          apiClient: {
+            src: ['public/js/src/apiClient/**/*.js'],
+            dest: 'public/js/dist/apiClient.js'
+          },
+          constructors: {
+            src: ['public/js/src/constructors/**/*.js'],
+            dest: 'public/js/dist/constructors.js'
+          },
+          loaders: {
+            src: ['public/js/src/loaders/**/*.js'],
+            dest: 'public/js/dist/loaders.js'
+          },
+          managers: {
+            src: ['public/js/src/managers/**/*.js'],
+            dest: 'public/js/dist/managers.js'
+          },
+          utilities: {
+            src: ['public/js/src/utilities/**/*.js'],
+            dest: 'public/js/dist/utilities.js'
           },
           controllers: {
             src: ['public/js/src/controllers/**/*.js'],
@@ -26,7 +38,11 @@ module.exports = function(grunt) {
           },
           app: {
             src: ['public/js/src/app.js',
-                  'public/js/dist/services.js',
+                  'public/js/dist/apiClient.js',
+                  'public/js/dist/constructors.js',
+                  'public/js/dist/loaders.js',
+                  'public/js/dist/managers.js',
+                  'public/js/dist/utilities.js',
                   'public/js/dist/controllers.js',
                   'public/js/dist/directives.js'],
             dest: 'public/js/dist/app.js'
@@ -65,6 +81,11 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('run-sass', ['watch:scss']);
-    grunt.registerTask('run-build', ['concat:services', 'concat:controllers', 'concat:directives', 'concat:app']);
-    grunt.registerTask('run-tests', ['concat:services', 'concat:controllers', 'concat:directives', 'concat:app', 'karma']);
+
+    grunt.registerTask('run-build', ['concat:apiClient', 'concat:constructors', 'concat:loaders', 'concat:managers',
+                                     'concat:utilities', 'concat:controllers', 'concat:directives', 'concat:app']);
+
+    grunt.registerTask('run-tests', ['concat:apiClient', 'concat:constructors', 'concat:loaders', 'concat:managers',
+                                     'concat:utilities', 'concat:controllers', 'concat:directives', 'concat:app',
+                                     'karma:unit']);
 };
