@@ -1,5 +1,5 @@
 /**
- * PServices.UserContextApiClient
+ * PApiClient.UserContextApiClient
  * Creates, updates, and destroys User Context Tokens
  *   @dependency {Angular} $http
  *   @dependency {Angular} $q
@@ -7,7 +7,7 @@
  *   @dependency {Present} ApiConfig  -- Provides API configuration properties
  */
 
-  PServices.factory('UserContextApiClient', ['$http', '$q', 'logger', 'ApiConfig',
+  PApiClient.factory('UserContextApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
    function($http, $q, logger, ApiConfig) {
      return {

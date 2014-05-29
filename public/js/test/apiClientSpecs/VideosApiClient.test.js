@@ -1,6 +1,6 @@
 /**
  * VideosApiClient.test
- * Test suite for PServices.VideosApiClient
+ * Test suite for PApiClient.VideosApiClient
  */
 
 describe('VideosApiClient', function() {
@@ -10,7 +10,8 @@ describe('VideosApiClient', function() {
 
   beforeEach(function() {
 
-    angular.mock.module('PServices');
+    angular.mock.module('PApiClient');
+    angular.mock.module('PUtilities');
 
     inject(function($injector) {
 

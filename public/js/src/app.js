@@ -12,27 +12,38 @@
    * Define Present Modules
    */
 
-  var PServices = angular.module('PServices', []);
   var PControllers = angular.module('PControllers', []);
   var PDirectives = angular.module('PDirectives', []);
+  var PConstructors = angular.module('PConstructors', []);
+  var PLoaders = angular.module('PLoaders', []);
+  var PManagers = angular.module('PManagers', []);
+  var PUtilities = angular.module('PUtilities', []);
+  var PApiClient = angular.module('PApiClient', []);
 
  /**
   * Initialize Angular Application
-  *   @dependency {Angular}   Angular      -- It's AngularJS
-  *   @dependency {ui-router} ui-router    -- Handles application state and view loading
-  *   @dependency {Present}   PControllers -- Module loader for all the applicaiton controllers
-  *   @dependency {Present}   PServices    -- Module loader for all the application services
-  *   @dependency {Present}   PDirectives  -- Module loader for all the application directives
+  *   @dependency {Angular}   Angular       -- It's AngularJS
+  *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
+  *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
+  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the controllers
+  *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
+  *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
+  *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
+  *   @dependency {Present}   PDirectives   -- Defines the custom HTML elements
+  *   @dependency {Present}   PUtilities    -- Utility functions
   */
 
   var PresentWebApp = angular.module('PresentWebApp',
-    ['ui.router', 'LocalStorageModule', 'PControllers', 'PServices', 'PDirectives']);
+    ['ui.router', 'LocalStorageModule',
+     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
+
 
   /**
    * PresentWebApp State Configureation
    * Define routes with ui-router's $stateProvider
    *   @dependency {ui-router} $stateProvider
    *   @dependency {Angular}   $locationProvider
+   *   @dependency {LStorage}  $localStorageServiceProvider
    */
 
   PresentWebApp.config(['$stateProvider', '$locationProvider', 'localStorageServiceProvider',
@@ -58,9 +69,10 @@
 
      /**
       * Configure Application states using ui router
-      * State data -- sets properties of the applicationManageer
-      *   @property <Boolean> fullscreen  -- When true state is full screen (i.e doens't scroll)
-      *   @property <Boolean> navigation  -- When true navigation bar is visible
+      * State data -- sets properties of the ApplicationManager
+      *   @property <Boolean> fullscreen          -- When true state is full screen (i.e doens't scroll)
+      *   @property <Boolean> navigation          -- When true navigation bar is visible
+      *   @property <Boolean> requiresUserContext -- When true user context is required to access state
       */
 
 

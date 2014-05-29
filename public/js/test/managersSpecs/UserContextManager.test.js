@@ -1,6 +1,6 @@
 /**
  * UserContextManager.test
- * Test suite for PServices.UserContextManager
+ * Test suite for PManagers.UserContextManager
  */
 
 describe('UserContextManager', function() {
@@ -9,7 +9,9 @@ describe('UserContextManager', function() {
 
   beforeEach(function() {
 
-    angular.mock.module('PServices');
+    angular.mock.module('PManagers');
+    angular.mock.module('PUtilities');
+    angular.mock.module('PApiClient'); 
     angular.mock.module('LocalStorageModule');
 
     inject(function($injector) {

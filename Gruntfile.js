@@ -9,7 +9,11 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
           services: {
-            src: ['public/js/src/services/**/*.js'],
+            src: ['public/js/src/apiClient/**/*.js',
+                  'public/js/src/constructors/**/*.js',
+                  'pubnlic/js/src/loaders/**/*.js',
+                  'public/js/src/managers/**/*.js',
+                  'public/js/src/utilities/**/*.js'],
             dest: 'public/js/dist/services.js'
           },
           controllers: {

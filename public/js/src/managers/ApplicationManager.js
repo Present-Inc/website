@@ -1,10 +1,10 @@
 /*
-* PServices.applicationManager
+* PManagers.applicationManager
 * Provides properties and methods to manage the state of the application
 * Only injected one per application, usually on the highest level scope
 */
 
-  PServices.factory('ApplicationManager', [function() {
+  PManagers.factory('ApplicationManager', [function() {
 
     function ApplicationManager() {
       this.fullscreenEnabled = false;

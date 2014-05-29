@@ -1,5 +1,5 @@
   /**
-   * PServices.UsersApiClient
+   * PApiClient.UsersApiClient
    * Sends API requests directed at the Users API resource and handles the raw API response.
    *   @dependency {Angular} $http
    *   @dependency {Angular} $q
@@ -8,7 +8,7 @@
    *
    */
 
-  PServices.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
+  PApiClient.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
     function($http, $q, logger, ApiConfig) {
 

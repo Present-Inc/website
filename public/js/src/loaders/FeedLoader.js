@@ -1,4 +1,3 @@
-
   /**
    * PServices.FeedLoader
    * Provides and interface to the VideosApiClint to the view Controllers
@@ -10,9 +9,9 @@
    *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
-  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+  PServices.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'Feed', 'UserContextManager',
 
-     function($q, logger, VideosApiClient, ApiClientResponseHandler, UserContextManager) {
+     function($q, logger, VideosApiClient, ApiClientResponseHandler, Feed, UserContextManager) {
 
        return {
 
@@ -27,24 +26,10 @@
             var loadingDiscoverFeed = $q.defer();
             var userContext = UserContextManager.getActiveUserContext();
 
-            VideosApiClient.listBrandNewVideos(cursor, currentSession)
+            VideosApiClient.listBrandNewVideos(cursor, userContext)
               .then(function(rawApiResponse) {
-
-                var deserializedFeed = {
-                  cursor: rawApiResponse.nextCursor,
-                  videos: []
-                };
-
-                for(var i=0; i < rawApiResponse.results.length; i++) {
-                  var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                  deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                  deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                  deserializedFeed.videos.push(deserializedVideo);
-                };
-
-                logger.debug(['PServices.FeedLoader -- loading the discover feed', deserializedFeed]);
-                loadingDiscoverFeed.resolve(deserializedFeed);
-
+                var Feed = Feed.create();
+                loadingDiscoverFeed.resolve(Feed);
               })
               .catch(function(rawApiResponse) {
                 //TODO better error handling
@@ -68,7 +53,7 @@
 
             if(currentSession.token && currentSession.userId) {
 
-              VideosApiClient.listHomeVideos(currentSession, cursor)
+              VideosApiClient.listHomeVideos(cursor, currentSession)
                 .then(function(rawApiResponse) {
 
                   var deserializedFeed = {

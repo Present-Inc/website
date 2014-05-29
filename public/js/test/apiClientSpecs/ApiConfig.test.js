@@ -1,11 +1,13 @@
 /**
  * UserContextManager.test.js
- * Jasmine unit tests for PServices.UserContextManager
+ * Jasmine unit tests for PApiClient.UserContextManager
  */
 
   describe('ApiConfig', function() {
 
-    beforeEach(module('PServices'));
+    beforeEach(function() {
+      angular.mock.module('PApiClient');
+    });
 
     describe('getAddress', function() {
       it('getAddress should return the api adress', inject(function(ApiConfig) {
@@ -18,6 +20,5 @@
         expect(ApiConfig.getVideoQueryLimit()).toEqual(5);
       }));
     });
-    
 
   });

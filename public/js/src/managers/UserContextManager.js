@@ -1,12 +1,11 @@
-
 /**
- * PServices.UserContextManager
+ * PManagers.UserContextManager
  *   @dependency {Angular} $q
  *   @dependency {Present} logger -- configurable logger for development
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PServices.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
 
   function($q, localStorageService, logger, UserContextApiClient) {
 

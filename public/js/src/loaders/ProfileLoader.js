@@ -1,5 +1,5 @@
 /**
- * PServices.ProfileLoader
+ * PLoaders.ProfileLoader
  * Provides and interface to the VideosApiClient to the view controllers
  * Parses and prepares the results provided from the UserApiClient
  *   @dependency {Angular} $q
@@ -8,7 +8,7 @@
  *   @dependency {Present} Session Manager
  */
 
-PServices.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
 
    function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
 

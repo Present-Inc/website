@@ -1,11 +1,11 @@
 /*
- * PServices.FeedManager
+ * PManagers.FeedManager
  * Provides properties and methods to manage the state of Video Feeds
  *   @dependency {Present} logger
  *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
  */
 
-  PServices.factory('FeedManager', ['logger', 'FeedLoader',
+  PManagers.factory('FeedManager', ['logger', 'FeedLoader',
 
     function(logger, FeedLoader) {
 

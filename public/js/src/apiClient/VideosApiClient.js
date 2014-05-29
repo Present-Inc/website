@@ -1,5 +1,5 @@
 /**
- * PServices.VideoApiClient
+ * PApiClient.VideoApiClient
  * Sends API requests directed at the Videos API Resource and handles the raw API response
  *   @dependency {Angular} $http
  *   @dependency {Angular} $q
@@ -8,7 +8,7 @@
  *
  */
 
-  PServices.factory('VideosApiClient', ['$http', '$q', 'logger', 'ApiConfig',
+  PApiClient.factory('VideosApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
     function($http, $q, logger, ApiConfig) {
 

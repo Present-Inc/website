@@ -1,6 +1,6 @@
 /**
  * UserContextApiClient.test
- * Test suite for PServices.UserContextApiClient
+ * Test suite for PApiClient.UserContextApiClient
  */
 
  describe('UserContextApiClient', function() {
@@ -9,7 +9,8 @@
 
   beforeEach(function() {
 
-    angular.mock.module('PServices');
+    angular.mock.module('PApiClient');
+    angular.mock.module('PUtilities');
 
     inject(function($injector) {
 
