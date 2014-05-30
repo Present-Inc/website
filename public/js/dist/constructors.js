@@ -31,7 +31,7 @@
       }
     }
 
- ]);
+  ]);
 
 /**
  * PConstructors.ProfileConstructor
@@ -110,6 +110,12 @@
             fullName        : apiVideoObject.creatorUser.object.profile.fullName,
             profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
           }
+
+          this.counts = {
+            comments : apiVideoObject.comments.count,
+            likes    : apiVideoObject.likes.count,
+            replies  : apiVideoObject.replies.count
+          };
 
           //Determine the display name(s)
           if(apiVideoObject.creatorUser.object.fullName) {
