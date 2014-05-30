@@ -5,7 +5,7 @@
    *    @dependency {Angular} $q
    *    @dependency {Utilities} logger
    *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
-   *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
+   *    @dependency {Present} FeedConstructor -- Constructs the new feed object
    *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
@@ -54,30 +54,18 @@
             if(currentSession.token && currentSession.userId) {
 
               VideosApiClient.listHomeVideos(cursor, currentSession)
-                .then(function(rawApiResponse) {
-
-                  var deserializedFeed = {
-                    cursor: rawApiResponse.nextCursor,
-                    videos: []
-                  };
-
-                  for(var i=0; i < rawApiResponse.results.length; i++) {
-                    var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                    deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                    deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                    deserializedFeed.videos.push(deserializedVideo);
-                  };
-
-                  logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
-                  loadingHomeFeed.resolve(deserializedFeed);
-
+                .then(function(apiResponse) {
+                  var Feed = FeedConstructor.create(apiResponse);
+                  loadingHomeFeed.resolve(Feed);
                 })
                 .catch(function(rawApiResponse) {
                   //TODO better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else loadingHomeFeed.resolve(false);
+            } else {
+                loadingHomeFeed.resolve(false);
+            }
 
             return loadingHomeFeed.promise;
 
@@ -97,9 +85,9 @@
  *   @dependency {Present} Session Manager
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
+   function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
      return {
 
@@ -115,11 +103,9 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
 
           if(userContext.token && userContext.userId) {
               UsersApiClient.showMe(userContext)
-                .then(function(rawApiResponse) {
-                  var deserializedProfile = {};
-                  deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-                  logger.test(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-                  loadingProfile.resolve(deserializedProfile);
+                .then(function(apiResponse) {
+                  var profile = ProfileConstructor.create(apiResponse.result.object);
+                  loadingProfile.resolve(profile);
                 })
                 .catch(function() {
                   loadingProfile.resolve(false);
@@ -136,13 +122,12 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
           var userContext = UserContextManager.getActiveUserContext();
 
           UsersApiClient.show(username, userContext)
-            .then(function(rawApiResponse) {
-              var deserializedProfile = {};
-              deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-              logger.debug(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-              loadingProfile.resolve(deserializedProfile);
+            .then(function(apiResponse) {
+              var profile = ProfileConstructor.create(apiResponse.result.object);
+              loadingProfile.resolve(profile);
             })
             .catch(function() {
+              //TODO:
               loadingProfile.resolve(false);
             });
 

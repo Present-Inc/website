@@ -8,9 +8,9 @@
  *   @dependency {Present} Session Manager
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
+   function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
      return {
 
@@ -26,11 +26,9 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
 
           if(userContext.token && userContext.userId) {
               UsersApiClient.showMe(userContext)
-                .then(function(rawApiResponse) {
-                  var deserializedProfile = {};
-                  deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-                  logger.test(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-                  loadingProfile.resolve(deserializedProfile);
+                .then(function(apiResponse) {
+                  var profile = ProfileConstructor.create(apiResponse.result.object);
+                  loadingProfile.resolve(profile);
                 })
                 .catch(function() {
                   loadingProfile.resolve(false);
@@ -47,13 +45,12 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
           var userContext = UserContextManager.getActiveUserContext();
 
           UsersApiClient.show(username, userContext)
-            .then(function(rawApiResponse) {
-              var deserializedProfile = {};
-              deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-              logger.debug(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-              loadingProfile.resolve(deserializedProfile);
+            .then(function(apiResponse) {
+              var profile = ProfileConstructor.create(apiResponse.result.object);
+              loadingProfile.resolve(profile);
             })
             .catch(function() {
+              //TODO:
               loadingProfile.resolve(false);
             });
 

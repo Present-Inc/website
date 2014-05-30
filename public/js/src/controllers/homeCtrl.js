@@ -24,16 +24,17 @@
       $scope.FeedManager = FeedManager;
       $scope.FeedManager.type = 'home';
       $scope.FeedManager.cursor = homeFeed.cursor;
-      $scope.FeedManager.videos = homeFeed.videos;
-
+      $scope.FeedManager.videoCells = homeFeed.videoCells;
 
       $scope.refreshFeed = function() {
-       $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
-         .then(function(newHomeFeed) {
+        $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
+          .then(function(newHomeFeed) {
             $scope.FeedManager.videos = newHomeFeed.videos;
             $scope.FeedManager.cursor = newHomeFeed.cursor;
-         })
+          })
       }
+
+
     }
 
   ]);

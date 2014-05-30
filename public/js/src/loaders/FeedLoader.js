@@ -5,7 +5,7 @@
    *    @dependency {Angular} $q
    *    @dependency {Utilities} logger
    *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
-   *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
+   *    @dependency {Present} FeedConstructor -- Constructs the new feed object
    *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
@@ -54,30 +54,18 @@
             if(currentSession.token && currentSession.userId) {
 
               VideosApiClient.listHomeVideos(cursor, currentSession)
-                .then(function(rawApiResponse) {
-
-                  var deserializedFeed = {
-                    cursor: rawApiResponse.nextCursor,
-                    videos: []
-                  };
-
-                  for(var i=0; i < rawApiResponse.results.length; i++) {
-                    var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                    deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                    deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                    deserializedFeed.videos.push(deserializedVideo);
-                  };
-
-                  logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
-                  loadingHomeFeed.resolve(deserializedFeed);
-
+                .then(function(apiResponse) {
+                  var Feed = FeedConstructor.create(apiResponse);
+                  loadingHomeFeed.resolve(Feed);
                 })
                 .catch(function(rawApiResponse) {
                   //TODO better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else loadingHomeFeed.resolve(false);
+            } else {
+                loadingHomeFeed.resolve(false);
+            }
 
             return loadingHomeFeed.promise;
 

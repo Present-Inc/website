@@ -101,7 +101,6 @@
           resolve: {
             discoverFeed : function(FeedLoader) {
                 return FeedLoader.loadDiscoverFeed();
-                //return {}
             }
           }
         })
@@ -448,6 +447,39 @@
 
  ]);
 
+/**
+ * PConstructors.ProfileConstructor
+ * Constructs a new Profile Object
+ */
+
+ PConstructors.factory('ProfileConstructor', function() {
+   return {
+     create : function(apiProfileObject) {
+
+       function Profile(apiProfileObject) {
+         this._id = apiProfileObject._id;
+         this.username = apiProfileObject.username;
+         this.fullName = apiProfileObject.profile.fullName;
+         this.profilePicture = apiProfileObject.profile.picture.url;
+         this.description = apiProfileObject.profile.description;
+
+         this.counts = {
+           videos: apiProfileObject.videos.count,
+           views: apiProfileObject.views.count,
+           likes: apiProfileObject.likes.count,
+           followers: apiProfileObject.followers.count,
+           friends: apiProfileObject.friends.count
+         }
+
+         this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
+         this.email = apiProfileObject.email ? apiProfileObject.email : null;
+       }
+
+       return new Profile(apiProfileObject); 
+
+     }
+   }
+ });
 
 /**
  * PConstructors.VideoCellConstructor
@@ -455,7 +487,9 @@
  */
 
  PConstructors.factory('VideoCellConstructor', [function() {
+
    return {
+
     Video : {
       create : function(apiVideoObject) {
 
@@ -505,6 +539,7 @@
 
       }
      },
+
      Comments: {
       create: function(apiCommentsObject) {
 
@@ -529,8 +564,9 @@
 
        }
      },
+
      Replies: {
-       create: function(apiRepliesObject) {
+      create: function(apiRepliesObject) {
 
         function Reply(apiRepliesObject) {
            this.count = apiRepliesObject.count
@@ -538,8 +574,9 @@
 
         return new Reply(apiRepliesObject);
 
-       }
+      }
      },
+
      Likes: {
       create: function(apiLikesObject) {
 
@@ -553,6 +590,7 @@
      }
 
    }
+
  }]);
 
   /**
@@ -562,7 +600,7 @@
    *    @dependency {Angular} $q
    *    @dependency {Utilities} logger
    *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
-   *    @dependency {Present} ApiClientResponseHandler -- Parses the raw api responses
+   *    @dependency {Present} FeedConstructor -- Constructs the new feed object
    *    @dependency {Present} UserContextManager -- Manages the user userContext data
    */
 
@@ -611,30 +649,18 @@
             if(currentSession.token && currentSession.userId) {
 
               VideosApiClient.listHomeVideos(cursor, currentSession)
-                .then(function(rawApiResponse) {
-
-                  var deserializedFeed = {
-                    cursor: rawApiResponse.nextCursor,
-                    videos: []
-                  };
-
-                  for(var i=0; i < rawApiResponse.results.length; i++) {
-                    var deserializedVideo = ApiClientResponseHandler.deserializeVideo(rawApiResponse.results[i].object);
-                    deserializedVideo.comments = ApiClientResponseHandler.deserializeComments(rawApiResponse.results[i].object.comments);
-                    deserializedVideo.creator = ApiClientResponseHandler.deserializeCreator(rawApiResponse.results[i].object.creatorUser.object);
-                    deserializedFeed.videos.push(deserializedVideo);
-                  };
-
-                  logger.debug(['PServices.FeedLoader -- loading the home feed', deserializedFeed]);
-                  loadingHomeFeed.resolve(deserializedFeed);
-
+                .then(function(apiResponse) {
+                  var Feed = FeedConstructor.create(apiResponse);
+                  loadingHomeFeed.resolve(Feed);
                 })
                 .catch(function(rawApiResponse) {
                   //TODO better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else loadingHomeFeed.resolve(false);
+            } else {
+                loadingHomeFeed.resolve(false);
+            }
 
             return loadingHomeFeed.promise;
 
@@ -654,9 +680,9 @@
  *   @dependency {Present} Session Manager
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientResponseHandler', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ApiClientResponseHandler, UserContextManager) {
+   function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
      return {
 
@@ -672,11 +698,9 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
 
           if(userContext.token && userContext.userId) {
               UsersApiClient.showMe(userContext)
-                .then(function(rawApiResponse) {
-                  var deserializedProfile = {};
-                  deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-                  logger.test(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-                  loadingProfile.resolve(deserializedProfile);
+                .then(function(apiResponse) {
+                  var profile = ProfileConstructor.create(apiResponse.result.object);
+                  loadingProfile.resolve(profile);
                 })
                 .catch(function() {
                   loadingProfile.resolve(false);
@@ -693,13 +717,12 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ApiClientR
           var userContext = UserContextManager.getActiveUserContext();
 
           UsersApiClient.show(username, userContext)
-            .then(function(rawApiResponse) {
-              var deserializedProfile = {};
-              deserializedProfile = ApiClientResponseHandler.deserializeProfile(rawApiResponse.result.object);
-              logger.debug(['PServices.ProfileLoader.loadOwnProfile -- loading the profile data', deserializedProfile]);
-              loadingProfile.resolve(deserializedProfile);
+            .then(function(apiResponse) {
+              var profile = ProfileConstructor.create(apiResponse.result.object);
+              loadingProfile.resolve(profile);
             })
             .catch(function() {
+              //TODO:
               loadingProfile.resolve(false);
             });
 
@@ -971,16 +994,17 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       $scope.FeedManager = FeedManager;
       $scope.FeedManager.type = 'home';
       $scope.FeedManager.cursor = homeFeed.cursor;
-      $scope.FeedManager.videos = homeFeed.videos;
-
+      $scope.FeedManager.videoCells = homeFeed.videoCells;
 
       $scope.refreshFeed = function() {
-       $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
-         .then(function(newHomeFeed) {
+        $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
+          .then(function(newHomeFeed) {
             $scope.FeedManager.videos = newHomeFeed.videos;
             $scope.FeedManager.cursor = newHomeFeed.cursor;
-         })
+          })
       }
+
+
     }
 
   ]);

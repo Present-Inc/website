@@ -101,7 +101,6 @@
           resolve: {
             discoverFeed : function(FeedLoader) {
                 return FeedLoader.loadDiscoverFeed();
-                //return {}
             }
           }
         })
