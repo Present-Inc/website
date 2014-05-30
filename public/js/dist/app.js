@@ -650,11 +650,11 @@
           loadHomeFeed : function(cursor) {
 
             var loadingHomeFeed = $q.defer();
-            var currentSession = UserContextManager.getActiveUserContext();
+            var userContext = UserContextManager.getActiveUserContext();
 
-            if(currentSession.token && currentSession.userId) {
+            if(userContext.token && userContext.userId) {
 
-              VideosApiClient.listHomeVideos(cursor, currentSession)
+              VideosApiClient.listHomeVideos(cursor, userContext)
                 .then(function(apiResponse) {
                   var Feed = FeedConstructor.create(apiResponse);
                   loadingHomeFeed.resolve(Feed);

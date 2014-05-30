@@ -5,14 +5,11 @@
 
 describe('UserContextManager', function() {
 
-  var UserContextManager, logger, localStorageService, UserContextApiClient, mockApiResponse, $q, $httpBackend, $rootScope;
+  var UserContextManager, logger, localStorageService, UserContextApiClient,  $q, $httpBackend, $rootScope;
 
   beforeEach(function() {
 
-    angular.mock.module('PManagers');
-    angular.mock.module('PUtilities');
-    angular.mock.module('PApiClient'); 
-    angular.mock.module('LocalStorageModule');
+    angular.mock.module('PresentWebApp');
 
     inject(function($injector) {
 
@@ -24,7 +21,7 @@ describe('UserContextManager', function() {
       localStorageService = $injector.get('localStorageService');
       UserContextApiClient = $injector.get('UserContextApiClient');
 
-      //Test Dependencies
+      //Test dependencies
       $q = $injector.get('$q');
       $httpBackend = $injector.get('$httpBackend');
       $rootScope = $injector.get('$rootScope');
