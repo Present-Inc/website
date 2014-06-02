@@ -38,8 +38,8 @@
  * Constructs a new Profile Object
  */
 
- PConstructors.factory('ProfileConstructor', function() {
-   return {
+  PConstructors.factory('ProfileConstructor', function() {
+    return {
      create : function(apiProfileObject) {
 
        function Profile(apiProfileObject) {
@@ -60,11 +60,9 @@
          this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
          this.email = apiProfileObject.email ? apiProfileObject.email : null;
        }
-
-       return new Profile(apiProfileObject); 
-
+       return new Profile(apiProfileObject);
      }
-   }
+    }
  });
 
 /**
