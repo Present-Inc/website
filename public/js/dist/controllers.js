@@ -167,7 +167,9 @@
       logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
       $scope.Navbar = {
-        mode: 'default'
+        mode: {
+					loggedIn: false
+				}
       };
 
       $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
@@ -184,12 +186,10 @@
       $scope.setMode = function() {
         var userContext = UserContextManager.getActiveUserContext();
         if(userContext) {
-          $scope.Navbar.mode.default = false;
           $scope.Navbar.mode.loggedIn = true;
 
         } else {
           $scope.Navbar.mode.loggedIn = false;
-          $scope.Navbar.mode.default = true;
         }
       }
 

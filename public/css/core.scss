@@ -43,6 +43,10 @@ body, html {
 
 body {
   font-family: 'PresentFT', sans-serif;
+  font-weight: 300;
+  color: $main-grey;
+  font-size: 13px;
+  background-color: #EFF1F2;
 }
 
 
@@ -63,7 +67,6 @@ h1 {
 
 .mainBtn {
   outline: none;
-  padding: 12px;
   padding: 6px 10px 8px 10px;
   background-color: transparent;
   font-weight: 300;
@@ -89,6 +92,20 @@ h1 {
 .secondaryBtn:hover {
   background-color: transparentize($main-purple, 0.9);
 }
+
+.defaultFeed {
+  width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #FFF;
+
+  @media (max-width: 520px) {
+    width: 100%;
+    padding: 0%;
+  }
+}
+
+
 
 /* Forms
 =================================*/

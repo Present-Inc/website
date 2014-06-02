@@ -1,0 +1,5 @@
+
+<nav id="mainNavbar" ng-controller="navCtrl" ng-show="ApplicationManager.navigationEnabled">
+    <button class="mainBtn" ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</button>
+    <button class="mainBtn" ng-click="logout()" ng-show="Navbar.mode.loggedIn">Log Out</button>
+</nav>

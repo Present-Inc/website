@@ -19,8 +19,8 @@
       <div class="creator">
         <img class="profilePicture" ng-src="{{videoCell.video.creator.profilePicture}}" height="70px" width="70px"/>
         <div class="displayName" ng-bind="videoCell.video.creator.displayName"></div>
-        <div class="userName" ng-bind="videoCell.video.creator.username"></div>
-        <div class="title" ng-bind="videoCell.video.title"></div>
+        <div class="userName" ng-bind="videoCell.video.creator.altName"></div>
+        <div class="title" ng-bind="videoCell.video.creator.title"></div>
       </div>
       <!-- end creator -->
 
@@ -29,7 +29,7 @@
         <label class="repliesLabel">Replies: </label>
         <div class="replies" ng-bind="videoCell.video.counts.replies"></div>
         <label class="likesLabel">Likes: </label>
-        <div class="likes"   ng-bind="videoCell.video.counts.likes"></div>
+        <div class="likes" ng-bind="videoCell.video.counts.likes"></div>
         <label class="commentsLabel">Comments: </label>
         <div class="comments" ng-bind="videoCell.video.counts.comments"></div>
       </div>

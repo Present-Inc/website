@@ -84,7 +84,8 @@
           this.media = {
             still          : apiVideoObject.mediaUrls.images['480px'] || null,
             replayPlaylist : apiVideoObject.mediaUrls.playlists.replay.master || null
-          }
+          };
+
           //Check to see if the video is live
           if(!apiVideoObject.creationTimeRange.endDate) {
             this.isLive = true;
@@ -104,10 +105,19 @@
 
           this.creator = {
             _id             : apiVideoObject.creatorUser.object._id,
-            username        : apiVideoObject.creatorUser.object.username,
-            fullName        : apiVideoObject.creatorUser.object.profile.fullName,
             profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
-          }
+						displayName     : '',
+						altName					: ''
+					};
+
+					//Determine the display name(s)
+					if(apiVideoObject.creatorUser.object.profile.fullName) {
+						this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
+						this.creator.altName = apiVideoObject.creatorUser.object.username;
+					} else {
+						this.creator.displayName = apiVideoObject.creatorUser.object.username;
+						this.creator.altName = null;
+					}
 
           this.counts = {
             comments : apiVideoObject.comments.count,
@@ -115,14 +125,6 @@
             replies  : apiVideoObject.replies.count
           };
 
-          //Determine the display name(s)
-          if(apiVideoObject.creatorUser.object.fullName) {
-            this.displayName = apiVideoObject.creatorUser.object.fullName;
-            this.altName = apiVideoObject.creatorUser.object.username;
-          } else {
-            this.displayName = apiVideoObject.creatorUser.object.username;
-            this.altName = null;
-          }
         }
 
         return new Video(apiVideoObject);

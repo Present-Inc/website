@@ -18,12 +18,7 @@
 
 <body class="fullscreen">
 
-    <nav id="mainNavigation" ng-controller="navCtrl" ng-show="ApplicationManager.navigationEnabled">
-      <button class="mainBtn" ui-sref="login" ng-show="false">Log In</button>
-      <button class="mainBtn" ng-click="logout()" ng-show="true">Log Out</button>
-    </nav>
-
-    </div>
+    <nav navbar></nav>
 
     <div ui-view class="fullscreen">
         <!--INJECTED TEMPLATES GO HERE -->
