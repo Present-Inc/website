@@ -17,7 +17,25 @@
   }
 
   .profile {
-    margin-bottom: 25px;
+    width: 280px;
+    margin: 0px auto 25px auto;
+    padding: 20px;
+    overflow: auto;
+    background-color: #FFF;
+    border: solid 1px #CCC;
+    font-size: 16px;
+  }
+
+  .profile {
+
+    .fullName {
+      font-weight: bold;
+    }
+
+    .counts span {
+      margin: 0px 5px;
+    }
+
   }
 
   .loadMoreVidoes {

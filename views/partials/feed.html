@@ -19,7 +19,7 @@
       <div class="creator">
         <img class="profilePicture" ng-src="{{videoCell.video.creator.profilePicture}}" height="70px" width="70px"/>
         <div class="displayName" ng-bind="videoCell.video.creator.displayName"></div>
-        <div class="userName" ng-bind="videoCell.video.creator.altName"></div>
+        <div class="altName" ng-bind="videoCell.video.creator.altName"></div>
         <div class="title" ng-bind="videoCell.video.creator.title"></div>
       </div>
       <!-- end creator -->
@@ -41,7 +41,8 @@
           <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
           <div class="commentBody" ng-bind="comment.body"></div>
         </div>
-        <button class="addComment">Add Comment</button>
+        <input class="commentInput" type="text" />
+        <button class="mainBtn">Add Comment</button>
       </div>
       <!-- end commentsPreview -->
 

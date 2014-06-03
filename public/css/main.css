@@ -60,13 +60,14 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 
 .videoCell .videoPlayer .still { z-index: 1; width: 100%; }
 .videoCell .creator { float: left; width: 300px; margin: 10px 0px 20px 0px; }
+.videoCell .displayName { font-weight: bold; font-size: 16px; }
 .videoCell .profilePicture { float: left; margin: 0px 10px 0px 0px; }
 .videoCell .timeAgo { width: 180px; float: right; margin: 10px 0px 0px 0px; text-align: right; }
 .videoCell .counts { clear: both; }
 .videoCell .counts div { display: inline-block; margin: 0px 5px 0px 0px; }
-.videoCell .commentsPreview { margin: 20px 0px 0px 0px; padding: 15px 0px 0px 0px; border-top: solid 1px #ccc; }
-.videoCell .commentsPreview .sourceUser { display: inline-block; }
-.videoCell .commentsPreview .commentBody { display: inline-block; }
+.videoCell .commentsPreview { margin: 20px 0px 0px 0px; padding: 15px 0px 0px 0px; border-top: solid 1px #eff1f2; }
+.videoCell .commentsPreview .sourceUser { font-weight: bold; color: #33aaff; }
+.videoCell .commentsPreview .commentBody { display: inline-block; margin: 0px 0px 20px 0px; }
 .videoCell .commentsPreview .addComment { margin: 20px 0px 0px 0px; }
 
 #login { text-align: center; width: 50%; margin: 200px auto 0px auto; }
@@ -89,5 +90,7 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 #home { width: 960px; margin: 0 auto; padding: 100px 0px 20px 0px; text-align: center; }
 @media (max-width: 960px) { #home { width: 100%; } }
 
-#home .profile { margin-bottom: 25px; }
+#home .profile { width: 280px; margin: 0px auto 25px auto; padding: 20px; overflow: auto; background-color: #FFF; border: solid 1px #CCC; font-size: 16px; }
+#home .profile .fullName { font-weight: bold; }
+#home .profile .counts span { margin: 0px 5px; }
 #home .loadMoreVidoes { display: block; margin: 0 auto; }

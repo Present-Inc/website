@@ -158,7 +158,7 @@
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
  *   @dependency {Present} UserContextManager -- Provides methods for userContext management
- */
+
 
   PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
@@ -185,18 +185,14 @@
 
       $scope.setMode = function() {
         var userContext = UserContextManager.getActiveUserContext();
-        if(userContext) {
-          $scope.Navbar.mode.loggedIn = true;
-
-        } else {
-          $scope.Navbar.mode.loggedIn = false;
-        }
+        if (userContext) $scope.Navbar.mode.loggedIn = true;
+        else $scope.Navbar.mode.loggedIn = false;
       }
 
     }
 
   ]);
-
+*/
  /*
   * PControllers.splashController
   * Controller for splashing state

@@ -1098,7 +1098,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
  *   @dependency {ui-router} $state
  *   @dependency {Utilities} logger
  *   @dependency {Present} UserContextManager -- Provides methods for userContext management
- */
+
 
   PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
 
@@ -1125,18 +1125,14 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       $scope.setMode = function() {
         var userContext = UserContextManager.getActiveUserContext();
-        if(userContext) {
-          $scope.Navbar.mode.loggedIn = true;
-
-        } else {
-          $scope.Navbar.mode.loggedIn = false;
-        }
+        if (userContext) $scope.Navbar.mode.loggedIn = true;
+        else $scope.Navbar.mode.loggedIn = false;
       }
 
     }
 
   ]);
-
+*/
  /*
   * PControllers.splashController
   * Controller for splashing state
@@ -1188,8 +1184,31 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
-			controller: function($scope) {
+			controller: function($scope, $state, logger, UserContextManager) {
+				logger.test(['PControllers.navCtrl -- navigation controller initialized']);
 
+				$scope.Navbar = {
+					mode: {
+						loggedIn: false
+					}
+				};
+
+				$scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+					$scope.setMode();
+				});
+
+				$scope.logout = function() {
+					UserContextManager.destroyActiveUserContext()
+						.then(function() {
+							$state.go('splash');
+						});
+				};
+
+				$scope.setMode = function() {
+					var userContext = UserContextManager.getActiveUserContext();
+					if (userContext) $scope.Navbar.mode.loggedIn = true;
+					else $scope.Navbar.mode.loggedIn = false;
+				}
 			},
 			link: function(scope, element, attrs) {
 

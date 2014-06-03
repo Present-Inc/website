@@ -1,9 +1,11 @@
 
 <div id="home">
   <div class="profile">
-    <div ng-bind="Profile.fullName"></div>
+
+    <img class="profilePicture" ng-src="{{Profile.profilePicture}}" height="70px" width="70px"/>
+
+    <div class="fullName" ng-bind="Profile.fullName"></div>
     <div ng-bind="Profile.username"></div>
-    <img ng-src="{{Profile.profilePicture}}" height="70px" width="70px"/>
 
     <div class="counts">
       <span ng-bind="Profile.counts.videos"></span>
@@ -13,7 +15,8 @@
       <span ng-bind="Profile.counts.friends"></span>
     </div>
 
-    <div ng-bind="Profile.description"></div>
+    <div class="description" ng-bind="Profile.description"></div>
+
   </div>
 
   <div feed class="feed"></div>
