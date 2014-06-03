@@ -1,5 +1,25 @@
 
-<nav id="mainNavbar" ng-controller="navCtrl" ng-show="ApplicationManager.navigationEnabled">
-    <button class="mainBtn" ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</button>
-    <button class="mainBtn" ng-click="logout()" ng-show="Navbar.mode.loggedIn">Log Out</button>
+<nav ng-controller="navCtrl" ng-show="ApplicationManager.navigationEnabled">
+
+    <div ui-sref="splash" class="logo">
+        <img src="assets/img/logo-small.png" />
+    </div>
+
+    <div class="search">
+        <input type="text" />
+    </div>
+
+    <div class="links">
+        <ul>
+            <li ui-sref="discover">Discover</li>
+            <li ui-sref="home">Home</li>
+            <li ui-sref="blog">Blog</li>
+        </ul>
+    </div>
+
+    <div class="hub">
+        <span ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</span>
+        <span ng-click="logout()" ng-show="Navbar.mode.loggedIn">Log Out</span>
+    </div>
+
 </nav>

@@ -14,7 +14,7 @@
 ==================================*/
 body, html { width: 100%; }
 
-body { font-family: 'PresentFT', sans-serif; font-weight: 300; color: #47525d; font-size: 13px; background-color: #EFF1F2; }
+body { font-family: 'PresentFT', sans-serif; font-weight: 400; color: #47525d; font-size: 13px; background-color: #eff1f2; }
 
 .fullscreen { height: 100%; }
 
@@ -32,16 +32,26 @@ h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 
 .secondaryBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
-.defaultFeed, #discover .feed, #home .feed { width: 480px; margin: 0 auto; padding: 20px; background-color: #FFF; }
+.defaultFeed, #discover .feed, #home .feed { width: 480px; margin: 0 auto; padding: 20px; background-color: #FFF; border: solid 1px #CCC; }
 @media (max-width: 520px) { .defaultFeed, #discover .feed, #home .feed { width: 100%; padding: 0%; } }
 
 /* Forms
 =================================*/
-input { display: block; width: 100%; padding: 10px; margin-bottom: 5px; border: solid 1px #ccc; font-weight: 300; }
+input { display: block; width: 80%; padding: 10px; margin: 10px 0px; border: solid 1px #ccc; font-weight: 400; }
 
-nav { padding: 10px 10px 0px 0px; }
+nav { position: fixed; width: 98%; height: 56px; padding: 0px 1% 0px 1%; overflow: auto; font-size: 14px; background-color: #FFFFFF; border-bottom: solid 1px #ccc; }
 
-nav button { float: right; }
+nav .logo { display: inline-block; float: left; width: 56px; height: 100%; background-color: #a566ff; }
+nav .logo img { display: block; width: 60%; margin: 10px auto; }
+nav .search { display: inline-block; float: left; width: 30%; height: 100%; }
+nav .search input { margin: 8px auto; color: #7A7A7A; background-color: #eff1f2; border: solid 1px #ccc; -webkit-border-radius: 6px; -moz-border-radius: 6px; -ms-border-radius: 6px; border-radius: 6px; }
+nav .links { display: inline-block; float: left; width: 40%; padding: 18px 0px; }
+nav .links ul { padding: 0px; margin: 0px; }
+nav .links li { list-style: none; display: inline-block; margin: 0px 6px; font-weight: bold; }
+nav .links li:hover { cursor: pointer; color: #33aaff; }
+nav .hub { display: inline-block; float: right; width: 12%; padding: 18px 10px; overflow: auto; }
+nav .hub span { float: right; font-weight: bold; }
+nav .hub span:hover { cursor: pointer; color: #33aaff; }
 
 /* videoCell.scss Define all styles for the Video Cells */
 /* Set Local Variables */
@@ -59,9 +69,11 @@ nav button { float: right; }
 .videoCell .commentsPreview .commentBody { display: inline-block; }
 .videoCell .commentsPreview .addComment { margin: 20px 0px 0px 0px; }
 
-#login { text-align: center; width: 300px; margin: 20px auto 0px auto; }
+#login { text-align: center; width: 50%; margin: 200px auto 0px auto; }
 
+#login input { margin: 10px auto; }
 #login button { margin: 10px 0px 0px 0px; }
+#login .formContainer { width: 60%; margin: 0 auto; }
 
 /* splash.scss Styles for splash view */
 #splash { width: 100%; height: 100%; background-image: url(/assets/img/main-bg.jpg); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
@@ -69,7 +81,7 @@ nav button { float: right; }
 #splash .content { width: 960px; margin: 0px auto; padding: 60px 0px 0px 0px; text-align: center; }
 @media (max-width: 960px) { #splash .content { overflow: auto; height: auto; width: 100%; } }
 
-#discover { width: 960px; margin: 0 auto; padding: 100px 0px 20px 0px; text-align: center; }
+#discover { width: 960px; margin: 0 auto; padding: 80px 0px 20px 0px; text-align: center; }
 @media (max-width: 960px) { #discover { width: 100%; } }
 
 #discover .loadMoreVideos { display: block; margin: 0 auto; }

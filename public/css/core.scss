@@ -14,7 +14,7 @@ $main-blue:  #33AAFF;
 $main-purple: #A566FF;
 $alt-purple: #8E73FF;
 $main-grey: #47525D;
-$light-grey: #c4c4c4;
+$light-grey: #EFF1F2;
 
 //Responsive Grid
 $break-large: 960px;
@@ -43,10 +43,10 @@ body, html {
 
 body {
   font-family: 'PresentFT', sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   color: $main-grey;
   font-size: 13px;
-  background-color: #EFF1F2;
+  background-color: $light-grey;
 }
 
 
@@ -98,6 +98,7 @@ h1 {
   margin: 0 auto;
   padding: 20px;
   background-color: #FFF;
+  border: solid 1px #CCC;
 
   @media (max-width: 520px) {
     width: 100%;
@@ -112,9 +113,9 @@ h1 {
 
 input {
   display: block;
-  width: 100%;
+  width: 80%;
   padding: 10px;
-  margin-bottom: 5px;
+  margin: 10px 0px;
   border: solid 1px #ccc;
-  font-weight: 300; 
+  font-weight: 400;
 }

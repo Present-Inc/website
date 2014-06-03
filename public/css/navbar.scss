@@ -1,9 +1,88 @@
 nav {
-  padding: 10px 10px 0px 0px;
+  position: fixed;
+  width: 98%;
+  height: 56px;
+  padding: 0px 1% 0px 1%;
+  overflow: auto;
+  font-size: 14px;
+  background-color: #FFFFFF;
+  border-bottom: solid 1px #ccc;
 }
 
 nav {
-  button {
+
+  .logo {
+    display: inline-block;
+    float: left;
+    width: 56px;
+    height: 100%;
+    background-color: $main-purple;
+  }
+
+  .logo img {
+    display: block;
+    width: 60%;
+    margin: 10px auto;
+  }
+
+  .search {
+    display: inline-block;
+    float: left;
+    width: 30%;
+    height: 100%;
+  }
+
+  .search {
+    input {
+      margin: 8px auto;
+      color: #7A7A7A;
+      background-color: $light-grey;
+      border: solid 1px #ccc;
+      @include _border-radius(6px);
+    }
+  }
+
+  .links {
+    display: inline-block;
+    float: left;
+    width: 40%;
+    padding: 18px 0px;
+  }
+
+  .links {
+    ul {
+      padding: 0px;
+      margin: 0px;
+    }
+    li {
+      list-style: none;
+      display: inline-block;
+      margin: 0px 6px;
+      font-weight: bold;
+    }
+    li:hover {
+      cursor: pointer;
+      color: $main-blue
+    }
+  }
+
+
+
+  .hub {
+    display: inline-block;
     float: right;
+    width: 12%;
+    padding: 18px 10px;
+    overflow: auto;
+  }
+
+  .hub span {
+    float: right;
+    font-weight: bold;
+  }
+
+  .hub span:hover {
+    cursor: pointer;
+    color: $main-blue;
   }
 }

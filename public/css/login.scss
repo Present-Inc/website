@@ -1,14 +1,24 @@
 
 #login {
   text-align: center;
-  width: 300px;
-  margin: 20px auto 0px auto;
+  width: 50%;
+  margin: 200px auto 0px auto;
 }
 
 #login {
 
+  input {
+    margin: 10px auto;
+  }
+
   button {
      margin: 10px 0px 0px 0px; 
   }
+
+  .formContainer {
+    width: 60%;
+    margin: 0 auto;
+  }
+
 
 }
