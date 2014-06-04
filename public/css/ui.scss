@@ -1,0 +1,63 @@
+/* Typography
+=================================== */
+h1 {
+  font-weight: 100;
+  font-size: $font-size-large;
+  color: $main-grey;
+}
+
+/* UI
+=================================== */
+
+.mainBtn {
+  outline: none;
+  padding: 6px 10px 8px 10px;
+  background-color: transparent;
+  font-weight: 300;
+  color: $main-blue;
+  border: solid 1px $main-blue;
+  @include _border-radius(4px);
+}
+
+.secondaryBtn {
+  outline: none;
+  padding: 6px 10px 8px 10px;
+  background-color: transparent;
+  font-weight: 300;
+  color: $main-purple;
+  border: solid 1px $main-purple;
+  @include _border-radius(4px);
+}
+
+.mainBtn:hover {
+  background-color: transparentize($main-blue, 0.9);
+}
+
+.secondaryBtn:hover {
+  background-color: transparentize($main-purple, 0.9);
+}
+
+.defaultFeed {
+  width: 480px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #FFF;
+  border: solid 1px #CCC;
+
+  @media (max-width: 520px) {
+    width: 100%;
+    padding: 0%;
+  }
+}
+
+/* Forms
+=================================*/
+
+input {
+  display: block;
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0px;
+  border: solid 1px $light-grey;
+  font-weight: 400;
+}

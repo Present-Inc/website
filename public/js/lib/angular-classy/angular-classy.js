@@ -34,7 +34,7 @@ License: MIT
 
     /*
      * We have to monkey-patch the `angular.module` method to see if 'classy' has been specified
-     * as a requirement. We also need the module name to we can register our classy controllers.
+     * as a requirement. We also need the module name to we can register our classy PControllers.
      * Unfortunately there doesn't seem to be a more pretty/pluggable way to this.
      */
     var module;

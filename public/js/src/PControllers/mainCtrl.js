@@ -35,9 +35,6 @@
         if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
         else $scope.ApplicationManager.fullscreenEnabled = false;
 
-        if(toState.metaData.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
-        else $scope.ApplicationManager.navigationEnabled = false;
-
       });
 
     }

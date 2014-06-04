@@ -14,7 +14,7 @@
  *
  * # ngAnimate
  *
- * The `ngAnimate` module provides support for JavaScript, CSS3 transition and CSS3 keyframe animation hooks within existing core and custom directives.
+ * The `ngAnimate` module provides support for JavaScript, CSS3 transition and CSS3 keyframe animation hooks within existing core and custom PDirectives.
  *
  *
  * <div doc-module-components="ngAnimate"></div>
@@ -22,11 +22,11 @@
  * # Usage
  *
  * To see animations in action, all that is required is to define the appropriate CSS classes
- * or to register a JavaScript animation via the myModule.animation() function. The directives that support animation automatically are:
- * `ngRepeat`, `ngInclude`, `ngIf`, `ngSwitch`, `ngShow`, `ngHide`, `ngView` and `ngClass`. Custom directives can take advantage of animation
+ * or to register a JavaScript animation via the myModule.animation() function. The PDirectives that support animation automatically are:
+ * `ngRepeat`, `ngInclude`, `ngIf`, `ngSwitch`, `ngShow`, `ngHide`, `ngView` and `ngClass`. Custom PDirectives can take advantage of animation
  * by using the `$animate` service.
  *
- * Below is a more detailed breakdown of the supported animation events provided by pre-existing ng directives:
+ * Below is a more detailed breakdown of the supported animation events provided by pre-existing ng PDirectives:
  *
  * | Directive                                                 | Supported Animations                               |
  * |---------------------------------------------------------- |----------------------------------------------------|
@@ -359,7 +359,7 @@ angular.module('ngAnimate', ['ng'])
       }
 
       function animationRunner(element, animationEvent, className) {
-        //transcluded directives may sometimes fire an animation using only comment nodes
+        //transcluded PDirectives may sometimes fire an animation using only comment nodes
         //best to catch this early on to prevent any animation operations from occurring
         var node = element[0];
         if(!node) {
@@ -511,7 +511,7 @@ angular.module('ngAnimate', ['ng'])
        * will examine any JavaScript-defined animations (which are defined by using the $animateProvider provider object)
        * as well as any CSS-defined animations against the CSS classes present on the element once the DOM operation is run.
        *
-       * The `$animate` service is used behind the scenes with pre-existing directives and animation with these directives
+       * The `$animate` service is used behind the scenes with pre-existing PDirectives and animation with these PDirectives
        * will work out of the box without any extra configuration.
        *
        * Requires the {@link ngAnimate `ngAnimate`} module to be installed.
@@ -957,7 +957,7 @@ angular.module('ngAnimate', ['ng'])
               /* only structural animations wait for reflow before removing an
                  animation, but class-based animations don't. An example of this
                  failing would be when a parent HTML tag has a ng-class attribute
-                 causing ALL directives below to skip animations during the digest */
+                 causing ALL PDirectives below to skip animations during the digest */
               if(runner && runner.isClassBased) {
                 cleanup(element, className);
               } else {

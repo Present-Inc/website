@@ -6,7 +6,7 @@
   "authors": [
     "Dave Jeffery <dave@davejeffery.com>"
   ],
-  "description": "Cleaner class-based controllers for AngularJS",
+  "description": "Cleaner class-based PControllers for AngularJS",
   "keywords": [
     "angular",
     "angularjs",

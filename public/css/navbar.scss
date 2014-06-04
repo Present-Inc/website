@@ -1,21 +1,26 @@
 nav {
+  width: 100%;
   position: fixed;
-  width: 98%;
-  height: 56px;
-  padding: 0px 1% 0px 1%;
-  overflow: auto;
-  font-size: 14px;
-  background-color: #FFFFFF;
-  border-bottom: solid 1px #ccc;
+  height: auto;
 }
 
 nav {
+
+  .navbarWrapper {
+    width: 100%;
+    height: 56px;
+    overflow: auto;
+    font-size: 14px;
+    background-color: #FFFFFF;
+    border-bottom: solid 1px #ccc;
+  }
 
   .logo {
     display: inline-block;
     float: left;
     width: 56px;
     height: 100%;
+    margin: 0px 0px 0px 10px;
     background-color: $main-purple;
   }
 
@@ -28,13 +33,14 @@ nav {
   .search {
     display: inline-block;
     float: left;
-    width: 30%;
+    width: 25%;
     height: 100%;
   }
 
   .search {
     input {
-      margin: 8px auto;
+      margin: 8px 12px;
+      width: 90%;
       color: #7A7A7A;
       background-color: $light-grey;
       border: solid 1px #ccc;
@@ -42,11 +48,87 @@ nav {
     }
   }
 
+  .dropdown {
+    position: absolute;
+    left: 78px;
+    top: 62px;
+    width: 24%;
+    min-height: 20px;
+    padding: 15px 0px;
+    background-color: #fff;
+    @include _border-radius(2px);
+    border: solid 1px #E1E8ED;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .dropdown::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    height: 20px;
+    width: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    background-color: #FFF;
+    @include _border-radius(2px);
+    border-left: 2px solid #E1E8ED;
+    border-top: 2px solid #E1E8ED;
+  }
+
+  .dropdown {
+
+    .userResult {
+      overflow: auto;
+      padding: 5px 10px 5px 10px;
+
+      img {
+        height: 50px;
+        float: left;
+        display: inline-block;
+      }
+      span {
+        display: block;
+        margin: 0px 0px 0px 60px;
+      }
+    }
+
+    .videoResult {
+      padding: 5px 10px;
+      font-weight: 100;
+    }
+
+    .videoResult span {
+      font-weight: 700;
+      columns: $main-blue;
+    }
+
+    .userResult:hover, .videoResult:hover {
+      background: $light-grey;
+    }
+
+    .displayName {
+      font-weight: bold;
+    }
+    .altName {
+      color: $main-blue;
+    }
+
+    .divider {
+      width: 96%;
+      height: 4px;
+      margin: 10px auto 10px auto;
+      border-bottom: solid 1px $light-grey;
+    }
+
+
+  }
+
   .links {
     display: inline-block;
     float: left;
     width: 40%;
-    padding: 18px 0px;
+    padding: 18px 5px;
   }
 
   .links {
@@ -78,6 +160,7 @@ nav {
 
   .hub span {
     float: right;
+    margin: 0px 10px 0px 0px;
     font-weight: bold;
   }
 

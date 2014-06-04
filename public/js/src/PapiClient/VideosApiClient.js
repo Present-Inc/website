@@ -86,7 +86,35 @@
           }
 
           return sendingRequest.promise;
-        }
+        },
+
+				search : function(query, limit, userContext ) {
+					var sendingRequest  = $q.defer();
+					var resourceUrl = ApiConfig.getAddress() + '/v1/videos/search';
+					if (query) {
+						$http({
+							method: 'GET',
+							url: resourceUrl,
+							params: {query: query, limit: limit ? limit : null},
+							headers: {
+								'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
+								'Present-User-Context-User-Id': userContext ? userContext.token : null
+							}
+						})
+							.success(function(data, status, headers) {
+								logger.debug(['PApiClient.UsersApiClient.search', 'http success block', status, data]);
+								sendingRequest.resolve(data);
+							})
+							.error(function(data, status, headers) {
+								logger.error(['PApiClient.UsersApiClient.search', 'http error block',  status, data]);
+								sendingRequest.reject(data);
+							});
+					} else {
+						logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
+						sendingRequest.reject({status: 'ERROR', mock: true});
+					}
+					return sendingRequest.promise;
+				}
 
       }
     }

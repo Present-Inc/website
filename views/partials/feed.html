@@ -38,6 +38,7 @@
       <!-- commentsPreview -->
       <div class="commentsPreview">
         <div ng-repeat="comment in videoCell.comments">
+          <img class="commentProfilePicture" ng-src="{{comment.sourceUser.profilePicture.url}}" />
           <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
           <div class="commentBody" ng-bind="comment.body"></div>
         </div>

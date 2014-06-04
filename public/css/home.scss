@@ -21,15 +21,25 @@
     margin: 0px auto 25px auto;
     padding: 20px;
     overflow: auto;
-    background-color: #FFF;
-    border: solid 1px #CCC;
     font-size: 16px;
   }
 
   .profile {
 
+    .profilePicture {
+      margin: 0px auto 10px auto;
+      background-color: #FFF;
+      border: solid 1px #CCC;
+      padding: 1px;
+    }
+
     .fullName {
+      font-size: 22px;
       font-weight: bold;
+    }
+
+    .counts {
+      margin: 10px auto 5px auto;
     }
 
     .counts span {

@@ -9,42 +9,42 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
           apiClient: {
-            src: ['public/js/src/apiClient/**/*.js'],
-            dest: 'public/js/dist/apiClient.js'
+            src: ['public/js/src/PApiClient/**/*.js'],
+            dest: 'public/js/dist/PApiClient.js'
           },
           constructors: {
-            src: ['public/js/src/constructors/**/*.js'],
-            dest: 'public/js/dist/constructors.js'
+            src: ['public/js/src/PConstructors/**/*.js'],
+            dest: 'public/js/dist/PConstructors.js'
           },
           loaders: {
-            src: ['public/js/src/loaders/**/*.js'],
-            dest: 'public/js/dist/loaders.js'
+            src: ['public/js/src/PLoaders/**/*.js'],
+            dest: 'public/js/dist/PLoaders.js'
           },
           managers: {
-            src: ['public/js/src/managers/**/*.js'],
-            dest: 'public/js/dist/managers.js'
+            src: ['public/js/src/PManagers/**/*.js'],
+            dest: 'public/js/dist/PManagers.js'
           },
           utilities: {
-            src: ['public/js/src/utilities/**/*.js'],
-            dest: 'public/js/dist/utilities.js'
+            src: ['public/js/src/PUtilities/**/*.js'],
+            dest: 'public/js/dist/PUtilities.js'
           },
           controllers: {
-            src: ['public/js/src/controllers/**/*.js'],
-            dest: 'public/js/dist/controllers.js'
+            src: ['public/js/src/PControllers/**/*.js'],
+            dest: 'public/js/dist/PControllers.js'
           },
           directives: {
-            src: ['public/js/src/directives/**/*.js'],
-            dest: 'public/js/dist/directives.js'
+            src: ['public/js/src/PDirectives/**/*.js'],
+            dest: 'public/js/dist/PDirectives.js'
           },
           app: {
             src: ['public/js/src/app.js',
-                  'public/js/dist/apiClient.js',
-                  'public/js/dist/constructors.js',
-                  'public/js/dist/loaders.js',
-                  'public/js/dist/managers.js',
-                  'public/js/dist/utilities.js',
-                  'public/js/dist/controllers.js',
-                  'public/js/dist/directives.js'],
+                  'public/js/dist/PApiClient.js',
+                  'public/js/dist/PConstructors.js',
+                  'public/js/dist/PLoaders.js',
+                  'public/js/dist/PManagers.js',
+                  'public/js/dist/PUtilities.js',
+                  'public/js/dist/PControllers.js',
+                  'public/js/dist/PDirectives.js'],
             dest: 'public/js/dist/app.js'
           },
         },

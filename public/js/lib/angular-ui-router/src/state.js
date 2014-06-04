@@ -382,7 +382,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory,           $
    * <a id='template'></a>
    *
    * - **`template`** - {string|function=} - html template as a string or a function that returns
-   *   an html template as a string which should be used by the uiView directives. This property 
+   *   an html template as a string which should be used by the uiView PDirectives. This property
    *   takes precedence over templateUrl.
    *   
    *   If `template` is a function, it will be called with the following parameters:
@@ -568,7 +568,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory,           $
      *
      * @description
      * A method that force reloads the current state. All resolves are re-resolved, events are not re-fired, 
-     * and controllers reinstantiated (bug with controllers reinstantiating right now, fixing soon).
+     * and PControllers reinstantiated (bug with PControllers reinstantiating right now, fixing soon).
      *
      * @example
      * <pre>

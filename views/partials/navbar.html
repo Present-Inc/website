@@ -1,25 +1,41 @@
+<nav ng-show="Navbar.isEnabled">
 
-<nav ng-show="ApplicationManager.navigationEnabled">
+    <div class="navbarWrapper">
+        <div ui-sref="splash" class="logo">
+            <img src="assets/img/logo-small.png" />
+        </div>
 
-    <div ui-sref="splash" class="logo">
-        <img src="assets/img/logo-small.png" />
-    </div>
+        <div class="search">
+            <input register-element="searchElem" ng-model="Navbar.search.query" ng-click="enableDropdown()" type="text" />
+            <div class="dropdown" register-element="dropdownElem" ng-show="Navbar.search.dropdownEnabled">
+                <div class="userResult" ng-repeat="user in Navbar.search.results.users">
+                    <img ng-src="{{user.profilePicture}}"/>
+                    <span class="displayName" ng-bind="user.fullName"></span>
+                    <span class="altName" ng-bind="user.username"></span>
+                </div>
+                <div class="divider"></div>
+                <div class="videoResult" ng-repeat="video in Navbar.search.results.videos">
+                    <span class="altName" ng-bind="video.creator.username"></span>
+                    <span ng-bind="video.title">@justin check this out.</span>
+                </div>
+            </div>
+        </div>
 
-    <div class="search">
-        <input type="text" />
-    </div>
+        <div class="links">
+            <ul>
+                <li ui-sref="discover">Discover</li>
+                <li ui-sref="home">Home</li>
+                <li ui-sref="blog">Blog</li>
+            </ul>
+        </div>
 
-    <div class="links">
-        <ul>
-            <li ui-sref="discover">Discover</li>
-            <li ui-sref="home">Home</li>
-            <li ui-sref="blog">Blog</li>
-        </ul>
-    </div>
+        <div class="hub">
+            <span ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</span>
+            <span ng-click="Navbar.logout()" ng-show="Navbar.mode.loggedIn">Log Out</span>
+        </div>
 
-    <div class="hub">
-        <span ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</span>
-        <span ng-click="logout()" ng-show="Navbar.mode.loggedIn">Log Out</span>
+
     </div>
 
 </nav>
+

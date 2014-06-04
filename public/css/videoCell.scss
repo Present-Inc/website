@@ -69,7 +69,7 @@ $loadingIndication-index: 3;
 
   .commentsPreview {
     margin: 20px 0px 0px 0px;
-    padding: 15px 0px 0px 0px;
+    padding: 10px 0px 0px 0px;
     border-top: solid 1px $light-grey;
   }
 
@@ -80,9 +80,16 @@ $loadingIndication-index: 3;
       color: $main-blue;
     }
 
+    .commentProfilePicture {
+      float: left;
+      height: 20px;
+      margin: 0px 5px 0px 0px;
+    }
+
     .commentBody {
-      display: inline-block;
-      margin: 0px 0px 20px 0px;
+      display: block;
+      clear: both;
+      margin: 10px 0px 20px 0px;
     }
 
     .addComment {

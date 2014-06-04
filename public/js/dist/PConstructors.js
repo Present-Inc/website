@@ -13,7 +13,7 @@
           var Feed = {
             cursor: apiResponse.nextCursor,
             videoCells: []
-          }
+          };
 
           for(var i=0, length=apiResponse.results.length; i < length; i++) {
             var VideoCell = {
@@ -45,7 +45,7 @@
        function Profile(apiProfileObject) {
          this._id = apiProfileObject._id;
          this.username = apiProfileObject.username;
-         this.fullName = apiProfileObject.profile.fullName;
+         this.fullName = apiProfileObject.profile.fullName || '';
          this.profilePicture = apiProfileObject.profile.picture.url;
          this.description = apiProfileObject.profile.description;
 
@@ -55,11 +55,12 @@
            likes: apiProfileObject.likes.count,
            followers: apiProfileObject.followers.count,
            friends: apiProfileObject.friends.count
-         }
+         };
 
          this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
          this.email = apiProfileObject.email ? apiProfileObject.email : null;
        }
+
        return new Profile(apiProfileObject);
      }
     }
@@ -106,6 +107,7 @@
           this.creator = {
             _id             : apiVideoObject.creatorUser.object._id,
             profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
+						username				: apiVideoObject.creatorUser.object.username,
 						displayName     : '',
 						altName					: ''
 					};

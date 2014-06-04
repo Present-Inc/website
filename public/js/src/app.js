@@ -25,7 +25,7 @@
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the controllers
+  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the PControllers
   *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -84,7 +84,7 @@
           controller: 'splashCtrl',
           metaData: {
             fullscreenEnabled: true,
-            navigationEnabled: false,
+            navbarEnabled: false,
             requireSession: false
           }
         })
@@ -95,8 +95,8 @@
           controller: 'discoverCtrl',
           metaData: {
             fullscreenEnabled: false,
-            navigationEnabled: true,
-            requireSession: false,
+            navbarEnabled: true,
+            requireSession: false
           },
           resolve: {
             discoverFeed : function(FeedLoader) {
@@ -111,8 +111,8 @@
           controller: 'loginCtrl',
           metaData: {
             fullscreenEnabled: true,
-            navigationEnabled: false,
-            requireSession: false,
+            navbarEnabled: false,
+            requireSession: false
           }
         })
 
@@ -122,7 +122,7 @@
           controller: 'homeCtrl',
           metaData: {
             fullscreenEnabled: false,
-            navigationEnabled: true,
+            navbarEnabled: true,
             requireSession: true
           },
           resolve: {

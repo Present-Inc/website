@@ -13,7 +13,7 @@
           var Feed = {
             cursor: apiResponse.nextCursor,
             videoCells: []
-          }
+          };
 
           for(var i=0, length=apiResponse.results.length; i < length; i++) {
             var VideoCell = {

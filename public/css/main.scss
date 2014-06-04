@@ -18,8 +18,12 @@
 @import 'mixins';
 
 //core.scss
-//Sets all sass variables and provides global styles
+//Sets all sass variables and provides some global styles
 @import 'core';
+
+//import ui.scss
+//defines default styles for ui elements
+@import 'ui';
 
 //navbar.scss
 //Sets all styles for the main navigation

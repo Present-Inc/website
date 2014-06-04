@@ -54,7 +54,7 @@ describe('UserContextManager', function() {
       error: {
         status: 'ERROR',
         result: "Please log in and try again"
-      },
+      }
     };
 
     it('should accept a valid username and password, retrieve a remote user context if args are valid, and save it in local storage',
@@ -112,7 +112,7 @@ describe('UserContextManager', function() {
       error: {
         status: 'ERROR',
         result: "Please log in and try again"
-      },
+      }
     };
 
     it('should destroy the local user context from local storage, and then destroy the remote user context',

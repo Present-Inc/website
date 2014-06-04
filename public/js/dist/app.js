@@ -25,7 +25,7 @@
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the controllers
+  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the PControllers
   *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -84,7 +84,7 @@
           controller: 'splashCtrl',
           metaData: {
             fullscreenEnabled: true,
-            navigationEnabled: false,
+            navbarEnabled: false,
             requireSession: false
           }
         })
@@ -95,8 +95,8 @@
           controller: 'discoverCtrl',
           metaData: {
             fullscreenEnabled: false,
-            navigationEnabled: true,
-            requireSession: false,
+            navbarEnabled: true,
+            requireSession: false
           },
           resolve: {
             discoverFeed : function(FeedLoader) {
@@ -111,8 +111,8 @@
           controller: 'loginCtrl',
           metaData: {
             fullscreenEnabled: true,
-            navigationEnabled: false,
-            requireSession: false,
+            navbarEnabled: false,
+            requireSession: false
           }
         })
 
@@ -122,7 +122,7 @@
           controller: 'homeCtrl',
           metaData: {
             fullscreenEnabled: false,
-            navigationEnabled: true,
+            navbarEnabled: true,
             requireSession: true
           },
           resolve: {
@@ -255,8 +255,7 @@
         show: function(username, userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
-
-          if(username) {
+          if (username) {
             $http({
              method: 'GET',
              url: resourceUrl,
@@ -267,17 +266,16 @@
              }
             })
              .success(function(data, status, headers) {
-               logger.debug(['PServices.UsersApiClient.show -- http success block', status, data]);
+               logger.debug(['PApiClient.UsersApiClient.show -- http success block', status, data]);
                sendingRequest.resolve(data);
              })
              .error(function (data, status, headers) {
-               logger.error(['PServices.UsersApiClsdient.show -- http error block', status, data]);
+               logger.error(['PApiClient.UsersApiClsdient.show -- http error block', status, data]);
                sendingRequest.reject(data);
              })
           } else {
-           var mockApiResponse = {status: "ERROR", mock: true};
            logger.error(['PServices.UsersApiClient.show', 'no valid user provided']);
-           sendingRequest.reject(mockApiResponse);
+           sendingRequest.reject({status: "ERROR", mock: true});
           }
           return sendingRequest.promise;
        },
@@ -285,8 +283,7 @@
         showMe: function(userContext) {
           var sendingRequest = $q.defer();
           var resourceUrl = ApiConfig.getAddress() + '/v1/users/show_me';
-
-          if(userContext) {
+          if (userContext) {
             $http({
              method: 'GET',
              url: resourceUrl,
@@ -296,20 +293,47 @@
              }
             })
               .success(function(data, status, headers) {
-                logger.debug(['PServices.UsersApiClient.showMe -- http success block', status, data]);
+                logger.debug(['PApiClient.UsersApiClient.showMe -- http success block', status, data]);
                 sendingRequest.resolve(data);
               })
               .error(function (data, status, headers) {
-                logger.error(['PServices.UsersApiClient.showMe -- http error block', status, data]);
+                logger.error(['PApiClient.UsersApiClient.showMe -- http error block', status, data]);
                 sendingRequest.reject(data);
               });
           } else {
-            var mockApiResponse = {status: 'ERROR', mock: true};
-            logger.error(['PServices.UsersApiClient.show', 'no valid user context']);
-            sendingRequest.reject(mockApiResponse);
+            	logger.error(['PApiClient.UsersApiClient.show', 'no valid user context']);
+            	sendingRequest.reject({status: 'ERROR', mock: true});
           }
           return sendingRequest.promise;
-        }
+        },
+
+				search : function(query, limit, userContext) {
+					var sendingRequest  = $q.defer();
+					var resourceUrl = ApiConfig.getAddress() + '/v1/users/search';
+					if (query) {
+						$http({
+							method: 'GET',
+							url: resourceUrl,
+							params: {query: query, limit: limit ? limit : null},
+							headers: {
+								'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
+								'Present-User-Context-User-Id': userContext ? userContext.token : null
+							}
+						})
+							.success(function(data, status, headers) {
+								logger.debug(['PApiClient.UsersApiClient.search', 'http success block', status, data]);
+								sendingRequest.resolve(data);
+							})
+							.error(function(data, status, headers) {
+								logger.error(['PApiClient.UsersApiClient.search', 'http error block',  status, data]);
+								sendingRequest.reject(data);
+							});
+					} else {
+							logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
+							sendingRequest.reject({status: 'ERROR', mock: true});
+					}
+					return sendingRequest.promise;
+				}
 
       }
 
@@ -405,7 +429,35 @@
           }
 
           return sendingRequest.promise;
-        }
+        },
+
+				search : function(query, limit, userContext ) {
+					var sendingRequest  = $q.defer();
+					var resourceUrl = ApiConfig.getAddress() + '/v1/videos/search';
+					if (query) {
+						$http({
+							method: 'GET',
+							url: resourceUrl,
+							params: {query: query, limit: limit ? limit : null},
+							headers: {
+								'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
+								'Present-User-Context-User-Id': userContext ? userContext.token : null
+							}
+						})
+							.success(function(data, status, headers) {
+								logger.debug(['PApiClient.UsersApiClient.search', 'http success block', status, data]);
+								sendingRequest.resolve(data);
+							})
+							.error(function(data, status, headers) {
+								logger.error(['PApiClient.UsersApiClient.search', 'http error block',  status, data]);
+								sendingRequest.reject(data);
+							});
+					} else {
+						logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
+						sendingRequest.reject({status: 'ERROR', mock: true});
+					}
+					return sendingRequest.promise;
+				}
 
       }
     }
@@ -427,7 +479,7 @@
           var Feed = {
             cursor: apiResponse.nextCursor,
             videoCells: []
-          }
+          };
 
           for(var i=0, length=apiResponse.results.length; i < length; i++) {
             var VideoCell = {
@@ -459,7 +511,7 @@
        function Profile(apiProfileObject) {
          this._id = apiProfileObject._id;
          this.username = apiProfileObject.username;
-         this.fullName = apiProfileObject.profile.fullName;
+         this.fullName = apiProfileObject.profile.fullName || '';
          this.profilePicture = apiProfileObject.profile.picture.url;
          this.description = apiProfileObject.profile.description;
 
@@ -469,11 +521,12 @@
            likes: apiProfileObject.likes.count,
            followers: apiProfileObject.followers.count,
            friends: apiProfileObject.friends.count
-         }
+         };
 
          this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
          this.email = apiProfileObject.email ? apiProfileObject.email : null;
        }
+
        return new Profile(apiProfileObject);
      }
     }
@@ -520,6 +573,7 @@
           this.creator = {
             _id             : apiVideoObject.creatorUser.object._id,
             profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
+						username				: apiVideoObject.creatorUser.object.username,
 						displayName     : '',
 						altName					: ''
 					};
@@ -618,7 +672,7 @@
 
           /**
            * loadDiscoverFeed
-           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view controllers
+           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view PControllers
            *   @params <Number> cursor -- video cursor provided to the API
            */
 
@@ -660,13 +714,11 @@
                   loadingHomeFeed.resolve(Feed);
                 })
                 .catch(function(rawApiResponse) {
-                  //TODO better error handling
+                  //TODO: better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else {
-                loadingHomeFeed.resolve(false);
-            }
+            } else loadingHomeFeed.resolve(false);
 
             return loadingHomeFeed.promise;
 
@@ -694,7 +746,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
        /**
         * loadProfile
-        * Prepares the data from UserApiClient.show to be injected into the view controllers
+        * Prepares the data from UserApiClient.show to be injected into the view PControllers
         */
 
         loadOwnProfile : function() {
@@ -807,6 +859,120 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
   ]);
 
+/**
+ * PManagers.NavbarManager
+ * Provides properties and methods to handle the state of the Navbar
+ */
+
+PManagers.factory('NavbarManager', ['$q',
+																		'$state',
+																		'logger',
+																		'UserContextManager',
+																		'VideosApiClient',
+																		'UsersApiClient',
+																		'VideoCellConstructor',
+																		'ProfileConstructor',
+
+	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoCellConstructor, ProfileConstructor) {
+
+		function NavbarManager(){
+
+			this.mode = {
+				loggedIn : false
+			};
+
+			this.isEnabled = false;
+
+			this.hub = {
+				username : '',
+				profilePicture : ''
+			};
+
+			this.search = {
+				dropdownEnabled : false,
+				query : '',
+				results  : {
+					users  : [],
+					videos : []
+				}
+			};
+
+			this.searchResults = {
+				users : [],
+				videos : []
+			};
+
+		}
+
+		NavbarManager.prototype.configure = function(toState) {
+			var userContext = UserContextManager.getActiveUserContext();
+
+			if(toState.metaData.navbarEnabled) this.isEnabled = true;
+			else this.isEnabled = false;
+
+			if(userContext) this.mode.loggedIn = true;
+			else this.mode.loggedIn = false;
+
+		};
+
+		NavbarManager.prototype.logout = function() {
+			UserContextManager.destroyActiveUserContext()
+				.then(function() {
+					$state.go('splash');
+				});
+		};
+
+		NavbarManager.prototype.showDropdown = function() {
+			this.search.dropdownEnabled = true;
+		};
+
+		NavbarManager.prototype.hideDropdown = function() {
+			this.search.dropdownEnabled = false;
+		};
+
+		NavbarManager.prototype.sendSearchQuery = function(query) {
+
+			var sendingVideosSearch = $q.defer(),
+					sendingUsersSearch = $q.defer(),
+					videosSearchResults = this.search.results.videos;
+					usersSearchResults = this.search.results.users;
+				  userContext = UserContextManager.getActiveUserContext(),
+				  limit = 5;
+
+			var promises  = [sendingVideosSearch, sendingUsersSearch];
+
+			videosSearchResults.length = 0;
+			usersSearchResults.length = 0;
+
+			VideosApiClient.search(query, limit, userContext)
+			 .then(function(apiResponse){
+				 for(var i = 0;  i < apiResponse.results.length; i++) {
+						var Video = VideoCellConstructor.Video.create(apiResponse.results[i].object);
+						videosSearchResults.push(Video);
+				 }
+				 logger.debug(['PManagers.NavbarManager', videosSearchResults]);
+				 sendingVideosSearch.resolve();
+			 });
+
+			UsersApiClient.search(query, limit, userContext)
+			 .then(function(apiResponse) {
+					for (var i=0; i < apiResponse.results.length; i++) {
+						var Profile = ProfileConstructor.create(apiResponse.results[i].object);
+						usersSearchResults.push(Profile);
+					}
+					logger.debug(['PManagers.NavbarManager', usersSearchResults]);
+					sendingUsersSearch.resolve();
+			 });
+
+			 return $q.all(promises);
+
+		};
+
+		return new NavbarManager();
+
+	}
+
+]);
 /**
  * PManagers.UserContextManager
  *   @dependency {Angular} $q
@@ -938,6 +1104,19 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
     }
   }]);
 
+
+
+PUtilities.directive('registerElement', function() {
+	return {
+		compile: function compile(tElement, tAttrs, transclude) {
+			return {
+				pre: function preLink(scope, iElement, iAttrs, controller) {
+					scope[iAttrs.registerElement] = iElement;
+				}
+			}
+		}
+	}
+});
 /**
  * PControllers.discoverCtrl
  * View Controller for the discover state
@@ -1082,57 +1261,12 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
         else $scope.ApplicationManager.fullscreenEnabled = false;
 
-        if(toState.metaData.navigationEnabled) $scope.ApplicationManager.navigationEnabled = true;
-        else $scope.ApplicationManager.navigationEnabled = false;
-
       });
 
     }
 
  ]);
 
-/**
- * PControllers.navCtrl
- * Controller for the navigation bar
- *   @dependency {Angular} $scope
- *   @dependency {ui-router} $state
- *   @dependency {Utilities} logger
- *   @dependency {Present} UserContextManager -- Provides methods for userContext management
-
-
-  PControllers.controller('navCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
-
-    function($scope, $state, logger, UserContextManager) {
-
-      logger.test(['PControllers.navCtrl -- navigation controller initialized']);
-
-      $scope.Navbar = {
-        mode: {
-					loggedIn: false
-				}
-      };
-
-      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-        $scope.setMode();
-      });
-
-      $scope.logout = function() {
-        UserContextManager.destroyActiveUserContext()
-          .then(function() {
-              $state.go('splash');
-          });
-      };
-
-      $scope.setMode = function() {
-        var userContext = UserContextManager.getActiveUserContext();
-        if (userContext) $scope.Navbar.mode.loggedIn = true;
-        else $scope.Navbar.mode.loggedIn = false;
-      }
-
-    }
-
-  ]);
-*/
  /*
   * PControllers.splashController
   * Controller for splashing state
@@ -1184,31 +1318,28 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
-			controller: function($scope, $state, logger, UserContextManager) {
-				logger.test(['PControllers.navCtrl -- navigation controller initialized']);
+			scope : {},
+			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
-				$scope.Navbar = {
-					mode: {
-						loggedIn: false
+				logger.test(['PDirectives -- Navbar initialized']);
+				$scope.Navbar = NavbarManager;
+				$scope.logger = logger;
+
+				$scope.$watch('Navbar');
+
+				$scope.$watch('Navbar.search.query', function(query) {
+					if(query == 0) {
+						$scope.Navbar.hideDropdown();
+					} else if (query.length % 3 == 0) {
+						$scope.Navbar.showDropdown();
+						$scope.Navbar.sendSearchQuery(query);
 					}
-				};
-
-				$scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-					$scope.setMode();
 				});
 
-				$scope.logout = function() {
-					UserContextManager.destroyActiveUserContext()
-						.then(function() {
-							$state.go('splash');
-						});
-				};
+				$scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
+					$scope.Navbar.configure(toState);
+				});
 
-				$scope.setMode = function() {
-					var userContext = UserContextManager.getActiveUserContext();
-					if (userContext) $scope.Navbar.mode.loggedIn = true;
-					else $scope.Navbar.mode.loggedIn = false;
-				}
 			},
 			link: function(scope, element, attrs) {
 

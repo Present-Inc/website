@@ -17,7 +17,7 @@
 
           /**
            * loadDiscoverFeed
-           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view controllers
+           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view PControllers
            *   @params <Number> cursor -- video cursor provided to the API
            */
 
@@ -59,13 +59,11 @@
                   loadingHomeFeed.resolve(Feed);
                 })
                 .catch(function(rawApiResponse) {
-                  //TODO better error handling
+                  //TODO: better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else {
-                loadingHomeFeed.resolve(false);
-            }
+            } else loadingHomeFeed.resolve(false);
 
             return loadingHomeFeed.promise;
 
@@ -93,7 +91,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
        /**
         * loadProfile
-        * Prepares the data from UserApiClient.show to be injected into the view controllers
+        * Prepares the data from UserApiClient.show to be injected into the view PControllers
         */
 
         loadOwnProfile : function() {

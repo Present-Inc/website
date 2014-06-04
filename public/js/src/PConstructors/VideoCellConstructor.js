@@ -39,6 +39,7 @@
           this.creator = {
             _id             : apiVideoObject.creatorUser.object._id,
             profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
+						username				: apiVideoObject.creatorUser.object.username,
 						displayName     : '',
 						altName					: ''
 					};

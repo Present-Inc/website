@@ -174,7 +174,7 @@ function $StateRefDirective($state, $timeout) {
  * </ul>
  * </pre>
  * 
- * The class name is interpolated **once** during the directives link time (any further changes to the 
+ * The class name is interpolated **once** during the PDirectives link time (any further changes to the
  * interpolated value are ignored). 
  * 
  * Multiple classes may be specified in a space-separated format:

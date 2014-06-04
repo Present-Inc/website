@@ -16,7 +16,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
        /**
         * loadProfile
-        * Prepares the data from UserApiClient.show to be injected into the view controllers
+        * Prepares the data from UserApiClient.show to be injected into the view PControllers
         */
 
         loadOwnProfile : function() {
