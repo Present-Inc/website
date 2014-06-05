@@ -12,20 +12,20 @@
    * Define Present Modules
    */
 
-  var PControllers = angular.module('PControllers', []);
-  var PDirectives = angular.module('PDirectives', []);
-  var PConstructors = angular.module('PConstructors', []);
-  var PLoaders = angular.module('PLoaders', []);
-  var PManagers = angular.module('PManagers', []);
-  var PUtilities = angular.module('PUtilities', []);
-  var PApiClient = angular.module('PApiClient', []);
+  var PControllers = angular.module('PControllers', []),
+  		PDirectives = angular.module('PDirectives', []),
+  	  PConstructors = angular.module('PConstructors', []),
+  		PLoaders = angular.module('PLoaders', []),
+  		PManagers = angular.module('PManagers', []),
+  		PUtilities = angular.module('PUtilities', []),
+  		PApiClient = angular.module('PApiClient', []);
 
  /**
   * Initialize Angular Application
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
+  *   @dependency {Present}   PManagers     -- Managers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
   *   @dependency {Present}   PDirectives   -- Defines the custom HTML elements
@@ -69,9 +69,9 @@
      /**
       * Configure Application states using ui router
       * State data -- sets properties of the ApplicationManager
-      *   @property <Boolean> fullscreen          -- When true state is full screen (i.e doens't scroll)
-      *   @property <Boolean> navigation          -- When true navigation bar is visible
-      *   @property <Boolean> requiresUserContext -- When true user context is required to access state
+      *   @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
+      *   @property navbarEnabled <Boolean> -- When true navigation bar is visible
+      *   @property requireUserContext <Boolean> -- When true user context is required to access state
       */
 
 
@@ -84,7 +84,7 @@
           metaData: {
             fullscreenEnabled: true,
             navbarEnabled: false,
-            requireSession: false
+            requireUserContext: false
           }
         })
 
@@ -95,10 +95,10 @@
           metaData: {
             fullscreenEnabled: false,
             navbarEnabled: true,
-            requireSession: false
+            requireUserContext: false
           },
           resolve: {
-            discoverFeed : function(FeedManager) {
+            Feed : function(FeedManager) {
                 return FeedManager.loadVideos('discover', false);
             }
           }
@@ -111,7 +111,7 @@
           metaData: {
             fullscreenEnabled: true,
             navbarEnabled: false,
-            requireSession: false
+            requireUserContext: false
           }
         })
 
@@ -122,13 +122,13 @@
           metaData: {
             fullscreenEnabled: false,
             navbarEnabled: true,
-            requireSession: true
+            requireUserContext: true
           },
           resolve: {
-            profile  : function(ProfileManager) {
+            Profile  : function(ProfileManager) {
              	return ProfileManager.loadOwnProfile();
             },
-            homeFeed : function(FeedManager) {
+            Feed : function(FeedManager) {
               return FeedManager.loadVideos('home', true);
             }
           }
@@ -682,6 +682,9 @@
  * PManagers.ApplicationManager
  * Provides properties and methods to manage the state of the application
  * Only injected one per application, usually on the highest level scope
+ * 	@dependency logger {PUtilities}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency UserContextManager {PManager}
  */
 
   PManagers.factory('ApplicationManager', ['logger', '$state', 'UserContextManager',
@@ -696,6 +699,13 @@
 
     }
 
+		/**
+		 * ApplicationManager.authorize
+		 * Checks to make sure the user has access to the requested state
+		 * 	@param event -- stateChangeStart event object which contains the preventDefault method
+		 * 	@param toState -- the state the the application is transitioning into
+		 */
+
 		ApplicationManager.prototype.authorize = function(event, toState) {
 			var userContext = UserContextManager.getActiveUserContext();
 			if (toState.metaData.requireSession && !userContext) {
@@ -703,6 +713,13 @@
 					$state.go('login');
 			}
 		};
+
+		/**
+		 * ApplicationManager.login
+		 * Handles user context creation, sets the activeUser property and changes the state to home
+		 * 	@param username <String> -- the user provided username
+		 * 	@param password <String> -- the user provided password
+		 */
 
 		ApplicationManager.prototype.login = function(username, password) {
 
@@ -716,6 +733,7 @@
 						$state.go('home');
 					})
 					.catch(function () {
+						//TODO: better error handling
 						alert('username and/or password is incorrect');
 					});
 
@@ -724,6 +742,11 @@
 			}
 
 		};
+
+		/**
+		 * ApplicationManager.logout
+		 * Handles user context deletion and changes the state to splash
+		 */
 
 		ApplicationManager.prototype.logout = function() {
 			UserContextManager.destroyActiveUserContext()
@@ -741,8 +764,11 @@
 /*
  * PManagers.FeedManager
  * Provides properties and methods to manage the state of Video Feeds
- *   @dependency {Present} logger
- *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
+ *   @dependency $q {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency UserContextManager {PManagers}
+ *   @dependency VideosApiClient {PApiClient}
+ *   @dependency FeedConstructor {PConstructors}
  */
 
   PManagers.factory('FeedManager', ['$q', 'logger', 'UserContextManager', 'VideosApiClient', 'FeedConstructor',
@@ -750,7 +776,6 @@
     function($q, logger, UserContextManager, VideosApiClient, FeedConstructor) {
 
        function FeedManager() {
-         //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
          this.cursor = null;
@@ -758,6 +783,12 @@
          this.errorMessage = '';
          this.videoCells = [];
        }
+
+			/**
+			 * Private Method: loadResourceMethod
+			 * @param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * @returns resourceMethod <String> -- the resource method for the provided feed type
+			 */
 
 			var loadResourceMethod = function(feedType) {
 				var resourceMethod = '';
@@ -775,16 +806,17 @@
 				return resourceMethod;
 			};
 
-
-      /* FeedManager.loadMoreVideos
-       * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
+      /**
+			 * FeedManager.loadVideos
+			 * 	@param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * 	@param requireUserContext <Boolean> -- determines if the feed requires a user context to access
+			 * 	@returns promise <Object>
        */
 
-			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
+			FeedManager.prototype.loadFeed = function(feedType, requireUserContext, cursor) {
 
 				var loadingFeed = $q.defer(),
-					userContext = UserContextManager.getActiveUserContext(),
-					cursor = this.cursor;
+					userContext = UserContextManager.getActiveUserContext();
 
 				var resourceMethod = loadResourceMethod(feedType);
 
@@ -805,6 +837,13 @@
 
 			};
 
+			/**
+			 * FeedManager.createComment
+			 * 	@param comment <String> -- the comment body
+			 * 	@param targetVideo <String> -- _id for the target video
+			 *  @returns promise <Object>
+			 */
+
 			FeedManager.prototype.createComment = function(comment, targetVideo) {
 
 				var creatingComment = $q.defer();
@@ -823,15 +862,25 @@
 
 			};
 
+			/**
+			 * FeedManager.createLike
+			 * @param targetVideo -- _id for the target video
+			 */
+
 			FeedManager.prototype.createLike = function(targetVideo) {
 
 			};
+
+			/**
+			 * FeedManager.createView
+			 * @param targetVideo -- _id for the target video
+			 */
 
 			FeedManager.prototype.createView = function(targetVideo) {
 
 			};
 
-       return new FeedManager();
+      return new FeedManager();
 
 		}
 
@@ -839,7 +888,15 @@
 
 /**
  * PManagers.NavbarManager
- * Provides properties and methods to handle the state of the Navbar
+ * Properties and methods to handle the state of the Navbar
+ * 	@dependency $q {Angular}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency logger {PUtilities}
+ * 	@dependency UserContextManager {PManagers}
+ * 	@dependency VideosApiClient {PApiClient}
+ * 	@dependency UsersApiClient {PApiClient}
+ * 	@dependency VideoCellConstructor {PConstructors}
+ * 	@dependency ProfileConstructor {PConstructors}
  */
 
 PManagers.factory('NavbarManager', ['$q',
@@ -877,6 +934,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		}
 
+		/**
+		 * NavbarManager.configure
+		 * Configuration method that is called on the ui router stateChangeStart event
+		 *  @param toState <Object> Ui-Router object that defines the requested state
+		 */
+
 		NavbarManager.prototype.configure = function(toState) {
 
 			var userContext = UserContextManager.getActiveUserContext();
@@ -889,6 +952,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.loadHub
+		 * Load the hub data if the user is still logged in when they enter the site
+		 * Otherwise, the data is set on the _newUserLoggedIn event
+		 */
+
 		NavbarManager.prototype.loadHub = function() {
 			var userContext = UserContextManager.getActiveUserContext();
 			var hub = this.hub;
@@ -900,6 +969,13 @@ PManagers.factory('NavbarManager', ['$q',
 					});
 			}
 		};
+
+		/**
+		 * NavbarManager.sendSearchQuery
+		 * Sends Users and Videos search API requests in parallel and then updates the search result properties
+		 * 	@param query <String> the search query string provided by the user
+		 * 	@returns promise <Object>
+		 */
 
 		NavbarManager.prototype.sendSearchQuery = function(query) {
 
@@ -939,9 +1015,19 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.showDropdown
+		 * Sets the search.dropdownEnabled to true
+		 */
+
 		NavbarManager.prototype.showDropdown = function() {
 			this.search.dropdownEnabled = true;
 		};
+
+		/**
+		 * NavbarManager.hideDropdown
+		 * Sets the search.dropdownEnabled to false
+		 */
 
 		NavbarManager.prototype.hideDropdown = function() {
 			this.search.dropdownEnabled = false;
@@ -956,10 +1042,11 @@ PManagers.factory('NavbarManager', ['$q',
  * PManagers.ProfileManager
  * Provides and interface to the VideosApiClient to the view controllers
  * Parses and prepares the results provided from the UserApiClient
- *   @dependency {Angular} $q
- *   @dependency {Utilities} logger
- *   @dependency {Present} UsersApiClient
- *   @dependency {Present} Session Manager
+ *   @dependency $q
+ *   @dependency logger
+ *   @dependency UsersApiClient
+ *   @dependency ProfileConstructor
+ *   @dependency UserContextManager
  */
 
 PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
@@ -967,11 +1054,6 @@ PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileC
 	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
 		return {
-
-			/**
-			 * loadProfile
-			 * Prepares the data from UserApiClient.show to be injected into the view PControllers
-			 */
 
 			loadOwnProfile : function() {
 
@@ -1030,10 +1112,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
     return {
 
       /**
-       * createNewUserContext
+       * UserContextManager.createNewUserContext
        * Sends a request to create a new user context and stores it to local storage on success
-       *   @param <String> username -- username in which the user context will be created with
-       *   @param <String> password -- password to validate the user
+       *   @param username <String> -- username in which the user context will be created with
+       *   @param password <String> -- password to validate the user
+			 *   @returns promise <Object>
        */
 
       createNewUserContext : function(username, password) {
@@ -1063,8 +1146,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * destroyActiveUserContext
+       * UserContextManager.destroyActiveUserContext
        * Sends a request to delete the user context and clears userContext token from local storage
+			 * @returns promise <Object>
        */
 
       destroyActiveUserContext : function() {
@@ -1102,8 +1186,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * getActiveUserContext
-       * Returns the userContext token if it exists. Returns false if the userContext token is invalid
+       * UserContextManager.getActiveUserContext
+       * @returns userContext <Object> token if it exists
+			 * @returns null <Null> if the userContext token is invalid
        */
 
       getActiveUserContext : function() {
@@ -1114,7 +1199,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         };
 
         if(userContext.token && userContext.userId) return userContext;
-        else return undefined;
+        else return null;
 
       }
 
@@ -1164,29 +1249,29 @@ PUtilities.directive('registerElement', function() {
 /**
  * PControllers.discoverCtrl
  * View Controller for the discover state
- *   @dependency {Angular} $scope
- *   @dependency {Present} logger   -- Configurable log for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency {Present} FeedManager {PManagers}
+ *   @dependency {Present} Feed <Object>
  */
 
-  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'discoverFeed',
+  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'Feed',
 
-    function($scope, logger, FeedManager, discoverFeed) {
-      //Check whether resolved dependencies resolved successfully
-      if(!discoverFeed) alert('Sorry, it appears that the application has lost connection, please try again');
+    function($scope, logger, FeedManager, Feed) {
 
-      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', discoverFeed]);
+      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', Feed]);
 
-      //Initialize Feed Manager on the controller scope
-      $scope.FeedManager = FeedManager;
-      $scope.FeedManager.type = 'discover';
-      $scope.FeedManager.cursor = discoverFeed.cursor;
-      $scope.FeedManager.videoCells = discoverFeed.videoCells;
+			if(Feed) {
+				//Initialize Feed Manager on the controller scope
+				$scope.FeedManager = FeedManager;
+				$scope.FeedManager.type = 'discover';
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
+			}
 
-      //Refreshes the discoverFeed
+      //Refreshes the Feed
       $scope.refreshFeed = function() {
-        $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
+        $scope.FeedManager.loadVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
           .then(function(newDiscoverFeed) {
             $scope.FeedManager.videos = newDiscoverFeed.videos;
             $scope.FeedManager.cursor = newDiscoverFeed.cursor;
@@ -1198,30 +1283,31 @@ PUtilities.directive('registerElement', function() {
   ]);
 
 /*
- * PControllers.homeCrtl
+ * PControllers.homeCtrl
  * View Controller for the home state
- *   @dependency {Angular} $scope
- *   @dependency {Utilities} logger -- Configurable logger for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency FeedManager {PManagers}
+ *   @dependency Feed <Object>
+ *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'Feed', 'Profile',
 
-    function($scope, logger, FeedManager, homeFeed, profile) {
+    function($scope, logger, FeedManager, Feed, Profile) {
 
-      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
-      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
+      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', Profile]);
+      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', Feed]);
 
       //Initialize Profile
-      $scope.Profile = profile;
+      $scope.Profile = Profile;
 
-			if(homeFeed) {
+			if(Feed) {
 				//Initialize Feed Manager on the controller scope
 				$scope.FeedManager = FeedManager;
 				$scope.FeedManager.type = 'home';
-				$scope.FeedManager.cursor = homeFeed.cursor;
-				$scope.FeedManager.videoCells = homeFeed.videoCells;
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
 			}
 
       $scope.refreshFeed = function() {
@@ -1239,10 +1325,8 @@ PUtilities.directive('registerElement', function() {
 
 /*
  * PControllers.loginCtrl
- *   @dependency {Angular} $scope
- *   @dependency {ui-router} $state
- *   @dependency {Utilities} logger -- configurable logger for development
- *   @dependency {Present} UserContextManager
+ * Application Manager handles all login functionality
+ * 	@dependency $scope {Angular}
  */
 
   PControllers.controller('loginCtrl', ['$scope', function($scope) {
@@ -1254,16 +1338,14 @@ PUtilities.directive('registerElement', function() {
  * PControllers.mainCtrl
  * Highest level controller PresentWebApp
  * Acts as a buffer to the rootScope
- *   @dependency {Angular} $scope
- *   @dependency {ui-router} $state
- *   @dependency {Utilities} logger
- *   @dependency {Present} ApplicationManager -- Provides properties and methods to manage the application state
- *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', '$state', 'logger', 'ApplicationManager',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationManager',
 
-    function($scope, $location, $state, logger, ApplicationManager) {
+    function($scope, logger, ApplicationManager) {
 
       $scope.Application = ApplicationManager;
 
@@ -1283,15 +1365,14 @@ PUtilities.directive('registerElement', function() {
 
  /*
   * PControllers.splashController
-  * Controller for splashing state
-  *   @dependency {Angular} $scope
-  *   @dependency {Utilities} logger
-  *   @dependency {Present} ApplicationManager
+  * Controller for splash state
+  *   @dependency  $scope {Angular}
+  *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
+  PControllers.controller('splashCtrl', ['$scope', 'logger',
 
-    function($scope, logger, ApplicationManager) {
+    function($scope, logger) {
 
       logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
@@ -1310,7 +1391,7 @@ PUtilities.directive('registerElement', function() {
   ]);
 
 /*
- * PDirectives.feed
+ * PDirectives.feedDirective
  * HTML Directive for the video feed
  */
 
@@ -1323,6 +1404,7 @@ PUtilities.directive('registerElement', function() {
 
 /**
  * PDirectives.navbarDirective
+ * HTML Directive for the main Navbar
  */
 
 
@@ -1332,6 +1414,7 @@ PUtilities.directive('registerElement', function() {
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
+
 			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
@@ -1360,15 +1443,17 @@ PUtilities.directive('registerElement', function() {
 				$scope.Navbar.loadHub();
 
 			},
+
 			link: function(scope, element, attrs) {
 
 			}
+
 		}
 
 	}]);
 /**
- * PDirectives.viewContainer
- * Directive that controlles the main view container
+ * PDirectives.viewContainerDirective
+ * HTML Directive that controls the main view container
  * I.E custom extension for ui-view
  */
 

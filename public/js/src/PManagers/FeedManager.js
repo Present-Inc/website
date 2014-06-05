@@ -46,14 +46,14 @@
       /**
 			 * FeedManager.loadVideos
 			 * 	@param feedType <String> -- defines the feed type [i.e. 'discover']
-			 * 	@returns requireUserContext <Boolean> -- determines if the feed requires a user context to access
+			 * 	@param requireUserContext <Boolean> -- determines if the feed requires a user context to access
+			 * 	@returns promise <Object>
        */
 
-			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
+			FeedManager.prototype.loadFeed = function(feedType, requireUserContext, cursor) {
 
 				var loadingFeed = $q.defer(),
-					userContext = UserContextManager.getActiveUserContext(),
-					cursor = this.cursor;
+					userContext = UserContextManager.getActiveUserContext();
 
 				var resourceMethod = loadResourceMethod(feedType);
 

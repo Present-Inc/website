@@ -2,6 +2,9 @@
  * PManagers.ApplicationManager
  * Provides properties and methods to manage the state of the application
  * Only injected one per application, usually on the highest level scope
+ * 	@dependency logger {PUtilities}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency UserContextManager {PManager}
  */
 
   PManagers.factory('ApplicationManager', ['logger', '$state', 'UserContextManager',
@@ -16,6 +19,13 @@
 
     }
 
+		/**
+		 * ApplicationManager.authorize
+		 * Checks to make sure the user has access to the requested state
+		 * 	@param event -- stateChangeStart event object which contains the preventDefault method
+		 * 	@param toState -- the state the the application is transitioning into
+		 */
+
 		ApplicationManager.prototype.authorize = function(event, toState) {
 			var userContext = UserContextManager.getActiveUserContext();
 			if (toState.metaData.requireSession && !userContext) {
@@ -23,6 +33,13 @@
 					$state.go('login');
 			}
 		};
+
+		/**
+		 * ApplicationManager.login
+		 * Handles user context creation, sets the activeUser property and changes the state to home
+		 * 	@param username <String> -- the user provided username
+		 * 	@param password <String> -- the user provided password
+		 */
 
 		ApplicationManager.prototype.login = function(username, password) {
 
@@ -36,6 +53,7 @@
 						$state.go('home');
 					})
 					.catch(function () {
+						//TODO: better error handling
 						alert('username and/or password is incorrect');
 					});
 
@@ -44,6 +62,11 @@
 			}
 
 		};
+
+		/**
+		 * ApplicationManager.logout
+		 * Handles user context deletion and changes the state to splash
+		 */
 
 		ApplicationManager.prototype.logout = function() {
 			UserContextManager.destroyActiveUserContext()
@@ -61,8 +84,11 @@
 /*
  * PManagers.FeedManager
  * Provides properties and methods to manage the state of Video Feeds
- *   @dependency {Present} logger
- *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
+ *   @dependency $q {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency UserContextManager {PManagers}
+ *   @dependency VideosApiClient {PApiClient}
+ *   @dependency FeedConstructor {PConstructors}
  */
 
   PManagers.factory('FeedManager', ['$q', 'logger', 'UserContextManager', 'VideosApiClient', 'FeedConstructor',
@@ -70,7 +96,6 @@
     function($q, logger, UserContextManager, VideosApiClient, FeedConstructor) {
 
        function FeedManager() {
-         //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
          this.cursor = null;
@@ -78,6 +103,12 @@
          this.errorMessage = '';
          this.videoCells = [];
        }
+
+			/**
+			 * Private Method: loadResourceMethod
+			 * @param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * @returns resourceMethod <String> -- the resource method for the provided feed type
+			 */
 
 			var loadResourceMethod = function(feedType) {
 				var resourceMethod = '';
@@ -95,16 +126,17 @@
 				return resourceMethod;
 			};
 
-
-      /* FeedManager.loadMoreVideos
-       * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
+      /**
+			 * FeedManager.loadVideos
+			 * 	@param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * 	@param requireUserContext <Boolean> -- determines if the feed requires a user context to access
+			 * 	@returns promise <Object>
        */
 
-			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
+			FeedManager.prototype.loadFeed = function(feedType, requireUserContext, cursor) {
 
 				var loadingFeed = $q.defer(),
-					userContext = UserContextManager.getActiveUserContext(),
-					cursor = this.cursor;
+					userContext = UserContextManager.getActiveUserContext();
 
 				var resourceMethod = loadResourceMethod(feedType);
 
@@ -125,6 +157,13 @@
 
 			};
 
+			/**
+			 * FeedManager.createComment
+			 * 	@param comment <String> -- the comment body
+			 * 	@param targetVideo <String> -- _id for the target video
+			 *  @returns promise <Object>
+			 */
+
 			FeedManager.prototype.createComment = function(comment, targetVideo) {
 
 				var creatingComment = $q.defer();
@@ -143,15 +182,25 @@
 
 			};
 
+			/**
+			 * FeedManager.createLike
+			 * @param targetVideo -- _id for the target video
+			 */
+
 			FeedManager.prototype.createLike = function(targetVideo) {
 
 			};
+
+			/**
+			 * FeedManager.createView
+			 * @param targetVideo -- _id for the target video
+			 */
 
 			FeedManager.prototype.createView = function(targetVideo) {
 
 			};
 
-       return new FeedManager();
+      return new FeedManager();
 
 		}
 
@@ -159,7 +208,15 @@
 
 /**
  * PManagers.NavbarManager
- * Provides properties and methods to handle the state of the Navbar
+ * Properties and methods to handle the state of the Navbar
+ * 	@dependency $q {Angular}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency logger {PUtilities}
+ * 	@dependency UserContextManager {PManagers}
+ * 	@dependency VideosApiClient {PApiClient}
+ * 	@dependency UsersApiClient {PApiClient}
+ * 	@dependency VideoCellConstructor {PConstructors}
+ * 	@dependency ProfileConstructor {PConstructors}
  */
 
 PManagers.factory('NavbarManager', ['$q',
@@ -197,6 +254,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		}
 
+		/**
+		 * NavbarManager.configure
+		 * Configuration method that is called on the ui router stateChangeStart event
+		 *  @param toState <Object> Ui-Router object that defines the requested state
+		 */
+
 		NavbarManager.prototype.configure = function(toState) {
 
 			var userContext = UserContextManager.getActiveUserContext();
@@ -209,6 +272,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.loadHub
+		 * Load the hub data if the user is still logged in when they enter the site
+		 * Otherwise, the data is set on the _newUserLoggedIn event
+		 */
+
 		NavbarManager.prototype.loadHub = function() {
 			var userContext = UserContextManager.getActiveUserContext();
 			var hub = this.hub;
@@ -220,6 +289,13 @@ PManagers.factory('NavbarManager', ['$q',
 					});
 			}
 		};
+
+		/**
+		 * NavbarManager.sendSearchQuery
+		 * Sends Users and Videos search API requests in parallel and then updates the search result properties
+		 * 	@param query <String> the search query string provided by the user
+		 * 	@returns promise <Object>
+		 */
 
 		NavbarManager.prototype.sendSearchQuery = function(query) {
 
@@ -259,9 +335,19 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.showDropdown
+		 * Sets the search.dropdownEnabled to true
+		 */
+
 		NavbarManager.prototype.showDropdown = function() {
 			this.search.dropdownEnabled = true;
 		};
+
+		/**
+		 * NavbarManager.hideDropdown
+		 * Sets the search.dropdownEnabled to false
+		 */
 
 		NavbarManager.prototype.hideDropdown = function() {
 			this.search.dropdownEnabled = false;
@@ -276,10 +362,11 @@ PManagers.factory('NavbarManager', ['$q',
  * PManagers.ProfileManager
  * Provides and interface to the VideosApiClient to the view controllers
  * Parses and prepares the results provided from the UserApiClient
- *   @dependency {Angular} $q
- *   @dependency {Utilities} logger
- *   @dependency {Present} UsersApiClient
- *   @dependency {Present} Session Manager
+ *   @dependency $q
+ *   @dependency logger
+ *   @dependency UsersApiClient
+ *   @dependency ProfileConstructor
+ *   @dependency UserContextManager
  */
 
 PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
@@ -287,11 +374,6 @@ PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileC
 	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
 		return {
-
-			/**
-			 * loadProfile
-			 * Prepares the data from UserApiClient.show to be injected into the view PControllers
-			 */
 
 			loadOwnProfile : function() {
 
@@ -350,10 +432,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
     return {
 
       /**
-       * createNewUserContext
+       * UserContextManager.createNewUserContext
        * Sends a request to create a new user context and stores it to local storage on success
-       *   @param <String> username -- username in which the user context will be created with
-       *   @param <String> password -- password to validate the user
+       *   @param username <String> -- username in which the user context will be created with
+       *   @param password <String> -- password to validate the user
+			 *   @returns promise <Object>
        */
 
       createNewUserContext : function(username, password) {
@@ -383,8 +466,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * destroyActiveUserContext
+       * UserContextManager.destroyActiveUserContext
        * Sends a request to delete the user context and clears userContext token from local storage
+			 * @returns promise <Object>
        */
 
       destroyActiveUserContext : function() {
@@ -422,8 +506,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * getActiveUserContext
-       * Returns the userContext token if it exists. Returns false if the userContext token is invalid
+       * UserContextManager.getActiveUserContext
+       * @returns userContext <Object> token if it exists
+			 * @returns null <Null> if the userContext token is invalid
        */
 
       getActiveUserContext : function() {
@@ -434,7 +519,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         };
 
         if(userContext.token && userContext.userId) return userContext;
-        else return undefined;
+        else return null;
 
       }
 

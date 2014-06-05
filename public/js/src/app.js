@@ -12,20 +12,20 @@
    * Define Present Modules
    */
 
-  var PControllers = angular.module('PControllers', []);
-  var PDirectives = angular.module('PDirectives', []);
-  var PConstructors = angular.module('PConstructors', []);
-  var PLoaders = angular.module('PLoaders', []);
-  var PManagers = angular.module('PManagers', []);
-  var PUtilities = angular.module('PUtilities', []);
-  var PApiClient = angular.module('PApiClient', []);
+  var PControllers = angular.module('PControllers', []),
+  		PDirectives = angular.module('PDirectives', []),
+  	  PConstructors = angular.module('PConstructors', []),
+  		PLoaders = angular.module('PLoaders', []),
+  		PManagers = angular.module('PManagers', []),
+  		PUtilities = angular.module('PUtilities', []),
+  		PApiClient = angular.module('PApiClient', []);
 
  /**
   * Initialize Angular Application
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
+  *   @dependency {Present}   PManagers     -- Managers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
   *   @dependency {Present}   PDirectives   -- Defines the custom HTML elements
@@ -69,9 +69,9 @@
      /**
       * Configure Application states using ui router
       * State data -- sets properties of the ApplicationManager
-      *   @property <Boolean> fullscreen          -- When true state is full screen (i.e doens't scroll)
-      *   @property <Boolean> navigation          -- When true navigation bar is visible
-      *   @property <Boolean> requiresUserContext -- When true user context is required to access state
+      *   @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
+      *   @property navbarEnabled <Boolean> -- When true navigation bar is visible
+      *   @property requireUserContext <Boolean> -- When true user context is required to access state
       */
 
 
@@ -84,7 +84,7 @@
           metaData: {
             fullscreenEnabled: true,
             navbarEnabled: false,
-            requireSession: false
+            requireUserContext: false
           }
         })
 
@@ -95,10 +95,10 @@
           metaData: {
             fullscreenEnabled: false,
             navbarEnabled: true,
-            requireSession: false
+            requireUserContext: false
           },
           resolve: {
-            discoverFeed : function(FeedManager) {
+            Feed : function(FeedManager) {
                 return FeedManager.loadVideos('discover', false);
             }
           }
@@ -111,7 +111,7 @@
           metaData: {
             fullscreenEnabled: true,
             navbarEnabled: false,
-            requireSession: false
+            requireUserContext: false
           }
         })
 
@@ -122,13 +122,13 @@
           metaData: {
             fullscreenEnabled: false,
             navbarEnabled: true,
-            requireSession: true
+            requireUserContext: true
           },
           resolve: {
-            profile  : function(ProfileManager) {
+            Profile  : function(ProfileManager) {
              	return ProfileManager.loadOwnProfile();
             },
-            homeFeed : function(FeedManager) {
+            Feed : function(FeedManager) {
               return FeedManager.loadVideos('home', true);
             }
           }

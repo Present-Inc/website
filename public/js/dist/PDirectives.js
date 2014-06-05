@@ -1,5 +1,5 @@
 /*
- * PDirectives.feed
+ * PDirectives.feedDirective
  * HTML Directive for the video feed
  */
 
@@ -12,6 +12,7 @@
 
 /**
  * PDirectives.navbarDirective
+ * HTML Directive for the main Navbar
  */
 
 
@@ -21,6 +22,7 @@
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
+
 			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
@@ -49,15 +51,17 @@
 				$scope.Navbar.loadHub();
 
 			},
+
 			link: function(scope, element, attrs) {
 
 			}
+
 		}
 
 	}]);
 /**
- * PDirectives.viewContainer
- * Directive that controlles the main view container
+ * PDirectives.viewContainerDirective
+ * HTML Directive that controls the main view container
  * I.E custom extension for ui-view
  */
 

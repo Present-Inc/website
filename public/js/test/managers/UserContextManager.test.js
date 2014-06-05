@@ -130,9 +130,9 @@ describe('UserContextManager', function() {
     });
 
     it('should return undefined if there is no active user context saved in local storage', function() {
-      spyOn(localStorageService, 'get').and.returnValue(undefined);
+      spyOn(localStorageService, 'get').and.returnValue(null);
       var userContext = UserContextManager.getActiveUserContext();
-      expect(userContext).not.toBeDefined();
+      expect(userContext).toBeFalsy();
     });
 
   })

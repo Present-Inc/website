@@ -11,16 +11,15 @@
 
     function($scope, logger, FeedManager, Feed) {
 
-      //Check whether resolved dependencies resolved successfully
-      if(!discoverFeed) alert('Sorry, it appears that the application has lost connection, please try again');
+      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', Feed]);
 
-      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', discoverFeed]);
-
-      //Initialize Feed Manager on the controller scope
-      $scope.FeedManager = FeedManager;
-      $scope.FeedManager.type = 'discover';
-      $scope.FeedManager.cursor = Feed.cursor;
-      $scope.FeedManager.videoCells = Feed.videoCells;
+			if(Feed) {
+				//Initialize Feed Manager on the controller scope
+				$scope.FeedManager = FeedManager;
+				$scope.FeedManager.type = 'discover';
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
+			}
 
       //Refreshes the Feed
       $scope.refreshFeed = function() {

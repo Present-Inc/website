@@ -1,5 +1,5 @@
 /*
- * PControllers.homeCrtl
+ * PControllers.homeCtrl
  * View Controller for the home state
  *   @dependency $scope {Angular}
  *   @dependency logger {PUtilities}

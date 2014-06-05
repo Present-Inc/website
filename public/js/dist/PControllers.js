@@ -1,29 +1,29 @@
 /**
  * PControllers.discoverCtrl
  * View Controller for the discover state
- *   @dependency {Angular} $scope
- *   @dependency {Present} logger   -- Configurable log for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency {Present} FeedManager {PManagers}
+ *   @dependency {Present} Feed <Object>
  */
 
-  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'discoverFeed',
+  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'Feed',
 
-    function($scope, logger, FeedManager, discoverFeed) {
-      //Check whether resolved dependencies resolved successfully
-      if(!discoverFeed) alert('Sorry, it appears that the application has lost connection, please try again');
+    function($scope, logger, FeedManager, Feed) {
 
-      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', discoverFeed]);
+      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', Feed]);
 
-      //Initialize Feed Manager on the controller scope
-      $scope.FeedManager = FeedManager;
-      $scope.FeedManager.type = 'discover';
-      $scope.FeedManager.cursor = discoverFeed.cursor;
-      $scope.FeedManager.videoCells = discoverFeed.videoCells;
+			if(Feed) {
+				//Initialize Feed Manager on the controller scope
+				$scope.FeedManager = FeedManager;
+				$scope.FeedManager.type = 'discover';
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
+			}
 
-      //Refreshes the discoverFeed
+      //Refreshes the Feed
       $scope.refreshFeed = function() {
-        $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
+        $scope.FeedManager.loadVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
           .then(function(newDiscoverFeed) {
             $scope.FeedManager.videos = newDiscoverFeed.videos;
             $scope.FeedManager.cursor = newDiscoverFeed.cursor;
@@ -35,30 +35,31 @@
   ]);
 
 /*
- * PControllers.homeCrtl
+ * PControllers.homeCtrl
  * View Controller for the home state
- *   @dependency {Angular} $scope
- *   @dependency {Utilities} logger -- Configurable logger for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency FeedManager {PManagers}
+ *   @dependency Feed <Object>
+ *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'Feed', 'Profile',
 
-    function($scope, logger, FeedManager, homeFeed, profile) {
+    function($scope, logger, FeedManager, Feed, Profile) {
 
-      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
-      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
+      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', Profile]);
+      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', Feed]);
 
       //Initialize Profile
-      $scope.Profile = profile;
+      $scope.Profile = Profile;
 
-			if(homeFeed) {
+			if(Feed) {
 				//Initialize Feed Manager on the controller scope
 				$scope.FeedManager = FeedManager;
 				$scope.FeedManager.type = 'home';
-				$scope.FeedManager.cursor = homeFeed.cursor;
-				$scope.FeedManager.videoCells = homeFeed.videoCells;
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
 			}
 
       $scope.refreshFeed = function() {
@@ -76,10 +77,8 @@
 
 /*
  * PControllers.loginCtrl
- *   @dependency {Angular} $scope
- *   @dependency {ui-router} $state
- *   @dependency {Utilities} logger -- configurable logger for development
- *   @dependency {Present} UserContextManager
+ * Application Manager handles all login functionality
+ * 	@dependency $scope {Angular}
  */
 
   PControllers.controller('loginCtrl', ['$scope', function($scope) {
@@ -91,16 +90,14 @@
  * PControllers.mainCtrl
  * Highest level controller PresentWebApp
  * Acts as a buffer to the rootScope
- *   @dependency {Angular} $scope
- *   @dependency {ui-router} $state
- *   @dependency {Utilities} logger
- *   @dependency {Present} ApplicationManager -- Provides properties and methods to manage the application state
- *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', '$state', 'logger', 'ApplicationManager',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationManager',
 
-    function($scope, $location, $state, logger, ApplicationManager) {
+    function($scope, logger, ApplicationManager) {
 
       $scope.Application = ApplicationManager;
 
@@ -120,15 +117,14 @@
 
  /*
   * PControllers.splashController
-  * Controller for splashing state
-  *   @dependency {Angular} $scope
-  *   @dependency {Utilities} logger
-  *   @dependency {Present} ApplicationManager
+  * Controller for splash state
+  *   @dependency  $scope {Angular}
+  *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
+  PControllers.controller('splashCtrl', ['$scope', 'logger',
 
-    function($scope, logger, ApplicationManager) {
+    function($scope, logger) {
 
       logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
