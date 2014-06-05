@@ -1,11 +1,10 @@
 /**
- * PApiClient.VideoApiClient
- * Sends API requests directed at the Videos API Resource and handles the raw API response
- *   @dependency {Angular} $http
- *   @dependency {Angular} $q
- *   @dependency {Present} logger -- Configurable log For development
- *   @dependency {Present} ApiConfig -- Provides API configuration properties
- *
+ * PApiClient.CommentsApiClient
+ * Handles all API requests to the Comments resource
+ * 	@dependency $http {Angular}
+ * 	@dependency $q {Angular}
+ * 	@dependency logger {PUtilities} -- Configurable log for development and testing
+ * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
  */
 
   PApiClient.factory('VideosApiClient', ['$http', '$q', 'logger', 'ApiConfig',
@@ -14,18 +13,12 @@
 
       return {
 
-        /**
-         * Sends a request to the list_brand_new_videos videos resouce
-         * Handles success and error blocks then resolves the api response to the FeedLoader
-         *   @param <Number> cursor -- active video cursor
-         *   @param <Object> userContext -- user userContext object for methods that require user context or respond with subjective meta data
-         *
-         */
-
         listBrandNewVideos: function(cursor, userContext) {
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
-          $http({
+
+					var sendingRequest = $q.defer(),
+          		resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
+
+					$http({
             method: 'GET',
             url: resourceUrl,
             params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null},
@@ -44,17 +37,13 @@
             });
 
           return sendingRequest.promise;
-        },
 
-        /**
-         * Sends a request to the list_home_videos videos resouce
-         * Handles success and error blocks then resolves the api response to the FeedLoader
-         */
+        },
 
         listHomeVideos: function(cursor, userContext) {
 
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos';
+          var sendingRequest = $q.defer(),
+          		resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos';
 
           if(userContext) {
             $http({
@@ -86,11 +75,14 @@
           }
 
           return sendingRequest.promise;
+
         },
 
 				search : function(query, limit, userContext ) {
-					var sendingRequest  = $q.defer();
-					var resourceUrl = ApiConfig.getAddress() + '/v1/videos/search';
+
+					var sendingRequest  = $q.defer(),
+							resourceUrl = ApiConfig.getAddress() + '/v1/videos/search';
+
 					if (query) {
 						$http({
 							method: 'GET',
@@ -113,7 +105,9 @@
 						logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
 						sendingRequest.reject({status: 'ERROR', mock: true});
 					}
+
 					return sendingRequest.promise;
+
 				}
 
       }

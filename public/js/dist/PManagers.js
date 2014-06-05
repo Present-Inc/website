@@ -43,7 +43,6 @@
 				$state.go('home');
 			}
 
-
 		};
 
 		ApplicationManager.prototype.logout = function() {

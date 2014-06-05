@@ -1,15 +1,16 @@
 /**
  * PControllers.discoverCtrl
  * View Controller for the discover state
- *   @dependency {Angular} $scope
- *   @dependency {Present} logger   -- Configurable log for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency {Present} FeedManager {PManagers}
+ *   @dependency {Present} Feed <Object>
  */
 
-  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'discoverFeed',
+  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'FeedManager', 'Feed',
 
-    function($scope, logger, FeedManager, discoverFeed) {
+    function($scope, logger, FeedManager, Feed) {
+
       //Check whether resolved dependencies resolved successfully
       if(!discoverFeed) alert('Sorry, it appears that the application has lost connection, please try again');
 
@@ -18,12 +19,12 @@
       //Initialize Feed Manager on the controller scope
       $scope.FeedManager = FeedManager;
       $scope.FeedManager.type = 'discover';
-      $scope.FeedManager.cursor = discoverFeed.cursor;
-      $scope.FeedManager.videoCells = discoverFeed.videoCells;
+      $scope.FeedManager.cursor = Feed.cursor;
+      $scope.FeedManager.videoCells = Feed.videoCells;
 
-      //Refreshes the discoverFeed
+      //Refreshes the Feed
       $scope.refreshFeed = function() {
-        $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
+        $scope.FeedManager.loadVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
           .then(function(newDiscoverFeed) {
             $scope.FeedManager.videos = newDiscoverFeed.videos;
             $scope.FeedManager.cursor = newDiscoverFeed.cursor;

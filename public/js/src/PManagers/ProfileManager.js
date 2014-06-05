@@ -2,10 +2,11 @@
  * PManagers.ProfileManager
  * Provides and interface to the VideosApiClient to the view controllers
  * Parses and prepares the results provided from the UserApiClient
- *   @dependency {Angular} $q
- *   @dependency {Utilities} logger
- *   @dependency {Present} UsersApiClient
- *   @dependency {Present} Session Manager
+ *   @dependency $q
+ *   @dependency logger
+ *   @dependency UsersApiClient
+ *   @dependency ProfileConstructor
+ *   @dependency UserContextManager
  */
 
 PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
@@ -13,11 +14,6 @@ PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileC
 	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
 		return {
-
-			/**
-			 * loadProfile
-			 * Prepares the data from UserApiClient.show to be injected into the view PControllers
-			 */
 
 			loadOwnProfile : function() {
 

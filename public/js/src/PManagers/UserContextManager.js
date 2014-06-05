@@ -12,10 +12,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
     return {
 
       /**
-       * createNewUserContext
+       * UserContextManager.createNewUserContext
        * Sends a request to create a new user context and stores it to local storage on success
-       *   @param <String> username -- username in which the user context will be created with
-       *   @param <String> password -- password to validate the user
+       *   @param username <String> -- username in which the user context will be created with
+       *   @param password <String> -- password to validate the user
+			 *   @returns promise <Object>
        */
 
       createNewUserContext : function(username, password) {
@@ -45,8 +46,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * destroyActiveUserContext
+       * UserContextManager.destroyActiveUserContext
        * Sends a request to delete the user context and clears userContext token from local storage
+			 * @returns promise <Object>
        */
 
       destroyActiveUserContext : function() {
@@ -84,8 +86,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * getActiveUserContext
-       * Returns the userContext token if it exists. Returns false if the userContext token is invalid
+       * UserContextManager.getActiveUserContext
+       * @returns userContext <Object> token if it exists
+			 * @returns null <Null> if the userContext token is invalid
        */
 
       getActiveUserContext : function() {
@@ -96,7 +99,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         };
 
         if(userContext.token && userContext.userId) return userContext;
-        else return undefined;
+        else return null;
 
       }
 

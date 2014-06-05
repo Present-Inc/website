@@ -1,5 +1,5 @@
 /*
- * PDirectives.feed
+ * PDirectives.feedDirective
  * HTML Directive for the video feed
  */
 

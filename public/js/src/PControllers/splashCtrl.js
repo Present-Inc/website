@@ -1,14 +1,13 @@
  /*
   * PControllers.splashController
-  * Controller for splashing state
-  *   @dependency {Angular} $scope
-  *   @dependency {Utilities} logger
-  *   @dependency {Present} ApplicationManager
+  * Controller for splash state
+  *   @dependency  $scope {Angular}
+  *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger', 'ApplicationManager',
+  PControllers.controller('splashCtrl', ['$scope', 'logger',
 
-    function($scope, logger, ApplicationManager) {
+    function($scope, logger) {
 
       logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 

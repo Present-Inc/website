@@ -1,6 +1,14 @@
 /**
  * PManagers.NavbarManager
- * Provides properties and methods to handle the state of the Navbar
+ * Properties and methods to handle the state of the Navbar
+ * 	@dependency $q {Angular}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency logger {PUtilities}
+ * 	@dependency UserContextManager {PManagers}
+ * 	@dependency VideosApiClient {PApiClient}
+ * 	@dependency UsersApiClient {PApiClient}
+ * 	@dependency VideoCellConstructor {PConstructors}
+ * 	@dependency ProfileConstructor {PConstructors}
  */
 
 PManagers.factory('NavbarManager', ['$q',
@@ -38,6 +46,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		}
 
+		/**
+		 * NavbarManager.configure
+		 * Configuration method that is called on the ui router stateChangeStart event
+		 *  @param toState <Object> Ui-Router object that defines the requested state
+		 */
+
 		NavbarManager.prototype.configure = function(toState) {
 
 			var userContext = UserContextManager.getActiveUserContext();
@@ -50,6 +64,12 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.loadHub
+		 * Load the hub data if the user is still logged in when they enter the site
+		 * Otherwise, the data is set on the _newUserLoggedIn event
+		 */
+
 		NavbarManager.prototype.loadHub = function() {
 			var userContext = UserContextManager.getActiveUserContext();
 			var hub = this.hub;
@@ -61,6 +81,13 @@ PManagers.factory('NavbarManager', ['$q',
 					});
 			}
 		};
+
+		/**
+		 * NavbarManager.sendSearchQuery
+		 * Sends Users and Videos search API requests in parallel and then updates the search result properties
+		 * 	@param query <String> the search query string provided by the user
+		 * 	@returns promise <Object>
+		 */
 
 		NavbarManager.prototype.sendSearchQuery = function(query) {
 
@@ -100,9 +127,19 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		/**
+		 * NavbarManager.showDropdown
+		 * Sets the search.dropdownEnabled to true
+		 */
+
 		NavbarManager.prototype.showDropdown = function() {
 			this.search.dropdownEnabled = true;
 		};
+
+		/**
+		 * NavbarManager.hideDropdown
+		 * Sets the search.dropdownEnabled to false
+		 */
 
 		NavbarManager.prototype.hideDropdown = function() {
 			this.search.dropdownEnabled = false;

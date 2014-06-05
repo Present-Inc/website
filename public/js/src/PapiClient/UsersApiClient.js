@@ -1,22 +1,16 @@
   /**
    * PApiClient.UsersApiClient
-   * Sends API requests directed at the Users API resource and handles the raw API response.
-   *   @dependency {Angular} $http
-   *   @dependency {Angular} $q
-   *   @dependency {Present} logger -- Configurable log For development
-   *   @dependency {Present} ApiConfig -- Provides API configuration properties
-   *
+   * Handles all API requests to the Users resource.
+	 * 	@dependency $http {Angular}
+	 * 	@dependency $q {Angular}
+	 * 	@dependency logger {PUtilities} -- Configurable log for development and testing
+	 * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
    */
 
   PApiClient.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
     function($http, $q, logger, ApiConfig) {
 
-      /**
-       * Sends a request to the show users resource
-       * Handles success and error blocks and then resolves the API response to somewhere...
-       *   @param <String> username -- the user whose profile is being requested
-       */
       return {
 
         show: function(username, userContext) {

@@ -1,28 +1,29 @@
 /*
  * PControllers.homeCrtl
  * View Controller for the home state
- *   @dependency {Angular} $scope
- *   @dependency {Utilities} logger -- Configurable logger for development
- *   @dependency {Present} FeedManager -- Provides properties and methods to manage the video feed
- *   @dependency {Present} discoverFeed -- Data resolved from FeedLoader.loadDiscoverFeed
+ *   @dependency $scope {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency FeedManager {PManagers}
+ *   @dependency Feed <Object>
+ *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'homeFeed', 'profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'FeedManager', 'Feed', 'Profile',
 
-    function($scope, logger, FeedManager, homeFeed, profile) {
+    function($scope, logger, FeedManager, Feed, Profile) {
 
-      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
-      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
+      logger.debug(['PControllers.homeCtrl -- initializing Profile Data', Profile]);
+      logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', Feed]);
 
       //Initialize Profile
-      $scope.Profile = profile;
+      $scope.Profile = Profile;
 
-			if(homeFeed) {
+			if(Feed) {
 				//Initialize Feed Manager on the controller scope
 				$scope.FeedManager = FeedManager;
 				$scope.FeedManager.type = 'home';
-				$scope.FeedManager.cursor = homeFeed.cursor;
-				$scope.FeedManager.videoCells = homeFeed.videoCells;
+				$scope.FeedManager.cursor = Feed.cursor;
+				$scope.FeedManager.videoCells = Feed.videoCells;
 			}
 
       $scope.refreshFeed = function() {

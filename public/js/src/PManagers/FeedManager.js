@@ -1,8 +1,11 @@
 /*
  * PManagers.FeedManager
  * Provides properties and methods to manage the state of Video Feeds
- *   @dependency {Present} logger
- *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
+ *   @dependency $q {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency UserContextManager {PManagers}
+ *   @dependency VideosApiClient {PApiClient}
+ *   @dependency FeedConstructor {PConstructors}
  */
 
   PManagers.factory('FeedManager', ['$q', 'logger', 'UserContextManager', 'VideosApiClient', 'FeedConstructor',
@@ -10,7 +13,6 @@
     function($q, logger, UserContextManager, VideosApiClient, FeedConstructor) {
 
        function FeedManager() {
-         //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
          this.cursor = null;
@@ -18,6 +20,12 @@
          this.errorMessage = '';
          this.videoCells = [];
        }
+
+			/**
+			 * Private Method: loadResourceMethod
+			 * @param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * @returns resourceMethod <String> -- the resource method for the provided feed type
+			 */
 
 			var loadResourceMethod = function(feedType) {
 				var resourceMethod = '';
@@ -35,9 +43,10 @@
 				return resourceMethod;
 			};
 
-
-      /* FeedManager.loadMoreVideos
-       * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
+      /**
+			 * FeedManager.loadVideos
+			 * 	@param feedType <String> -- defines the feed type [i.e. 'discover']
+			 * 	@returns requireUserContext <Boolean> -- determines if the feed requires a user context to access
        */
 
 			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
@@ -65,6 +74,13 @@
 
 			};
 
+			/**
+			 * FeedManager.createComment
+			 * 	@param comment <String> -- the comment body
+			 * 	@param targetVideo <String> -- _id for the target video
+			 *  @returns promise <Object>
+			 */
+
 			FeedManager.prototype.createComment = function(comment, targetVideo) {
 
 				var creatingComment = $q.defer();
@@ -83,15 +99,25 @@
 
 			};
 
+			/**
+			 * FeedManager.createLike
+			 * @param targetVideo -- _id for the target video
+			 */
+
 			FeedManager.prototype.createLike = function(targetVideo) {
 
 			};
+
+			/**
+			 * FeedManager.createView
+			 * @param targetVideo -- _id for the target video
+			 */
 
 			FeedManager.prototype.createView = function(targetVideo) {
 
 			};
 
-       return new FeedManager();
+      return new FeedManager();
 
 		}
 

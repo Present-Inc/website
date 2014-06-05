@@ -1,5 +1,6 @@
 /**
  * PDirectives.navbarDirective
+ * HTML Directive for the main Navbar
  */
 
 
@@ -9,6 +10,7 @@
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
+
 			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
@@ -37,9 +39,11 @@
 				$scope.Navbar.loadHub();
 
 			},
+
 			link: function(scope, element, attrs) {
 
 			}
+
 		}
 
 	}]);
