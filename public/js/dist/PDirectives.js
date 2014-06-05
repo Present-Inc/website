@@ -21,12 +21,10 @@
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
-			scope : {},
 			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
 				$scope.Navbar = NavbarManager;
-				$scope.logger = logger;
 
 				$scope.$watch('Navbar');
 

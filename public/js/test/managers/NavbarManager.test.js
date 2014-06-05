@@ -27,7 +27,7 @@
 				//Service Being Tested
 				NavbarManager = $injector.get('NavbarManager');
 
-				//ServiceDependencies
+				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
 				VideosApiClient = $injector.get('VideosApiClient');
 				UsersApiClient = $injector.get('UsersApiClient');
@@ -56,7 +56,7 @@
 
 			beforeEach(function() {
 				toState = {metaData : {navbarEnabled : true}};
-				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456'})
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'})
 			});
 
 			it('should enable the navigation when the toState has navigation enabled', function() {
@@ -68,6 +68,27 @@
 				NavbarManager.configure(toState);
 				expect(NavbarManager.mode.loggedIn).toBe(true);
 			})
+
+		});
+
+
+		describe('loadHub', function() {
+
+			beforeEach(function() {
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
+				spyOn(UsersApiClient, 'showMe').and.callFake(function() {
+					var defer = $q.defer();
+					defer.resolve(getJSONFixture('users/show.success.json'));
+					return defer.promise;
+				});
+			});
+
+			it('should load active users username and picture for the navbar hub', function() {
+				$rootScope.$apply(function() {
+					NavbarManager.loadHub();
+				});
+				expect(NavbarManager.hub.username).toEqual('ddluc32');
+			});
 
 		});
 

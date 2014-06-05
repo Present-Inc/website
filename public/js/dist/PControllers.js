@@ -112,7 +112,6 @@
 
       $scope.$on('$stateChangeStart', function(event, toState) {
 				$scope.Application.authorize(event, toState);
-				$scope.Application.configure(toState);
       });
 
     }

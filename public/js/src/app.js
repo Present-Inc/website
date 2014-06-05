@@ -25,7 +25,6 @@
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the PControllers
   *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -35,11 +34,11 @@
 
   var PresentWebApp = angular.module('PresentWebApp',
     ['ui.router', 'LocalStorageModule',
-     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
+     'PControllers', 'PDirectives', 'PConstructors', 'PManagers', 'PApiClient', 'PUtilities']);
 
 
   /**
-   * PresentWebApp State Configureation
+   * PresentWebApp State Configuration
    * Define routes with ui-router's $stateProvider
    *   @dependency {ui-router} $stateProvider
    *   @dependency {Angular}   $locationProvider
@@ -99,8 +98,8 @@
             requireSession: false
           },
           resolve: {
-            discoverFeed : function(FeedLoader) {
-                return FeedLoader.loadDiscoverFeed();
+            discoverFeed : function(FeedManager) {
+                return FeedManager.loadVideos('discover', false);
             }
           }
         })
@@ -126,11 +125,11 @@
             requireSession: true
           },
           resolve: {
-            profile  : function(ProfileLoader) {
-             	return ProfileLoader.loadOwnProfile();
+            profile  : function(ProfileManager) {
+             	return ProfileManager.loadOwnProfile();
             },
-            homeFeed : function(FeedLoader) {
-              return FeedLoader.loadHomeFeed();
+            homeFeed : function(FeedManager) {
+              return FeedManager.loadVideos('home', true);
             }
           }
         });

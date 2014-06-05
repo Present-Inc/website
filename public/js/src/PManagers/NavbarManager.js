@@ -36,21 +36,16 @@ PManagers.factory('NavbarManager', ['$q',
 				}
 			};
 
-			this.searchResults = {
-				users : [],
-				videos : []
-			};
-
 		}
 
 		NavbarManager.prototype.configure = function(toState) {
 
 			var userContext = UserContextManager.getActiveUserContext();
 
-			if(toState.metaData.navbarEnabled) this.isEnabled = true;
+			if (toState.metaData.navbarEnabled) this.isEnabled = true;
 			else this.isEnabled = false;
 
-			if(userContext) this.mode.loggedIn = true;
+			if (userContext) this.mode.loggedIn = true;
 			else this.mode.loggedIn = false;
 
 		};
@@ -58,31 +53,13 @@ PManagers.factory('NavbarManager', ['$q',
 		NavbarManager.prototype.loadHub = function() {
 			var userContext = UserContextManager.getActiveUserContext();
 			var hub = this.hub;
-			if(userContext) {
+			if (userContext) {
 				UsersApiClient.showMe(userContext)
 					.then(function(apiResponse) {
 						hub.username = apiResponse.result.object.username;
 						hub.profilePicture = apiResponse.result.object.profile.picture.url;
 					});
 			}
-		};
-
-		NavbarManager.prototype.logout = function() {
-			var hub = this.hub;
-			UserContextManager.destroyActiveUserContext()
-				.then(function() {
-					$state.go('splash');
-					hub.username = '';
-					hub.profilePicture = '';
-				});
-		};
-
-		NavbarManager.prototype.showDropdown = function() {
-			this.search.dropdownEnabled = true;
-		};
-
-		NavbarManager.prototype.hideDropdown = function() {
-			this.search.dropdownEnabled = false;
 		};
 
 		NavbarManager.prototype.sendSearchQuery = function(query) {
@@ -101,7 +78,7 @@ PManagers.factory('NavbarManager', ['$q',
 
 			VideosApiClient.search(query, limit, userContext)
 			 .then(function(apiResponse){
-				 for(var i = 0;  i < apiResponse.results.length; i++) {
+				 for (var i = 0;  i < apiResponse.results.length; i++) {
 						var Video = VideoCellConstructor.Video.create(apiResponse.results[i].object);
 						videosSearchResults.push(Video);
 				 }
@@ -121,6 +98,14 @@ PManagers.factory('NavbarManager', ['$q',
 
 			 return $q.all(promises);
 
+		};
+
+		NavbarManager.prototype.showDropdown = function() {
+			this.search.dropdownEnabled = true;
+		};
+
+		NavbarManager.prototype.hideDropdown = function() {
+			this.search.dropdownEnabled = false;
 		};
 
 		return new NavbarManager();

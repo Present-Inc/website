@@ -5,43 +5,94 @@
  *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
  */
 
-  PManagers.factory('FeedManager', ['logger', 'FeedLoader',
+  PManagers.factory('FeedManager', ['$q', 'logger', 'UserContextManager', 'VideosApiClient', 'FeedConstructor',
 
-    function(logger, FeedLoader) {
+    function($q, logger, UserContextManager, VideosApiClient, FeedConstructor) {
 
        function FeedManager() {
          //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
-         this.cursor = -1;
+         this.cursor = null;
          this.isLoading = false;
          this.errorMessage = '';
          this.videoCells = [];
-       };
+       }
+
+			var loadResourceMethod = function(feedType) {
+				var resourceMethod = '';
+				switch (feedType) {
+					case 'discover':
+						resourceMethod = 'listBrandNewVideos';
+						break;
+					case 'home':
+						resourceMethod = 'listHomeVideos';
+						break;
+					default:
+						resourceMethod = 'listBrandNewVideos';
+						break;
+				}
+				return resourceMethod;
+			};
+
 
       /* FeedManager.loadMoreVideos
        * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
        */
 
-       FeedManager.prototype.loadMoreVideos = function(feedType, cursor, username) {
+			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
 
-         this.videos = [];
-         this.isLoading = true;
+				var loadingFeed = $q.defer(),
+					userContext = UserContextManager.getActiveUserContext(),
+					cursor = this.cursor;
 
-         logger.test(['PServices.FeedManager -- refreshing feed' , feedType, cursor, username]);
+				var resourceMethod = loadResourceMethod(feedType);
 
-         if(feedType == 'discover') return FeedLoader.loadDiscoverFeed(cursor);
+				if (requireUserContext && !userContext) {
+					loadingFeed.reject();
+				} else {
+					VideosApiClient[resourceMethod](cursor, userContext)
+						.then(function (apiResponse) {
+							var Feed = FeedConstructor.create(apiResponse);
+							loadingFeed.resolve(Feed);
+						})
+						.catch(function () {
+							loadingFeed.reject();
+						});
+				}
 
-         else if(feedType == 'home') return FeedLoader.loadHomeFeed(cursor, username);
+				return loadingFeed.promise;
 
-         else if(feedType == 'profile') return FeedLoader.loadProfileFeed(cursor, username);
+			};
 
-         else  logger.error('PServices.FeedManager -- no feed type provided');
+			FeedManager.prototype.createComment = function(comment, targetVideo) {
 
-       };
+				var creatingComment = $q.defer();
+						userContext = UserContextManager.getActiveUserContext();
+
+
+				CommentsApiClient.create(comment, targetVideo, userContext)
+					.then(function(apiResponse) {
+						creatingComment.resolve();
+					})
+					.catch(function() {
+						creatingComment.reject();
+					});
+
+				return creatingComment.promise;
+
+			};
+
+			FeedManager.prototype.createLike = function(targetVideo) {
+
+			};
+
+			FeedManager.prototype.createView = function(targetVideo) {
+
+			};
 
        return new FeedManager();
 
-    }
+		}
 
   ]);

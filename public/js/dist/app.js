@@ -25,7 +25,6 @@
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
   *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
-  *   @dependency {Present}   PLoaders      -- Loads data which will be injected into the PControllers
   *   @dependency {Present}   PManagers     -- Magers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -35,11 +34,11 @@
 
   var PresentWebApp = angular.module('PresentWebApp',
     ['ui.router', 'LocalStorageModule',
-     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
+     'PControllers', 'PDirectives', 'PConstructors', 'PManagers', 'PApiClient', 'PUtilities']);
 
 
   /**
-   * PresentWebApp State Configureation
+   * PresentWebApp State Configuration
    * Define routes with ui-router's $stateProvider
    *   @dependency {ui-router} $stateProvider
    *   @dependency {Angular}   $locationProvider
@@ -99,8 +98,8 @@
             requireSession: false
           },
           resolve: {
-            discoverFeed : function(FeedLoader) {
-                return FeedLoader.loadDiscoverFeed();
+            discoverFeed : function(FeedManager) {
+                return FeedManager.loadVideos('discover', false);
             }
           }
         })
@@ -126,11 +125,11 @@
             requireSession: true
           },
           resolve: {
-            profile  : function(ProfileLoader) {
-             	return ProfileLoader.loadOwnProfile();
+            profile  : function(ProfileManager) {
+             	return ProfileManager.loadOwnProfile();
             },
-            homeFeed : function(FeedLoader) {
-              return FeedLoader.loadHomeFeed();
+            homeFeed : function(FeedManager) {
+              return FeedManager.loadVideos('home', true);
             }
           }
         });
@@ -654,156 +653,16 @@
 
  }]);
 
-  /**
-   * PLoaders.FeedLoader
-   * Provides and interface to the VideosApiClint to the view Controllers
-   * Parses and prepares the results provided from the VideoApiClient
-   *    @dependency {Angular} $q
-   *    @dependency {Utilities} logger
-   *    @dependency {Present} VideoApiClient -- Provides an interface to the Present API
-   *    @dependency {Present} FeedConstructor -- Constructs the new feed object
-   *    @dependency {Present} UserContextManager -- Manages the user userContext data
-   */
-
-  PLoaders.factory('FeedLoader', ['$q', 'logger', 'VideosApiClient', 'FeedConstructor', 'UserContextManager',
-
-     function($q, logger, VideosApiClient, FeedConstructor, UserContextManager) {
-
-       return {
-
-          /**
-           * loadDiscoverFeed
-           * Prepares the data from VideoApiClient.listBrandNew Videos to be injected into the view PControllers
-           *   @params <Number> cursor -- video cursor provided to the API
-           */
-
-          loadDiscoverFeed : function(cursor) {
-
-            var loadingDiscoverFeed = $q.defer();
-            var userContext = UserContextManager.getActiveUserContext();
-
-            VideosApiClient.listBrandNewVideos(cursor, userContext)
-              .then(function(apiResponse) {
-                var Feed = FeedConstructor.create(apiResponse);
-                loadingDiscoverFeed.resolve(Feed);
-              })
-              .catch(function(apiResponse) {
-                //TODO better error handling
-                loadingDiscoverFeed.resolve(false)
-              });
-
-            return loadingDiscoverFeed.promise;
-
-          },
-
-          /**
-           * loadHomeFeed
-           * Prepares the data from UsersApiClient.listHomeVideos
-           *   @params <Number> cursor -- video cursor provided to the API
-           */
-
-          loadHomeFeed : function(cursor) {
-
-            var loadingHomeFeed = $q.defer();
-            var userContext = UserContextManager.getActiveUserContext();
-
-            if(userContext) {
-              VideosApiClient.listHomeVideos(cursor, userContext)
-                .then(function(apiResponse) {
-                  var Feed = FeedConstructor.create(apiResponse);
-                  loadingHomeFeed.resolve(Feed);
-                })
-                .catch(function(apiResponse) {
-                  //TODO: better error handling
-                  loadingHomeFeed.resolve(false);
-                });
-
-            } else {
-							loadingHomeFeed.resolve();
-						}
-
-            return loadingHomeFeed.promise;
-
-          }
-        }
-      }
-
-  ]);
 
 /**
- * PLoaders.ProfileLoader
- * Provides and interface to the VideosApiClient to the view controllers
- * Parses and prepares the results provided from the UserApiClient
- *   @dependency {Angular} $q
- *   @dependency {Utilities} logger
- *   @dependency {Present} UsersApiClient
- *   @dependency {Present} Session Manager
+ * PManagers.ApplicationManager
+ * Provides properties and methods to manage the state of the application
+ * Only injected one per application, usually on the highest level scope
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
+  PManagers.factory('ApplicationManager', ['logger', '$state', 'UserContextManager',
 
-   function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
-
-     return {
-
-       /**
-        * loadProfile
-        * Prepares the data from UserApiClient.show to be injected into the view PControllers
-        */
-
-        loadOwnProfile : function() {
-
-          var loadingProfile = $q.defer();
-          var userContext = UserContextManager.getActiveUserContext();
-
-          if(userContext) {
-              UsersApiClient.showMe(userContext)
-                .then(function(apiResponse) {
-                  var profile = ProfileConstructor.create(apiResponse.result.object);
-                  loadingProfile.resolve(profile);
-                })
-                .catch(function() {
-                  loadingProfile.resolve(false);
-                });
-          } else loadingProfile.resolve(false);
-
-          return loadingProfile.promise;
-
-        },
-
-        loadUserProfile : function(username) {
-
-          var loadingProfile = $q.defer();
-          var userContext = UserContextManager.getActiveUserContext();
-
-          UsersApiClient.show(username, userContext)
-            .then(function(apiResponse) {
-              var profile = ProfileConstructor.create(apiResponse.result.object);
-              loadingProfile.resolve(profile);
-            })
-            .catch(function() {
-              //TODO:
-              loadingProfile.resolve(false);
-            });
-
-          return loadingProfile.promise;
-
-        }
-
-     }
-   }
-
-]);
-
-/*
-* PManagers.ApplicationManager
-* Provides properties and methods to manage the state of the application
-* Only injected one per application, usually on the highest level scope
-*/
-
-  PManagers.factory('ApplicationManager', ['logger', '$state', '$rootScope', 'UserContextManager',
-
-		function(logger, $state, $rootScope, UserContextManager) {
+		function(logger, $state, UserContextManager) {
 
     function ApplicationManager() {
 
@@ -811,43 +670,36 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 				active : ''
 			};
 
-      this.mode = {
-				loggedIn   : false,
-				fullscreen : true
-			};
-
     }
-
-		ApplicationManager.prototype.configure = function(toState) {
-
-			var userContext = UserContextManager.getActiveUserContext();
-
-			if (userContext) this.mode.loggedIn = true;
-			else this.mode.loggedIn = false;
-
-			if (toState) this.mode.fullscreen = true;
-			else this.mode.fullscreen = false;
-
-		};
 
 		ApplicationManager.prototype.authorize = function(event, toState) {
 			var userContext = UserContextManager.getActiveUserContext();
-			if(toState.metaData.requireSession && !userContext) {
+			if (toState.metaData.requireSession && !userContext) {
 					event.preventDefault();
 					$state.go('login');
 			}
 		};
 
 		ApplicationManager.prototype.login = function(username, password) {
-			var user = this.user;
-			UserContextManager.createNewUserContext(username, password)
-				.then(function(newUserContext) {
-					user.active = newUserContext.profile;
-					$state.go('home');
-				})
-				.catch(function() {
-					alert('username and/or password is incorrect');
-				});
+
+			var userContext = UserContextManager.getActiveUserContext();
+					user = this.user;
+
+			if (!userContext) {
+				UserContextManager.createNewUserContext(username, password)
+					.then(function (newUserContext) {
+						user.active = newUserContext.profile;
+						$state.go('home');
+					})
+					.catch(function () {
+						alert('username and/or password is incorrect');
+					});
+
+			} else {
+				$state.go('home');
+			}
+
+
 		};
 
 		ApplicationManager.prototype.logout = function() {
@@ -870,44 +722,95 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
  *   @dependency {Present} FeedLoader -- Loads feed data from the Api Client
  */
 
-  PManagers.factory('FeedManager', ['logger', 'FeedLoader',
+  PManagers.factory('FeedManager', ['$q', 'logger', 'UserContextManager', 'VideosApiClient', 'FeedConstructor',
 
-    function(logger, FeedLoader) {
+    function($q, logger, UserContextManager, VideosApiClient, FeedConstructor) {
 
        function FeedManager() {
          //Set default properties for the FeedManager
          this.type = '';
          this.activeVideo = null;
-         this.cursor = -1;
+         this.cursor = null;
          this.isLoading = false;
          this.errorMessage = '';
          this.videoCells = [];
-       };
+       }
+
+			var loadResourceMethod = function(feedType) {
+				var resourceMethod = '';
+				switch (feedType) {
+					case 'discover':
+						resourceMethod = 'listBrandNewVideos';
+						break;
+					case 'home':
+						resourceMethod = 'listHomeVideos';
+						break;
+					default:
+						resourceMethod = 'listBrandNewVideos';
+						break;
+				}
+				return resourceMethod;
+			};
+
 
       /* FeedManager.loadMoreVideos
        * Refreshes video feed by mapping the Feed Type to the correct FeedLoader Method
        */
 
-       FeedManager.prototype.loadMoreVideos = function(feedType, cursor, username) {
+			FeedManager.prototype.loadVideos = function(feedType, requireUserContext) {
 
-         this.videos = [];
-         this.isLoading = true;
+				var loadingFeed = $q.defer(),
+					userContext = UserContextManager.getActiveUserContext(),
+					cursor = this.cursor;
 
-         logger.test(['PServices.FeedManager -- refreshing feed' , feedType, cursor, username]);
+				var resourceMethod = loadResourceMethod(feedType);
 
-         if(feedType == 'discover') return FeedLoader.loadDiscoverFeed(cursor);
+				if (requireUserContext && !userContext) {
+					loadingFeed.reject();
+				} else {
+					VideosApiClient[resourceMethod](cursor, userContext)
+						.then(function (apiResponse) {
+							var Feed = FeedConstructor.create(apiResponse);
+							loadingFeed.resolve(Feed);
+						})
+						.catch(function () {
+							loadingFeed.reject();
+						});
+				}
 
-         else if(feedType == 'home') return FeedLoader.loadHomeFeed(cursor, username);
+				return loadingFeed.promise;
 
-         else if(feedType == 'profile') return FeedLoader.loadProfileFeed(cursor, username);
+			};
 
-         else  logger.error('PServices.FeedManager -- no feed type provided');
+			FeedManager.prototype.createComment = function(comment, targetVideo) {
 
-       };
+				var creatingComment = $q.defer();
+						userContext = UserContextManager.getActiveUserContext();
+
+
+				CommentsApiClient.create(comment, targetVideo, userContext)
+					.then(function(apiResponse) {
+						creatingComment.resolve();
+					})
+					.catch(function() {
+						creatingComment.reject();
+					});
+
+				return creatingComment.promise;
+
+			};
+
+			FeedManager.prototype.createLike = function(targetVideo) {
+
+			};
+
+			FeedManager.prototype.createView = function(targetVideo) {
+
+			};
 
        return new FeedManager();
 
-    }
+		}
 
   ]);
 
@@ -949,21 +852,16 @@ PManagers.factory('NavbarManager', ['$q',
 				}
 			};
 
-			this.searchResults = {
-				users : [],
-				videos : []
-			};
-
 		}
 
 		NavbarManager.prototype.configure = function(toState) {
 
 			var userContext = UserContextManager.getActiveUserContext();
 
-			if(toState.metaData.navbarEnabled) this.isEnabled = true;
+			if (toState.metaData.navbarEnabled) this.isEnabled = true;
 			else this.isEnabled = false;
 
-			if(userContext) this.mode.loggedIn = true;
+			if (userContext) this.mode.loggedIn = true;
 			else this.mode.loggedIn = false;
 
 		};
@@ -971,31 +869,13 @@ PManagers.factory('NavbarManager', ['$q',
 		NavbarManager.prototype.loadHub = function() {
 			var userContext = UserContextManager.getActiveUserContext();
 			var hub = this.hub;
-			if(userContext) {
+			if (userContext) {
 				UsersApiClient.showMe(userContext)
 					.then(function(apiResponse) {
 						hub.username = apiResponse.result.object.username;
 						hub.profilePicture = apiResponse.result.object.profile.picture.url;
 					});
 			}
-		};
-
-		NavbarManager.prototype.logout = function() {
-			var hub = this.hub;
-			UserContextManager.destroyActiveUserContext()
-				.then(function() {
-					$state.go('splash');
-					hub.username = '';
-					hub.profilePicture = '';
-				});
-		};
-
-		NavbarManager.prototype.showDropdown = function() {
-			this.search.dropdownEnabled = true;
-		};
-
-		NavbarManager.prototype.hideDropdown = function() {
-			this.search.dropdownEnabled = false;
 		};
 
 		NavbarManager.prototype.sendSearchQuery = function(query) {
@@ -1014,7 +894,7 @@ PManagers.factory('NavbarManager', ['$q',
 
 			VideosApiClient.search(query, limit, userContext)
 			 .then(function(apiResponse){
-				 for(var i = 0;  i < apiResponse.results.length; i++) {
+				 for (var i = 0;  i < apiResponse.results.length; i++) {
 						var Video = VideoCellConstructor.Video.create(apiResponse.results[i].object);
 						videosSearchResults.push(Video);
 				 }
@@ -1036,11 +916,83 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		NavbarManager.prototype.showDropdown = function() {
+			this.search.dropdownEnabled = true;
+		};
+
+		NavbarManager.prototype.hideDropdown = function() {
+			this.search.dropdownEnabled = false;
+		};
+
 		return new NavbarManager();
 
 	}
 
 ]);
+/**
+ * PManagers.ProfileManager
+ * Provides and interface to the VideosApiClient to the view controllers
+ * Parses and prepares the results provided from the UserApiClient
+ *   @dependency {Angular} $q
+ *   @dependency {Utilities} logger
+ *   @dependency {Present} UsersApiClient
+ *   @dependency {Present} Session Manager
+ */
+
+PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
+
+	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
+
+		return {
+
+			/**
+			 * loadProfile
+			 * Prepares the data from UserApiClient.show to be injected into the view PControllers
+			 */
+
+			loadOwnProfile : function() {
+
+				var loadingProfile = $q.defer();
+				var userContext = UserContextManager.getActiveUserContext();
+
+				if(userContext) {
+					UsersApiClient.showMe(userContext)
+						.then(function(apiResponse) {
+							var profile = ProfileConstructor.create(apiResponse.result.object);
+							loadingProfile.resolve(profile);
+						})
+						.catch(function() {
+							loadingProfile.reject();
+						});
+				} else loadingProfile.resolve(false);
+
+				return loadingProfile.promise;
+
+			},
+
+			loadUserProfile : function(username) {
+
+				var loadingProfile = $q.defer();
+				var userContext = UserContextManager.getActiveUserContext();
+
+				UsersApiClient.show(username, userContext)
+					.then(function(apiResponse) {
+						var profile = ProfileConstructor.create(apiResponse.result.object);
+						loadingProfile.resolve(profile);
+					})
+					.catch(function() {
+						loadingProfile.reject();
+					});
+
+				return loadingProfile.promise;
+
+			}
+
+		}
+	}
+
+]);
+
 /**
  * PManagers.UserContextManager
  *   @dependency {Angular} $q
@@ -1300,7 +1252,6 @@ PUtilities.directive('registerElement', function() {
 
       $scope.$on('$stateChangeStart', function(event, toState) {
 				$scope.Application.authorize(event, toState);
-				$scope.Application.configure(toState);
       });
 
     }
@@ -1358,12 +1309,10 @@ PUtilities.directive('registerElement', function() {
 			restrict: 'EA',
 			templateUrl: 'views/partials/navbar',
 			replace: true,
-			scope : {},
 			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
 				$scope.Navbar = NavbarManager;
-				$scope.logger = logger;
 
 				$scope.$watch('Navbar');
 
