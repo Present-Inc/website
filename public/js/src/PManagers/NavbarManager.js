@@ -44,6 +44,7 @@ PManagers.factory('NavbarManager', ['$q',
 		}
 
 		NavbarManager.prototype.configure = function(toState) {
+
 			var userContext = UserContextManager.getActiveUserContext();
 
 			if(toState.metaData.navbarEnabled) this.isEnabled = true;
@@ -54,10 +55,25 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		NavbarManager.prototype.loadHub = function() {
+			var userContext = UserContextManager.getActiveUserContext();
+			var hub = this.hub;
+			if(userContext) {
+				UsersApiClient.showMe(userContext)
+					.then(function(apiResponse) {
+						hub.username = apiResponse.result.object.username;
+						hub.profilePicture = apiResponse.result.object.profile.picture.url;
+					});
+			}
+		};
+
 		NavbarManager.prototype.logout = function() {
+			var hub = this.hub;
 			UserContextManager.destroyActiveUserContext()
 				.then(function() {
 					$state.go('splash');
+					hub.username = '';
+					hub.profilePicture = '';
 				});
 		};
 

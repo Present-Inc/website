@@ -1,20 +1,70 @@
 /*
-* PManagers.applicationManager
+* PManagers.ApplicationManager
 * Provides properties and methods to manage the state of the application
 * Only injected one per application, usually on the highest level scope
 */
 
-  PManagers.factory('ApplicationManager', [function() {
+  PManagers.factory('ApplicationManager', ['logger', '$state', '$rootScope', 'UserContextManager',
+
+		function(logger, $state, $rootScope, UserContextManager) {
 
     function ApplicationManager() {
-      this.fullscreenEnabled = false;
-      this.navigation = false;
-      this.status = 'Application is currently running';
-    };
+
+			this.user = {
+				active : ''
+			};
+
+      this.mode = {
+				loggedIn   : false,
+				fullscreen : true
+			};
+
+    }
+
+		ApplicationManager.prototype.configure = function(toState) {
+
+			var userContext = UserContextManager.getActiveUserContext();
+
+			if (userContext) this.mode.loggedIn = true;
+			else this.mode.loggedIn = false;
+
+			if (toState) this.mode.fullscreen = true;
+			else this.mode.fullscreen = false;
+
+		};
+
+		ApplicationManager.prototype.authorize = function(event, toState) {
+			var userContext = UserContextManager.getActiveUserContext();
+			if(toState.metaData.requireSession && !userContext) {
+					event.preventDefault();
+					$state.go('login');
+			}
+		};
+
+		ApplicationManager.prototype.login = function(username, password) {
+			var user = this.user;
+			UserContextManager.createNewUserContext(username, password)
+				.then(function(newUserContext) {
+					user.active = newUserContext.profile;
+					$state.go('home');
+				})
+				.catch(function() {
+					alert('username and/or password is incorrect');
+				});
+		};
+
+		ApplicationManager.prototype.logout = function() {
+			UserContextManager.destroyActiveUserContext()
+				.then(function() {
+					$state.go('splash');
+				});
+		};
 
     return new ApplicationManager();
 
-  }]);
+  	}
+
+	]);
 
 /*
  * PManagers.FeedManager
@@ -110,6 +160,7 @@ PManagers.factory('NavbarManager', ['$q',
 		}
 
 		NavbarManager.prototype.configure = function(toState) {
+
 			var userContext = UserContextManager.getActiveUserContext();
 
 			if(toState.metaData.navbarEnabled) this.isEnabled = true;
@@ -120,10 +171,25 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		NavbarManager.prototype.loadHub = function() {
+			var userContext = UserContextManager.getActiveUserContext();
+			var hub = this.hub;
+			if(userContext) {
+				UsersApiClient.showMe(userContext)
+					.then(function(apiResponse) {
+						hub.username = apiResponse.result.object.username;
+						hub.profilePicture = apiResponse.result.object.profile.picture.url;
+					});
+			}
+		};
+
 		NavbarManager.prototype.logout = function() {
+			var hub = this.hub;
 			UserContextManager.destroyActiveUserContext()
 				.then(function() {
 					$state.go('splash');
+					hub.username = '';
+					hub.profilePicture = '';
 				});
 		};
 
@@ -185,9 +251,9 @@ PManagers.factory('NavbarManager', ['$q',
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ProfileConstructor',
 
-  function($q, localStorageService, logger, UserContextApiClient) {
+  function($q, localStorageService, logger, UserContextApiClient, ProfileConstructor) {
 
     return {
 
@@ -203,15 +269,16 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         var creatingNewUserContext = $q.defer();
 
         UserContextApiClient.create(username, password)
-          .then(function(rawApiResponse) {
+          .then(function(apiResponse) {
             var userContext = {
-              token  : rawApiResponse.result.object.sessionToken,
-              userId : rawApiResponse.result.object.user.object._id
+              token   : apiResponse.result.object.sessionToken,
+              userId  : apiResponse.result.object.user.object._id,
+							profile : ProfileConstructor.create(apiResponse.result.object.user.object)
             };
-            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
+						logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             creatingNewUserContext.resolve(userContext);
           })
           .catch(function(error) {

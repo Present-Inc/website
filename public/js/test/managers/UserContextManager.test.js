@@ -5,7 +5,8 @@
 
 describe('UserContextManager', function() {
 
-  var UserContextManager, logger, localStorageService, UserContextApiClient,  $q, $httpBackend, $rootScope;
+  var UserContextManager, logger, localStorageService, UserContextApiClient,  ProfileConstructor, $q, $httpBackend, $rootScope;
+	jasmine.getJSONFixtures().fixturesPath = '/base/test/fixtures/';
 
   beforeEach(function() {
 
@@ -20,6 +21,7 @@ describe('UserContextManager', function() {
       logger = $injector.get('logger');
       localStorageService = $injector.get('localStorageService');
       UserContextApiClient = $injector.get('UserContextApiClient');
+			ProfileConstructor = $injector.get('ProfileConstructor');
 
       //Test dependencies
       $q = $injector.get('$q');
@@ -38,39 +40,24 @@ describe('UserContextManager', function() {
 
   describe('createNewUserContext', function() {
 
-    var mockApiResponse = {
-      success: {
-        status: 'OK',
-        result: {
-          object: {
-            _id: '789',
-            sessionToken: '456',
-            user: {
-              object: {_id: '123', username: 'ddluc32'}
-            }
-          }
-        }
-      },
-      error: {
-        status: 'ERROR',
-        result: "Please log in and try again"
-      }
-    };
+		beforeEach(function() {
+			spyOn(UserContextApiClient, 'create').and.callFake(function() {
+				var defer = $q.defer();
+				defer.resolve(getJSONFixture('userContexts/create.success.json'));
+				return defer.promise;
+			});
+		});
 
-    it('should accept a valid username and password, retrieve a remote user context if args are valid, and save it in local storage',
+    it('should accept a valid username and password, retrieve a remote user context, save it in local storage and return the user context',
       function() {
-        spyOn(UserContextApiClient, 'create').and.callFake(function() {
-          var defer = $q.defer();
-          defer.resolve(mockApiResponse.success);
-          return defer.promise;
-        });
-        var user = {name: 'ddluc', password: 'hello'};
+        var user = {name: 'ddluc32', password: 'hello'};
         var returnedPromise = UserContextManager.createNewUserContext(user.name, user.password);
         spyOn(returnedPromise, 'then').and.callThrough();
         $rootScope.$apply(function() {
             returnedPromise.then(function(userContext) {
-              expect(userContext.token).toEqual('456');
-              expect(userContext.userId).toEqual('123');
+              expect(userContext.token).toEqual('fc7469fff6f82724640ebfa12cdcd80dc517fdb1cb0ec059f1d43a3847fe512f2d77733cf293dfd256f0bc46d225fba50e7f806b53c818256d7153ae5909a618');
+              expect(userContext.userId).toEqual('53744bf4650762a97c8c94f2');
+							expect(userContext.profile.username).toBeDefined('ddluc32');
               expect(localStorageService.set).toHaveBeenCalledWith('token', userContext.token);
               expect(localStorageService.set).toHaveBeenCalledWith('userId', userContext.userId);
             });
@@ -78,26 +65,6 @@ describe('UserContextManager', function() {
         expect(returnedPromise.then).toHaveBeenCalled();
       }
     );
-
-    it('should accept an invalid username and password, attempt to retrieve a remote user context, and handle error',
-      function() {
-        spyOn(UserContextApiClient, 'create').and.callFake(function() {
-          var defer = $q.defer();
-          defer.reject(mockApiResponse.error);
-          return defer.promise;
-        });
-        var user = {name: 'invalid', password: 'invalid'};
-        var returnedPromise = UserContextManager.createNewUserContext(user.name, user.password);
-        spyOn(returnedPromise, 'catch').and.callThrough();
-        $rootScope.$apply(function() {
-            returnedPromise.catch(function(error) {
-              expect(error).toBeDefined();
-              expect(logger.error).toHaveBeenCalled();
-              expect(localStorageService.set.calls.count()).toEqual(0);
-            });
-        });
-        expect(returnedPromise.catch).toHaveBeenCalled();
-    });
 
   });
 
@@ -127,26 +94,6 @@ describe('UserContextManager', function() {
         spyOn(returnedPromise, 'then').and.callThrough();
         $rootScope.$apply(function() {
           returnedPromise.then(function() {
-            expect(localStorageService.clearAll).toHaveBeenCalled();
-          });
-        });
-        expect(returnedPromise.then).toHaveBeenCalled();
-      }
-    );
-
-    it('should destroy the local user context from local storage, even if the remote user context could not be deleted',
-      function() {
-        spyOn(UserContextApiClient, 'destroy').and.callFake(function() {
-          var defer = $q.defer();
-          defer.reject(mockApiResponse.error);
-          return defer.promise;
-        });
-        spyOn(localStorageService, 'get').and.returnValue('123');
-        var returnedPromise = UserContextManager.destroyActiveUserContext();
-        spyOn(returnedPromise, 'then').and.callThrough();
-        $rootScope.$apply(function() {
-          returnedPromise.catch(function(error) {
-            expect(error).toBeDefined();
             expect(localStorageService.clearAll).toHaveBeenCalled();
           });
         });

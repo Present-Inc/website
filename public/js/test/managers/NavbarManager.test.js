@@ -56,7 +56,7 @@
 
 			beforeEach(function() {
 				toState = {metaData : {navbarEnabled : true}};
-				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456'})
 			});
 
 			it('should enable the navigation when the toState has navigation enabled', function() {

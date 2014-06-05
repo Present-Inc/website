@@ -24,7 +24,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
           var loadingProfile = $q.defer();
           var userContext = UserContextManager.getActiveUserContext();
 
-          if(userContext.token && userContext.userId) {
+          if(userContext) {
               UsersApiClient.showMe(userContext)
                 .then(function(apiResponse) {
                   var profile = ProfileConstructor.create(apiResponse.result.object);
@@ -33,7 +33,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
                 .catch(function() {
                   loadingProfile.resolve(false);
                 });
-          }
+          } else loadingProfile.resolve(false);
 
           return loadingProfile.promise;
 

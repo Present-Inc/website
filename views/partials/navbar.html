@@ -29,9 +29,11 @@
             </ul>
         </div>
 
+
         <div class="hub">
             <span ui-sref="login" ng-hide="Navbar.mode.loggedIn">Log In</span>
-            <span ng-click="Navbar.logout()" ng-show="Navbar.mode.loggedIn">Log Out</span>
+            <span ng-bind="Navbar.hub.username" ng-show="Navbar.mode.loggedIn" ng-click="Navbar.logout()" ></span>
+            <img ng-src="{{Navbar.hub.profilePicture}}" ng-show="Navbar.mode.loggedIn"/>
         </div>
 
 

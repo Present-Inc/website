@@ -127,7 +127,7 @@
           },
           resolve: {
             profile  : function(ProfileLoader) {
-              return ProfileLoader.loadOwnProfile();
+             	return ProfileLoader.loadOwnProfile();
             },
             homeFeed : function(FeedLoader) {
               return FeedLoader.loadHomeFeed();
@@ -136,3 +136,4 @@
         });
 
   }]);
+

@@ -6,7 +6,7 @@
 -->
 
 <!DOCTYPE html>
-<html ng-controller="mainCtrl" ng-app ="PresentWebApp" class="fullscreen">
+<html ng-app="PresentWebApp" class="fullscreen">
 
 <head>
     <meta charset="utf-8">
@@ -16,9 +16,9 @@
     <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
 </head>
 
-<body class="fullscreen">
+<body ng-controller="mainCtrl" class="fullscreen">
 
-    <nav navbar application-manager="{{ApplicationManager}}"></nav>
+    <nav navbar></nav>
 
     <div ui-view class="fullscreen">
         <!--INJECTED TEMPLATES GO HERE -->

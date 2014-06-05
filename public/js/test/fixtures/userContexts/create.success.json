@@ -1,0 +1,62 @@
+{
+	"status": "OK",
+	"result": {
+		"object": {
+			"__v": 0,
+			"_lastUpdateDate": "2014-06-04T22:04:11.055Z",
+			"_creationDate": "2014-06-04T22:04:11.055Z",
+			"user": {
+				"subjectiveObjectMeta": {
+					"demand": {
+						"backward": false,
+						"forward": false
+					},
+					"friendship": {
+						"backward": false,
+						"forward": false
+					}
+				},
+				"object": {
+					"__v": 0,
+					"_creationDate": "2014-05-15T05:09:08.846Z",
+					"_id": "53744bf4650762a97c8c94f2",
+					"_lastUpdateDate": "2014-06-04T04:00:03.784Z",
+					"_objectId": "dUakwDkunh",
+					"displayUsername": "ddluc32",
+					"email": "ddluc32@gmail.com",
+					"phoneNumber": "724-994-6182",
+					"username": "ddluc32",
+					"views": {
+						"count": 341
+					},
+					"videos": {
+						"count": 34
+					},
+					"profile": {
+						"description": "It's a push party",
+						"fullName": "Dan Lucas",
+						"picture": {
+							"url": "http://user-assets.present.tv/profile-pictures/53744bf4650762a97c8c94f2jpg"
+						},
+						"location": "Princeton NJ "
+					},
+					"likes": {
+						"count": 111
+					},
+					"friends": {
+						"count": 37
+					},
+					"followers": {
+						"count": 29
+					},
+					"demands": {
+						"count": 4
+					}
+				}
+			},
+			"sessionToken": "fc7469fff6f82724640ebfa12cdcd80dc517fdb1cb0ec059f1d43a3847fe512f2d77733cf293dfd256f0bc46d225fba50e7f806b53c818256d7153ae5909a618",
+			"_id": "538f97dbb91e212700c735d4"
+		},
+		"subjectiveObjectMeta": {}
+	}
+}

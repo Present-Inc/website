@@ -47,20 +47,19 @@
 
     function($scope, logger, FeedManager, homeFeed, profile) {
 
-      //Check whether resolved dedpendencies resolved successfully
-      if(!homeFeed) alert('the home feed could not be loaded');
-
       logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
       logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
 
       //Initialize Profile
       $scope.Profile = profile;
 
-      //Initialize Feed Manager on the controller scope
-      $scope.FeedManager = FeedManager;
-      $scope.FeedManager.type = 'home';
-      $scope.FeedManager.cursor = homeFeed.cursor;
-      $scope.FeedManager.videoCells = homeFeed.videoCells;
+			if(homeFeed) {
+				//Initialize Feed Manager on the controller scope
+				$scope.FeedManager = FeedManager;
+				$scope.FeedManager.type = 'home';
+				$scope.FeedManager.cursor = homeFeed.cursor;
+				$scope.FeedManager.videoCells = homeFeed.videoCells;
+			}
 
       $scope.refreshFeed = function() {
         $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
@@ -83,27 +82,10 @@
  *   @dependency {Present} UserContextManager
  */
 
-  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
-
-    function($scope, $state, logger, UserContextManager) {
-
+  PControllers.controller('loginCtrl', ['$scope', function($scope) {
       $scope.username = '';
       $scope.password = '';
-
-      $scope.login = function() {
-        UserContextManager.createNewUserContext($scope.username, $scope.password)
-          .then(function(newUserContext) {
-              logger.debug(['PControllers.loginCtrl -- userContext created', newUserContext]);
-              $state.go('home');
-          })
-          .catch(function() {
-            alert('username and/or password is incorrect');
-          });
-      }
-
-    }
-
-  ]);
+  }]);
 
 /**
  * PControllers.mainCtrl
@@ -116,32 +98,21 @@
  *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'UserContextManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', '$state', 'logger', 'ApplicationManager',
 
-    function($scope, $location, logger, ApplicationManager, UserContextManager) {
+    function($scope, $location, $state, logger, ApplicationManager) {
 
-      $scope.ApplicationManager = ApplicationManager;
+      $scope.Application = ApplicationManager;
 
-      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+			$scope.$watch('Application');
 
-        //Check to see if requested state requires a valid userContext
-        if(toState.metaData.requireSession) {
-          var userContext = UserContextManager.getActiveUserContext();
-          if(!userContext) {
-            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is invalid', userContext]);
-            $location.path('/login');
-          }
-          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is valid', userContext]);
-        }
+			$scope.$watch('Application.user.active', function(user) {
+				$scope.$broadcast('_newUserLoggedIn', user);
+			});
 
-      });
-
-      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-
-        //Apply state data to the Application Manager on the stateChangeStart event
-        if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
-        else $scope.ApplicationManager.fullscreenEnabled = false;
-
+      $scope.$on('$stateChangeStart', function(event, toState) {
+				$scope.Application.authorize(event, toState);
+				$scope.Application.configure(toState);
       });
 
     }

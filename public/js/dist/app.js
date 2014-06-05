@@ -127,7 +127,7 @@
           },
           resolve: {
             profile  : function(ProfileLoader) {
-              return ProfileLoader.loadOwnProfile();
+             	return ProfileLoader.loadOwnProfile();
             },
             homeFeed : function(FeedLoader) {
               return FeedLoader.loadHomeFeed();
@@ -136,6 +136,7 @@
         });
 
   }]);
+
 
 /**
 * PApiClient.ApiClientConfig
@@ -706,19 +707,20 @@
             var loadingHomeFeed = $q.defer();
             var userContext = UserContextManager.getActiveUserContext();
 
-            if(userContext.token && userContext.userId) {
-
+            if(userContext) {
               VideosApiClient.listHomeVideos(cursor, userContext)
                 .then(function(apiResponse) {
                   var Feed = FeedConstructor.create(apiResponse);
                   loadingHomeFeed.resolve(Feed);
                 })
-                .catch(function(rawApiResponse) {
+                .catch(function(apiResponse) {
                   //TODO: better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else loadingHomeFeed.resolve(false);
+            } else {
+							loadingHomeFeed.resolve();
+						}
 
             return loadingHomeFeed.promise;
 
@@ -754,7 +756,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
           var loadingProfile = $q.defer();
           var userContext = UserContextManager.getActiveUserContext();
 
-          if(userContext.token && userContext.userId) {
+          if(userContext) {
               UsersApiClient.showMe(userContext)
                 .then(function(apiResponse) {
                   var profile = ProfileConstructor.create(apiResponse.result.object);
@@ -763,7 +765,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
                 .catch(function() {
                   loadingProfile.resolve(false);
                 });
-          }
+          } else loadingProfile.resolve(false);
 
           return loadingProfile.promise;
 
@@ -794,22 +796,72 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 ]);
 
 /*
-* PManagers.applicationManager
+* PManagers.ApplicationManager
 * Provides properties and methods to manage the state of the application
 * Only injected one per application, usually on the highest level scope
 */
 
-  PManagers.factory('ApplicationManager', [function() {
+  PManagers.factory('ApplicationManager', ['logger', '$state', '$rootScope', 'UserContextManager',
+
+		function(logger, $state, $rootScope, UserContextManager) {
 
     function ApplicationManager() {
-      this.fullscreenEnabled = false;
-      this.navigation = false;
-      this.status = 'Application is currently running';
-    };
+
+			this.user = {
+				active : ''
+			};
+
+      this.mode = {
+				loggedIn   : false,
+				fullscreen : true
+			};
+
+    }
+
+		ApplicationManager.prototype.configure = function(toState) {
+
+			var userContext = UserContextManager.getActiveUserContext();
+
+			if (userContext) this.mode.loggedIn = true;
+			else this.mode.loggedIn = false;
+
+			if (toState) this.mode.fullscreen = true;
+			else this.mode.fullscreen = false;
+
+		};
+
+		ApplicationManager.prototype.authorize = function(event, toState) {
+			var userContext = UserContextManager.getActiveUserContext();
+			if(toState.metaData.requireSession && !userContext) {
+					event.preventDefault();
+					$state.go('login');
+			}
+		};
+
+		ApplicationManager.prototype.login = function(username, password) {
+			var user = this.user;
+			UserContextManager.createNewUserContext(username, password)
+				.then(function(newUserContext) {
+					user.active = newUserContext.profile;
+					$state.go('home');
+				})
+				.catch(function() {
+					alert('username and/or password is incorrect');
+				});
+		};
+
+		ApplicationManager.prototype.logout = function() {
+			UserContextManager.destroyActiveUserContext()
+				.then(function() {
+					$state.go('splash');
+				});
+		};
 
     return new ApplicationManager();
 
-  }]);
+  	}
+
+	]);
 
 /*
  * PManagers.FeedManager
@@ -905,6 +957,7 @@ PManagers.factory('NavbarManager', ['$q',
 		}
 
 		NavbarManager.prototype.configure = function(toState) {
+
 			var userContext = UserContextManager.getActiveUserContext();
 
 			if(toState.metaData.navbarEnabled) this.isEnabled = true;
@@ -915,10 +968,25 @@ PManagers.factory('NavbarManager', ['$q',
 
 		};
 
+		NavbarManager.prototype.loadHub = function() {
+			var userContext = UserContextManager.getActiveUserContext();
+			var hub = this.hub;
+			if(userContext) {
+				UsersApiClient.showMe(userContext)
+					.then(function(apiResponse) {
+						hub.username = apiResponse.result.object.username;
+						hub.profilePicture = apiResponse.result.object.profile.picture.url;
+					});
+			}
+		};
+
 		NavbarManager.prototype.logout = function() {
+			var hub = this.hub;
 			UserContextManager.destroyActiveUserContext()
 				.then(function() {
 					$state.go('splash');
+					hub.username = '';
+					hub.profilePicture = '';
 				});
 		};
 
@@ -980,9 +1048,9 @@ PManagers.factory('NavbarManager', ['$q',
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ProfileConstructor',
 
-  function($q, localStorageService, logger, UserContextApiClient) {
+  function($q, localStorageService, logger, UserContextApiClient, ProfileConstructor) {
 
     return {
 
@@ -998,15 +1066,16 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         var creatingNewUserContext = $q.defer();
 
         UserContextApiClient.create(username, password)
-          .then(function(rawApiResponse) {
+          .then(function(apiResponse) {
             var userContext = {
-              token  : rawApiResponse.result.object.sessionToken,
-              userId : rawApiResponse.result.object.user.object._id
+              token   : apiResponse.result.object.sessionToken,
+              userId  : apiResponse.result.object.user.object._id,
+							profile : ProfileConstructor.create(apiResponse.result.object.user.object)
             };
-            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
+						logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             creatingNewUserContext.resolve(userContext);
           })
           .catch(function(error) {
@@ -1166,20 +1235,19 @@ PUtilities.directive('registerElement', function() {
 
     function($scope, logger, FeedManager, homeFeed, profile) {
 
-      //Check whether resolved dedpendencies resolved successfully
-      if(!homeFeed) alert('the home feed could not be loaded');
-
       logger.debug(['PControllers.homeCtrl -- initializing Profile Data', profile]);
       logger.debug(['PControllers.homeCtrl -- initializing the Feed Manager', homeFeed]);
 
       //Initialize Profile
       $scope.Profile = profile;
 
-      //Initialize Feed Manager on the controller scope
-      $scope.FeedManager = FeedManager;
-      $scope.FeedManager.type = 'home';
-      $scope.FeedManager.cursor = homeFeed.cursor;
-      $scope.FeedManager.videoCells = homeFeed.videoCells;
+			if(homeFeed) {
+				//Initialize Feed Manager on the controller scope
+				$scope.FeedManager = FeedManager;
+				$scope.FeedManager.type = 'home';
+				$scope.FeedManager.cursor = homeFeed.cursor;
+				$scope.FeedManager.videoCells = homeFeed.videoCells;
+			}
 
       $scope.refreshFeed = function() {
         $scope.FeedManager.loadMoreVideos($scope.FeedManager.type, $scope.FeedManager.cursor)
@@ -1202,27 +1270,10 @@ PUtilities.directive('registerElement', function() {
  *   @dependency {Present} UserContextManager
  */
 
-  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
-
-    function($scope, $state, logger, UserContextManager) {
-
+  PControllers.controller('loginCtrl', ['$scope', function($scope) {
       $scope.username = '';
       $scope.password = '';
-
-      $scope.login = function() {
-        UserContextManager.createNewUserContext($scope.username, $scope.password)
-          .then(function(newUserContext) {
-              logger.debug(['PControllers.loginCtrl -- userContext created', newUserContext]);
-              $state.go('home');
-          })
-          .catch(function() {
-            alert('username and/or password is incorrect');
-          });
-      }
-
-    }
-
-  ]);
+  }]);
 
 /**
  * PControllers.mainCtrl
@@ -1235,32 +1286,21 @@ PUtilities.directive('registerElement', function() {
  *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'UserContextManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', '$state', 'logger', 'ApplicationManager',
 
-    function($scope, $location, logger, ApplicationManager, UserContextManager) {
+    function($scope, $location, $state, logger, ApplicationManager) {
 
-      $scope.ApplicationManager = ApplicationManager;
+      $scope.Application = ApplicationManager;
 
-      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+			$scope.$watch('Application');
 
-        //Check to see if requested state requires a valid userContext
-        if(toState.metaData.requireSession) {
-          var userContext = UserContextManager.getActiveUserContext();
-          if(!userContext) {
-            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is invalid', userContext]);
-            $location.path('/login');
-          }
-          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is valid', userContext]);
-        }
+			$scope.$watch('Application.user.active', function(user) {
+				$scope.$broadcast('_newUserLoggedIn', user);
+			});
 
-      });
-
-      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-
-        //Apply state data to the Application Manager on the stateChangeStart event
-        if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
-        else $scope.ApplicationManager.fullscreenEnabled = false;
-
+      $scope.$on('$stateChangeStart', function(event, toState) {
+				$scope.Application.authorize(event, toState);
+				$scope.Application.configure(toState);
       });
 
     }
@@ -1339,6 +1379,13 @@ PUtilities.directive('registerElement', function() {
 				$scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
 					$scope.Navbar.configure(toState);
 				});
+
+				$scope.$on('_newUserLoggedIn', function(event, profile) {
+					$scope.Navbar.hub.username = profile.username;
+					$scope.Navbar.hub.profilePicture = profile.profilePicture;
+				});
+
+				$scope.Navbar.loadHub();
 
 			},
 			link: function(scope, element, attrs) {

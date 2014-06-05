@@ -9,32 +9,21 @@
  *   @dependency {Present} UserContextManager -- Provides methods to manage userContexts
  */
 
-  PControllers.controller('mainCtrl', ['$scope', '$location', 'logger', 'ApplicationManager', 'UserContextManager',
+  PControllers.controller('mainCtrl', ['$scope', '$location', '$state', 'logger', 'ApplicationManager',
 
-    function($scope, $location, logger, ApplicationManager, UserContextManager) {
+    function($scope, $location, $state, logger, ApplicationManager) {
 
-      $scope.ApplicationManager = ApplicationManager;
+      $scope.Application = ApplicationManager;
 
-      $scope.$on('$stateChangeStart', function(event, toState, fromState) {
+			$scope.$watch('Application');
 
-        //Check to see if requested state requires a valid userContext
-        if(toState.metaData.requireSession) {
-          var userContext = UserContextManager.getActiveUserContext();
-          if(!userContext) {
-            logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is invalid', userContext]);
-            $location.path('/login');
-          }
-          else logger.debug(['PControllers.mainCtrl on $stateChangeStart -- userContext is valid', userContext]);
-        }
+			$scope.$watch('Application.user.active', function(user) {
+				$scope.$broadcast('_newUserLoggedIn', user);
+			});
 
-      });
-
-      $scope.$on('$stateChangeSuccess', function(event, toState, fromState) {
-
-        //Apply state data to the Application Manager on the stateChangeStart event
-        if(toState.metaData.fullscreenEnabled) $scope.ApplicationManager.fullscreenEnabled = true;
-        else $scope.ApplicationManager.fullscreenEnabled = false;
-
+      $scope.$on('$stateChangeStart', function(event, toState) {
+				$scope.Application.authorize(event, toState);
+				$scope.Application.configure(toState);
       });
 
     }

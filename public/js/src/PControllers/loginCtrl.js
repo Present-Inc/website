@@ -6,24 +6,7 @@
  *   @dependency {Present} UserContextManager
  */
 
-  PControllers.controller('loginCtrl', ['$scope', '$state', 'logger', 'UserContextManager',
-
-    function($scope, $state, logger, UserContextManager) {
-
+  PControllers.controller('loginCtrl', ['$scope', function($scope) {
       $scope.username = '';
       $scope.password = '';
-
-      $scope.login = function() {
-        UserContextManager.createNewUserContext($scope.username, $scope.password)
-          .then(function(newUserContext) {
-              logger.debug(['PControllers.loginCtrl -- userContext created', newUserContext]);
-              $state.go('home');
-          })
-          .catch(function() {
-            alert('username and/or password is incorrect');
-          });
-      }
-
-    }
-
-  ]);
+  }]);

@@ -51,19 +51,20 @@
             var loadingHomeFeed = $q.defer();
             var userContext = UserContextManager.getActiveUserContext();
 
-            if(userContext.token && userContext.userId) {
-
+            if(userContext) {
               VideosApiClient.listHomeVideos(cursor, userContext)
                 .then(function(apiResponse) {
                   var Feed = FeedConstructor.create(apiResponse);
                   loadingHomeFeed.resolve(Feed);
                 })
-                .catch(function(rawApiResponse) {
+                .catch(function(apiResponse) {
                   //TODO: better error handling
                   loadingHomeFeed.resolve(false);
                 });
 
-            } else loadingHomeFeed.resolve(false);
+            } else {
+							loadingHomeFeed.resolve();
+						}
 
             return loadingHomeFeed.promise;
 

@@ -5,9 +5,9 @@
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ProfileConstructor',
 
-  function($q, localStorageService, logger, UserContextApiClient) {
+  function($q, localStorageService, logger, UserContextApiClient, ProfileConstructor) {
 
     return {
 
@@ -23,15 +23,16 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
         var creatingNewUserContext = $q.defer();
 
         UserContextApiClient.create(username, password)
-          .then(function(rawApiResponse) {
+          .then(function(apiResponse) {
             var userContext = {
-              token  : rawApiResponse.result.object.sessionToken,
-              userId : rawApiResponse.result.object.user.object._id
+              token   : apiResponse.result.object.sessionToken,
+              userId  : apiResponse.result.object.user.object._id,
+							profile : ProfileConstructor.create(apiResponse.result.object.user.object)
             };
-            logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
+						logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             creatingNewUserContext.resolve(userContext);
           })
           .catch(function(error) {

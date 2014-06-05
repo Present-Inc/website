@@ -31,6 +31,13 @@
 					$scope.Navbar.configure(toState);
 				});
 
+				$scope.$on('_newUserLoggedIn', function(event, profile) {
+					$scope.Navbar.hub.username = profile.username;
+					$scope.Navbar.hub.profilePicture = profile.profilePicture;
+				});
+
+				$scope.Navbar.loadHub();
+
 			},
 			link: function(scope, element, attrs) {
 
