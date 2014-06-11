@@ -4,7 +4,7 @@
 
 	PConstructors.factory('LikeConstructor', function() {
 		return {
-			create: function(apiLikesObject) {
+			create: function(apiLikeObject) {
 
 				function Like(apiLikeObject) {
 					this._id = apiLikeObject._id;

@@ -49,7 +49,8 @@
 							VideosApiClient[resourceMethod](this.cursor, userContext)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
-										var VideoCell = VideoCellConstructor.create(apiResponse.results[i].object);
+										var VideoCell = VideoCellConstructor
+											.create(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
