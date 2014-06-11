@@ -39,7 +39,7 @@ describe('FeedConstructor', function() {
 
 	});
 
-	describe('loadFeed', function() {
+	describe('load', function() {
 
 		beforeEach(function() {
 

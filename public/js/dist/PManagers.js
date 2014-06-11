@@ -5,9 +5,9 @@
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ProfileConstructor',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
 
-  function($q, localStorageService, logger, UserContextApiClient, ProfileConstructor) {
+  function($q, localStorageService, logger, UserContextApiClient) {
 
     return {
 

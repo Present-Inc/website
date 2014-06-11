@@ -215,12 +215,12 @@
  * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
  */
 
-PApiClient.factory('LikesAPiClient', ['$http', '$q', 'logger', 'ApiConfig',
+PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
 	function($http, $q, logger, ApiConfig) {
 		return {
 
-			create: function(comment, targetVideo, userContext) {
+			create: function(targetVideo, userContext) {
 
 				var sendingRequest = $q.defer(),
 					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/create';
@@ -229,30 +229,30 @@ PApiClient.factory('LikesAPiClient', ['$http', '$q', 'logger', 'ApiConfig',
 					$http({
 						method: 'POST',
 						url: resourceUrl,
-						data: {comment: comment, target_video: targetVideo},
+						data: {video_id: targetVideo},
 						headers: {
 							'Present-User-Context-Session-Token' : userContext.token,
 							'Present-User-Context-User-Id': userContext.userId
 						}
 					})
 						.success(function(data, status, headers) {
-							logger.debug();
+							logger.debug(['PApiClient.LikesApiClient.create', 'http success block', data]);
 							sendingRequest.resolve(data);
 						})
 						.error(function(data, status, headers) {
-							logger.error();
+							logger.error(['PApiClient.LikesApiClient.create', 'http error block', data]);
 							sendingRequest.reject(data);
 						});
 				} else {
-					logger.error();
-					sendingRequest.reject({status: 'ERROR', mock:true});
+					logger.error(['PApiClient.LikesApiClient.create', 'invalid user context']);
+					sendingRequest.reject({status: 'ERROR', mock: true});
 				}
 
 				return sendingRequest.promise;
 
 			},
 
-			destroy: function(comment, userContext) {
+			destroy: function(targetVideo, userContext) {
 				var sendingRequest = $q.defer(),
 					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/destroy';
 
@@ -260,22 +260,22 @@ PApiClient.factory('LikesAPiClient', ['$http', '$q', 'logger', 'ApiConfig',
 					$http({
 						method: 'POST',
 						url: resourceUrl,
-						data: {comment: comment, target_video: targetVideo},
+						data: {video_id: targetVideo},
 						headers: {
 							'Present-User-Context-Session-Token' : userContext.token,
 							'Present-User-Context-User-Id': userContext.userId
 						}
 					})
 						.success(function(data, status, headers) {
-							logger.debug();
+							logger.debug(['PApiClient.LikesApiClient.destroy', 'http success block', data]);
 							sendingRequest.resolve(data);
 						})
 						.error(function(data, status, headers) {
-							logger.error();
+							logger.error(['PApiClient.LikesApiClient.create', 'http error block', data]);
 							sendingRequest.reject(data);
 						});
 				} else {
-					logger.error();
+					logger.error(['PApiClient.LikesApiClient.destroy', 'invalid user context']);
 					sendingRequest.reject({status: 'ERROR', mock:true});
 				}
 
@@ -733,7 +733,8 @@ PApiClient.factory('LikesAPiClient', ['$http', '$q', 'logger', 'ApiConfig',
 							VideosApiClient[resourceMethod](this.cursor, userContext)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
-										var VideoCell = VideoCellConstructor.create(apiResponse.results[i].object);
+										var VideoCell = VideoCellConstructor
+											.create(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
@@ -761,7 +762,7 @@ PApiClient.factory('LikesAPiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
 	PConstructors.factory('LikeConstructor', function() {
 		return {
-			create: function(apiLikesObject) {
+			create: function(apiLikeObject) {
 
 				function Like(apiLikeObject) {
 					this._id = apiLikeObject._id;
@@ -996,18 +997,27 @@ PConstructors.factory('ReplyConstructor', function() {
 
 /**
  * PConstructors.VideoCellConstructor
- *  Constructs the individial components of a video cell
+ *  Constructs the individual components of a video cell
  */
 
- PConstructors.factory('VideoCellConstructor', ['VideoConstructor', 'CommentConstructor', 'LikeConstructor', 'ReplyConstructor',
+ PConstructors.factory('VideoCellConstructor', ['$state',
+	 																							'UserContextManager',
+	 																							'LikesApiClient',
+	 																							'CommentsApiClient',
+	 																							'VideoConstructor',
+	 																							'CommentConstructor',
+	 																							'LikeConstructor',
+	 																							'ReplyConstructor',
 
-	 function(VideoConstructor, CommentConstructor, LikeConstructor, ReplyConstructor) {
+	 function($state, UserContextManager, LikesApiClient, CommentsApiClient,
+						VideoConstructor, CommentConstructor, LikeConstructor, ReplyConstructor) {
 
    return {
-		create: function(apiVideoObject) {
+		create: function(apiVideoObject, subjectiveMeta) {
 
 			function VideoCellConstructor() {
 				this.video = VideoConstructor.create(apiVideoObject);
+				this.subjectiveMeta = subjectiveMeta;
 				this.comments = [];
 				this.likes = [];
 				this.replies = [];
@@ -1023,17 +1033,64 @@ PConstructors.factory('ReplyConstructor', function() {
 					this.comments.push(Comment);
 				}
 
-				for(var j = 0; j < embededResults.likes.length;  i++) {
+				for(var j = 0; j < embededResults.likes.length;  j++) {
 					var Like = LikeConstructor.create(embededResults.likes[j].object);
 					this.likes.push(Like);
 				}
 
-				for(var k = 0; i < embededResults.replies.length; i++) {
+				for(var k = 0; k < embededResults.replies.length; k++) {
 					var Reply = ReplyConstructor.create(embededResults.replies[k].object);
 					this.replies.push(Reply);
 				}
 
 			}
+
+			VideoCellConstructor.prototype.addLike = function(apiResponse) {
+				if(!apiResponse.errorCode == 100002) {
+					this.likes.push(LikeConstructor(apiResponse.result.object));
+				}
+			};
+
+			VideoCellConstructor.prototype.removeLike = function(apiResponse, sourceUser) {
+				if(!apiResponse.errorCode == 100001) {
+					for (var i=0; i < this.likes.length; i ++) {
+						if (this.likes[i]._sourceUser == sourceUser)
+						this.likes[i].splice(i, 1);
+					}
+				}
+			};
+
+			VideoCellConstructor.prototype.toggleLike = function() {
+
+				var userContext = UserContextManager.getActiveUserContext(),
+						_this = this;
+
+				if(!userContext) {
+					$state.go('login');
+				}
+				else if (this.subjectiveMeta.like.forward) {
+					this.video.counts.likes--;
+					this.subjectiveMeta.like.forward = false;
+					LikesApiClient.destroy(this.video._id, userContext)
+						.then(function(apiResponse) {
+							_this.removeLike(apiResponse, userContext.userId);
+						})
+						.catch(function() {
+							_this.removeLike(apiResponse, userContext.userId);
+						})
+				} else {
+					this.video.counts.likes++;
+					this.subjectiveMeta.like.forward = true;
+					LikesApiClient.create(this.video._id, userContext)
+						.then(function(apiResponse) {
+							_this.addLike(apiResponse);
+						})
+						.catch(function() {
+							_this.addLike(apiResponse);
+						});
+				}
+
+			};
 
 			return new VideoCellConstructor(apiVideoObject)
 		}
@@ -1196,9 +1253,9 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient', 'ProfileConstructor',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
 
-  function($q, localStorageService, logger, UserContextApiClient, ProfileConstructor) {
+  function($q, localStorageService, logger, UserContextApiClient) {
 
     return {
 
@@ -1513,6 +1570,23 @@ PUtilities.directive('registerElement', function() {
 		}
 
 	}]);
+/**
+ * VideoCellDirective.js
+ */
+
+PDirectives.directive('videoCell', function() {
+	return {
+		restrict : 'EA',
+		link : function(scope, element, attrs) {
+
+			scope.$watch('videoCell.subjectiveMeta.like.forward', function(newValue) {
+				if (newValue) scope.likesElem.css({'color' : '#FF557F'});
+				else scope.likesElem.css({'color' : '#47525D'});
+			});
+
+		}
+	}
+});
 /**
  * PDirectives.viewContainerDirective
  * HTML Directive that controls the main view container
