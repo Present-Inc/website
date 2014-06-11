@@ -17,10 +17,10 @@ PConstructors.factory('NavbarConstructor', ['$q',
 																					 'UserContextManager',
 																					 'VideosApiClient',
 																					 'UsersApiClient',
-																					 'VideoCellConstructor',
+																					 'VideoConstructor',
 																					 'ProfileConstructor',
 
-	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoCellConstructor, ProfileConstructor) {
+	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoConstructor, ProfileConstructor) {
 
 		return {
 			create : function() {
@@ -109,7 +109,7 @@ PConstructors.factory('NavbarConstructor', ['$q',
 					VideosApiClient.search(query, limit, userContext)
 						.then(function(apiResponse){
 							for (var i = 0;  i < apiResponse.results.length; i++) {
-								var Video = VideoCellConstructor.Video.create(apiResponse.results[i].object);
+								var Video = VideoConstructor.create(apiResponse.results[i].object);
 								videosSearchResults.push(Video);
 							}
 							logger.debug(['PManagers.NavbarManager', videosSearchResults]);

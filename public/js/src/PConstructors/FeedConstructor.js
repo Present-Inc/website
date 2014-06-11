@@ -49,12 +49,7 @@
 							VideosApiClient[resourceMethod](this.cursor, userContext)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
-										var VideoCell = {
-											video    : VideoCellConstructor.Video.create(apiResponse.results[i].object),
-											comments : VideoCellConstructor.Comments.create(apiResponse.results[i].object.comments),
-											likes    : VideoCellConstructor.Likes.create(apiResponse.results[i].object.likes),
-											replies  : VideoCellConstructor.Replies.create(apiResponse.results[i].object.replies)
-										};
+										var VideoCell = VideoCellConstructor.create(apiResponse.results[i].object);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
@@ -64,7 +59,7 @@
 								});
 						}
 
-						return loadingFeed.promise;
+					return loadingFeed.promise;
 
 					};
 
