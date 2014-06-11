@@ -17,7 +17,7 @@
 					var sendingRequest = $q.defer(),
 							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';
 
-					if(userContext) {
+					if (userContext) {
 						$http({
 							method: 'POST',
 							url: resourceUrl,
@@ -37,9 +37,13 @@
 							});
 					} else {
 							logger.error();
-							sendingRequest.reject({status: 'ERROR', mock:true});
+							sendingRequest.reject({status: 'ERROR', mock: true});
 					}
 					return sendingRequest.promise;
+
+				},
+
+				destroy: function(comment, userContext) {
 
 				}
 

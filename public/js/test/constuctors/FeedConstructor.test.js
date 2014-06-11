@@ -1,11 +1,12 @@
 /**
- * FeedManager.test.js
+ * FeedConstructor.test.js
  * Test suite for the PManagers.FeedManager
  */
 
-describe('FeedManager', function() {
+describe('FeedConstructor', function() {
 
-	var FeedManager,
+	var HomeFeed,
+			DiscoverFeed,
 			UserContextManager,
 			VideosApiClient,
 			FeedConstructor,
@@ -20,7 +21,9 @@ describe('FeedManager', function() {
 		inject(function($injector) {
 
 			//Service being tested
-			FeedManager = $injector.get('FeedManager');
+			var FeedConstructor = $injector.get('FeedConstructor');
+			DiscoverFeed = FeedConstructor.create('discover', false);
+			HomeFeed = FeedConstructor.create('home', true);
 
 			//Service Dependencies
 			UserContextManager = $injector.get('UserContextManager');
@@ -47,42 +50,6 @@ describe('FeedManager', function() {
 		});
 
 		it('should do nothing if the feed requires a user context and the user context is undefined', function() {
-
-		});
-
-	});
-
-	describe('createComment', function() {
-
-		beforeEach(function() {
-
-		});
-
-		it('should call the Comments API client to create a new comment', function() {
-
-		});
-
-	});
-
-	describe('createLike', function() {
-
-		beforeEach(function() {
-
-		});
-
-		it('should call the Likes API Client to create a new like', function() {
-
-		});
-
-	});
-
-	describe('createView', function() {
-
-		beforeEach(function() {
-
-		});
-
-		it('should call the Views API Client to create a new view', function() {
 
 		});
 

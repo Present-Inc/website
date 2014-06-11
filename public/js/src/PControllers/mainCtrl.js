@@ -7,11 +7,11 @@
  *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationManager',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationConstructor',
 
-    function($scope, logger, ApplicationManager) {
+    function($scope, logger, ApplicationConstructor) {
 
-      $scope.Application = ApplicationManager;
+      $scope.Application = ApplicationConstructor.create();
 
 			$scope.$watch('Application');
 
@@ -25,4 +25,4 @@
 
     }
 
- ]);
+  ]);

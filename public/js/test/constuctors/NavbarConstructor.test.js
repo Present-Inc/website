@@ -5,7 +5,7 @@
 
 	describe('NavbarManager', function() {
 
-		var NavbarManager,
+		var Navbar,
 				UserContextManager,
 				VideosApiClient,
 				UsersApiClient,
@@ -25,7 +25,8 @@
 			inject(function($injector) {
 
 				//Service Being Tested
-				NavbarManager = $injector.get('NavbarManager');
+				var NavbarConstructor = $injector.get('NavbarConstructor');
+				Navbar = NavbarConstructor.create();
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
@@ -60,13 +61,13 @@
 			});
 
 			it('should enable the navigation when the toState has navigation enabled', function() {
-				NavbarManager.configure(toState);
-				expect(NavbarManager.isEnabled).toBe(true);
+				Navbar.configure(toState);
+				expect(Navbar.isEnabled).toBe(true);
 			});
 
 			it('should set the mode.loggedIn to true when there is a valid user context', function() {
-				NavbarManager.configure(toState);
-				expect(NavbarManager.mode.loggedIn).toBe(true);
+				Navbar.configure(toState);
+				expect(Navbar.mode.loggedIn).toBe(true);
 			})
 
 		});
@@ -85,9 +86,9 @@
 
 			it('should load active users username and picture for the navbar hub', function() {
 				$rootScope.$apply(function() {
-					NavbarManager.loadHub();
+					Navbar.loadHub();
 				});
-				expect(NavbarManager.hub.username).toEqual('ddluc32');
+				expect(Navbar.hub.username).toEqual('ddluc32');
 			});
 
 		});
@@ -116,13 +117,13 @@
 
 
 			it('should send the search query and update the searchResults', function() {
-				var returnedPromise = NavbarManager.sendSearchQuery();
+				var returnedPromise = Navbar.sendSearchQuery();
 				spyOn(returnedPromise, 'then').and.callThrough();
 				$rootScope.$apply(function() {
 					returnedPromise.then(function() {
-						expect(NavbarManager.search.results.videos[0].creator.username).toEqual('ddluc32');
-						expect(NavbarManager.search.results.users[0].username).toEqual('ddluc32');
-						expect(NavbarManager.search.results.users[0].profilePicture).toBeDefined();
+						expect(Navbar.search.results.videos[0].creator.username).toEqual('ddluc32');
+						expect(Navbar.search.results.users[0].username).toEqual('ddluc32');
+						expect(Navbar.search.results.users[0].profilePicture).toBeDefined();
 					});
 				});
 				expect(returnedPromise.then).toHaveBeenCalled();

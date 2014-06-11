@@ -16,10 +16,10 @@ module.exports = function(grunt) {
             src: ['public/js/src/PConstructors/**/*.js'],
             dest: 'public/js/dist/PConstructors.js'
           },
-          loaders: {
-            src: ['public/js/src/PLoaders/**/*.js'],
-            dest: 'public/js/dist/PLoaders.js'
-          },
+					loaders : {
+						src: ['public/js/src/PLoaders/**/*.js'],
+						dest: 'public/js/dist/PLoaders.js'
+					},
           managers: {
             src: ['public/js/src/PManagers/**/*.js'],
             dest: 'public/js/dist/PManagers.js'
@@ -40,13 +40,13 @@ module.exports = function(grunt) {
             src: ['public/js/src/app.js',
                   'public/js/dist/PApiClient.js',
                   'public/js/dist/PConstructors.js',
-                  'public/js/dist/PLoaders.js',
+									'public/js/dist/PLoaders.js',
                   'public/js/dist/PManagers.js',
                   'public/js/dist/PUtilities.js',
                   'public/js/dist/PControllers.js',
                   'public/js/dist/PDirectives.js'],
             dest: 'public/js/dist/app.js'
-          },
+          }
         },
         sass: {
             dist: {
@@ -82,10 +82,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('run-sass', ['watch:scss']);
 
-    grunt.registerTask('run-build', ['concat:apiClient', 'concat:constructors', 'concat:loaders', 'concat:managers',
+    grunt.registerTask('run-build', ['concat:apiClient', 'concat:constructors', 'concat:managers', 'concat:loaders',
                                      'concat:utilities', 'concat:controllers', 'concat:directives', 'concat:app']);
 
-    grunt.registerTask('run-tests', ['concat:apiClient', 'concat:constructors', 'concat:loaders', 'concat:managers',
+    grunt.registerTask('run-tests', ['concat:apiClient', 'concat:constructors', 'concat:managers', 'concat:loaders',
                                      'concat:utilities', 'concat:controllers', 'concat:directives', 'concat:app',
                                      'karma:unit']);
 };

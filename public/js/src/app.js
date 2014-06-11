@@ -1,6 +1,6 @@
 /*
  * Present Web App
- * V - 2.0.0
+ * Version - 2.0.0
  * Present Inc.
  * Written by Daniel Lucas
  *
@@ -15,7 +15,7 @@
   var PControllers = angular.module('PControllers', []),
   		PDirectives = angular.module('PDirectives', []),
   	  PConstructors = angular.module('PConstructors', []),
-  		PLoaders = angular.module('PLoaders', []),
+			PLoaders = angular.module('PLoaders', []),
   		PManagers = angular.module('PManagers', []),
   		PUtilities = angular.module('PUtilities', []),
   		PApiClient = angular.module('PApiClient', []);
@@ -34,7 +34,7 @@
 
   var PresentWebApp = angular.module('PresentWebApp',
     ['ui.router', 'LocalStorageModule',
-     'PControllers', 'PDirectives', 'PConstructors', 'PManagers', 'PApiClient', 'PUtilities']);
+     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
 
 
   /**
@@ -98,9 +98,9 @@
             requireUserContext: false
           },
           resolve: {
-            Feed : function(FeedManager) {
-                return FeedManager.loadVideos('discover', false);
-            }
+						Feed : function(FeedLoader) {
+							return FeedLoader.preLoad('discover', false);
+						}
           }
         })
 
@@ -125,11 +125,11 @@
             requireUserContext: true
           },
           resolve: {
-            Profile  : function(ProfileManager) {
-             	return ProfileManager.loadOwnProfile();
+            Profile  : function(ProfileLoader) {
+             	return ProfileLoader.loadOwnProfile();
             },
-            Feed : function(FeedManager) {
-              return FeedManager.loadVideos('home', true);
+            Feed : function(FeedLoader) {
+              return FeedLoader.preLoad('home', true);
             }
           }
         });

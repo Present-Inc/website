@@ -28,7 +28,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
             var userContext = {
               token   : apiResponse.result.object.sessionToken,
               userId  : apiResponse.result.object.user.object._id,
-							profile : ProfileConstructor.create(apiResponse.result.object.user.object)
+							profile : apiResponse.result.object.user.object
             };
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);

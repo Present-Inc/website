@@ -1,15 +1,14 @@
 /**
- * PManagers.ProfileManager
+ * PLoader.ProfileManager
  * Provides and interface to the VideosApiClient to the view controllers
  * Parses and prepares the results provided from the UserApiClient
- *   @dependency $q
- *   @dependency logger
- *   @dependency UsersApiClient
- *   @dependency ProfileConstructor
- *   @dependency UserContextManager
+ *   @dependency $q {Angular}
+ *   @dependency logger {PUtilities}
+ *   @dependency UsersApiClient {PApiClient}
+ *   @dependency UserContextManager {PManagers}
  */
 
-PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
 
 	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
 
@@ -23,8 +22,8 @@ PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileC
 				if(userContext) {
 					UsersApiClient.showMe(userContext)
 						.then(function(apiResponse) {
-							var profile = ProfileConstructor.create(apiResponse.result.object);
-							loadingProfile.resolve(profile);
+							var Profile = ProfileConstructor.create(apiResponse.result.object);
+							loadingProfile.resolve(Profile);
 						})
 						.catch(function() {
 							loadingProfile.reject();
@@ -37,13 +36,13 @@ PManagers.factory('ProfileManager', ['$q', 'logger', 'UsersApiClient', 'ProfileC
 
 			loadUserProfile : function(username) {
 
-				var loadingProfile = $q.defer();
-				var userContext = UserContextManager.getActiveUserContext();
+				var loadingProfile = $q.defer(),
+						userContext = UserContextManager.getActiveUserContext();
 
 				UsersApiClient.show(username, userContext)
 					.then(function(apiResponse) {
-						var profile = ProfileConstructor.create(apiResponse.result.object);
-						loadingProfile.resolve(profile);
+						var Profile = ProfileConstructor.create(apiResponse.result.object);
+						loadingProfile.resolve(Profile);
 					})
 					.catch(function() {
 						loadingProfile.reject();

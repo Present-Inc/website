@@ -11,10 +11,11 @@
 			templateUrl: 'views/partials/navbar',
 			replace: true,
 
-			controller: function($scope, $state, logger, UserContextManager, NavbarManager) {
+			controller: function($scope, $state, logger, UserContextManager, NavbarConstructor) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
-				$scope.Navbar = NavbarManager;
+				$scope.Navbar = NavbarConstructor.create();
+				$scope.Navbar.loadHub();
 
 				$scope.$watch('Navbar');
 
@@ -35,8 +36,6 @@
 					$scope.Navbar.hub.username = profile.username;
 					$scope.Navbar.hub.profilePicture = profile.profilePicture;
 				});
-
-				$scope.Navbar.loadHub();
 
 			},
 

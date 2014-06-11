@@ -1,11 +1,11 @@
 /**
- * ApplicationManager.js
- * Test Suite for the Application Manager
+ * ApplicationFactory.test.js
+ * Test Suite for the ApplicationFactory
  */
 
-	describe('ApplicationManager', function() {
+	describe('Application', function() {
 
-		var ApplicationManager,
+		var Application,
 			  UserContextManager,
 				$state,
 			  logger,
@@ -22,7 +22,8 @@
 			inject(function($injector) {
 
 				//Service being tested
-				ApplicationManager = $injector.get('ApplicationManager');
+				var ApplicationConstructor = $injector.get('ApplicationConstructor');
+				Application = ApplicationConstructor.create();
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
@@ -53,18 +54,18 @@
 				event = {
 					preventDefault: jasmine.createSpy('preventDefault')
 				};
-				toState = {metaData: {requireSession: true}};
+				toState = {metaData: {requireUserContext: true}};
 			});
 
 			it('should not authorize the user to access the private state if the user context is undefined', function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(undefined);
-				ApplicationManager.authorize(event, toState);
+				Application.authorize(event, toState);
 				expect($state.go).toHaveBeenCalledWith('login');
 			});
 
 			it('should authorize the user to access the private state if there is a valid user context', function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
-				ApplicationManager.authorize(event, toState);
+				Application.authorize(event, toState);
 				expect($state.go).not.toHaveBeenCalled();
 			});
 
@@ -75,9 +76,10 @@
 			var username, password;
 
 			beforeEach(function() {
+				var mockApiResponse = getJSONFixture('userContexts/create.success.json');
 				spyOn(UserContextManager, 'createNewUserContext').and.callFake(function() {
 					var defer = $q.defer();
-					defer.resolve({token:'456', user:'123', profile:{username:'ddluc32'}});
+					defer.resolve({token:'456', user:'123', profile: mockApiResponse.result.object.user.object});
 					return defer.promise;
 				});
 				spyOn($state, 'go');
@@ -87,9 +89,9 @@
 
 			it('should log the user in if the username and password are correct', function() {
 				$rootScope.$apply(function() {
-					ApplicationManager.login(username, password);
+					Application.login(username, password);
 				});
-				expect(ApplicationManager.user.active.username).toEqual('ddluc32');
+				expect(Application.user.active.username).toEqual('ddluc32');
 				expect($state.go).toHaveBeenCalledWith('home');
 			});
 
@@ -106,10 +108,9 @@
 				spyOn($state, 'go');
 			});
 
-
 			it('should the the user out', function() {
 				$rootScope.$apply(function() {
-					ApplicationManager.logout();
+					Application.logout();
 				});
 				expect($state.go).toHaveBeenCalledWith('splash');
 			});

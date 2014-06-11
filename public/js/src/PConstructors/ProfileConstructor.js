@@ -1,9 +1,8 @@
 /**
  * PConstructors.ProfileConstructor
- * Constructs a new Profile Object
  */
 
-  PConstructors.factory('ProfileConstructor', function() {
+  PConstructors.factory('ProfileConstructor', ['$q', 'logger', 'UsersApiClient', function() {
     return {
      create : function(apiProfileObject) {
 
@@ -26,7 +25,16 @@
          this.email = apiProfileObject.email ? apiProfileObject.email : null;
        }
 
+			 Profile.prototype.follow = function() {
+
+			 };
+
+			 Profile.prototype.demand = function() {
+
+			 };
+
        return new Profile(apiProfileObject);
-     }
+
+		 }
     }
- });
+ }]);
