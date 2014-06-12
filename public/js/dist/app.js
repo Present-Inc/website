@@ -668,6 +668,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 			create : function(apiCommentObject) {
 
 				function Comment(apiCommentObject) {
+					this._id = apiCommentObject._id;
 					this.body = apiCommentObject.body;
 					this.sourceUser = {
 						username: apiCommentObject.sourceUser.object.username,
@@ -766,8 +767,13 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
 				function Like(apiLikeObject) {
 					this._id = apiLikeObject._id;
-					this.sourceUser = apiLikeObject.sourceUser;
+					this.sourceUser = {
+						_id : apiLikeObject.sourceUser.object._id,
+						username : apiLikeObject.sourceUser.object.username
+					};
 					this.targetVideo = apiLikeObject.targetVideo;
+					//TODO: implement a momentjs utility service
+					this.timeAgo = '2 minutes'
 				}
 
 				return new Like(apiLikeObject);
@@ -1015,7 +1021,7 @@ PConstructors.factory('ReplyConstructor', function() {
    return {
 		create: function(apiVideoObject, subjectiveMeta) {
 
-			function VideoCellConstructor() {
+			function VideoCellConstructor(apiVideoObject, subjectiveMeta) {
 				this.video = VideoConstructor.create(apiVideoObject);
 				this.subjectiveMeta = subjectiveMeta;
 				this.comments = [];
@@ -1046,16 +1052,17 @@ PConstructors.factory('ReplyConstructor', function() {
 			}
 
 			VideoCellConstructor.prototype.addLike = function(apiResponse) {
-				if(!apiResponse.errorCode == 100002) {
-					this.likes.push(LikeConstructor(apiResponse.result.object));
+				if(apiResponse.status == 'OK') {
+					console.log('hi');
+					this.likes.push(LikeConstructor.create(apiResponse.result.object));
 				}
 			};
 
-			VideoCellConstructor.prototype.removeLike = function(apiResponse, sourceUser) {
-				if(!apiResponse.errorCode == 100001) {
+			VideoCellConstructor.prototype.removeLike = function(apiResponse, userContext) {
+				if(apiResponse.status == 'OK') {
 					for (var i=0; i < this.likes.length; i ++) {
-						if (this.likes[i]._sourceUser == sourceUser)
-						this.likes[i].splice(i, 1);
+						if (this.likes[i].sourceUser._id == userContext.userId);
+						this.likes.splice(i, 1);
 					}
 				}
 			};
@@ -1073,10 +1080,10 @@ PConstructors.factory('ReplyConstructor', function() {
 					this.subjectiveMeta.like.forward = false;
 					LikesApiClient.destroy(this.video._id, userContext)
 						.then(function(apiResponse) {
-							_this.removeLike(apiResponse, userContext.userId);
+							_this.removeLike(apiResponse, userContext);
 						})
-						.catch(function() {
-							_this.removeLike(apiResponse, userContext.userId);
+						.catch(function(apiResponse) {
+							_this.removeLike(apiResponse, userContext);
 						})
 				} else {
 					this.video.counts.likes++;
@@ -1085,14 +1092,14 @@ PConstructors.factory('ReplyConstructor', function() {
 						.then(function(apiResponse) {
 							_this.addLike(apiResponse);
 						})
-						.catch(function() {
+						.catch(function(apiResponse) {
 							_this.addLike(apiResponse);
 						});
 				}
 
 			};
 
-			return new VideoCellConstructor(apiVideoObject)
+			return new VideoCellConstructor(apiVideoObject, subjectiveMeta);
 		}
    }
 

@@ -5,11 +5,10 @@
 
 describe('FeedConstructor', function() {
 
-	var HomeFeed,
-			DiscoverFeed,
+	var FeedConstructor,
 			UserContextManager,
 			VideosApiClient,
-			FeedConstructor,
+			VideoCellConstructor,
 			logger,
 			$q,
 			$rootScope;
@@ -21,14 +20,12 @@ describe('FeedConstructor', function() {
 		inject(function($injector) {
 
 			//Service being tested
-			var FeedConstructor = $injector.get('FeedConstructor');
-			DiscoverFeed = FeedConstructor.create('discover', false);
-			HomeFeed = FeedConstructor.create('home', true);
+			FeedConstructor = $injector.get('FeedConstructor');
 
 			//Service Dependencies
 			UserContextManager = $injector.get('UserContextManager');
 			VideosApiClient = $injector.get('VideosApiClient');
-			FeedConstructor = $injector.get('FeedConstructor');
+			VideoCellConstructor = $injector.get('VideoCellConstructor');
 			logger = $injector.get('logger');
 
 			//Test Dependencies
@@ -39,17 +36,21 @@ describe('FeedConstructor', function() {
 
 	});
 
-	describe('load', function() {
+	describe('create', function() {
+
+		it('should create a new Feed Object', function() {
+
+		});
+
+	});
+
+	describe('Feed.prototype.load', function() {
 
 		beforeEach(function() {
 
 		});
 
 		it('should load a video feed of the desired type', function() {
-
-		});
-
-		it('should do nothing if the feed requires a user context and the user context is undefined', function() {
 
 		});
 

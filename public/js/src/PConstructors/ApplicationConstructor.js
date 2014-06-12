@@ -7,9 +7,9 @@
  * 	@dependency UserContextManager {PManager}
  */
 
-  PConstructors.factory('ApplicationConstructor', ['logger', '$state', 'UserContextManager', 'ProfileConstructor',
+  PConstructors.factory('ApplicationConstructor', ['logger', '$state', 'UserContextManager',
 
-		function(logger, $state, UserContextManager, ProfileConstructor) {
+		function(logger, $state, UserContextManager) {
 			return {
 				create : function() {
 
@@ -45,13 +45,13 @@
 
 					Application.prototype.login = function(username, password) {
 
-						var userContext = UserContextManager.getActiveUserContext();
-						user = this.user;
+						var userContext = UserContextManager.getActiveUserContext(),
+								_this = this;
 
 						if (!userContext) {
 							UserContextManager.createNewUserContext(username, password)
 								.then(function (newUserContext) {
-									user.active = ProfileConstructor.create(newUserContext.profile);
+									_this.user.active = newUserContext.profile;
 									$state.go('home');
 								})
 								.catch(function () {

@@ -7,6 +7,7 @@
 			create : function(apiCommentObject) {
 
 				function Comment(apiCommentObject) {
+					this._id = apiCommentObject._id;
 					this.body = apiCommentObject.body;
 					this.sourceUser = {
 						username: apiCommentObject.sourceUser.object.username,

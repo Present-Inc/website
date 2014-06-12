@@ -6,8 +6,9 @@
  */
 
 PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+																				 'UserContextModel',
 
-  function($q, localStorageService, logger, UserContextApiClient) {
+  function($q, localStorageService, logger, UserContextApiClient, UserContextConstructor) {
 
     return {
 
@@ -25,14 +26,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         UserContextApiClient.create(username, password)
           .then(function(apiResponse) {
-            var userContext = {
-              token   : apiResponse.result.object.sessionToken,
-              userId  : apiResponse.result.object.user.object._id,
-							profile : apiResponse.result.object.user.object
-            };
+          	var userContext = UserContextConstructor.construct(apiResponse);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
+						localStorageService.set('profile', JSON.stringify(userContext.profile));
 						logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             creatingNewUserContext.resolve(userContext);
           })
@@ -55,15 +53,16 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         var destroyingUserContext = $q.defer();
 
-        var userContext = {
-          token  : localStorageService.get('token'),
-          userId : localStorageService.get('userId')
-        };
+				var userContext = userContextConstructor.create(
+														localStorageService.get('token'),
+														localStorageService.get('userId'),
+														JSON.parse(localStorageService.get('profile'))
+				);
 
         if(userContext.token && userContext.userId) {
 
           UserContextApiClient.destroy(userContext)
-            .then(function() {
+            .then(function(apiResponse) {
               logger.debug(['PServices.UserContextManager.destroyActiveUserContext',
                             'User context deleted. User context data being deleted from local storage']);
               localStorageService.clearAll();
@@ -93,10 +92,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       getActiveUserContext : function() {
 
-        var userContext = {
-          token : localStorageService.get('token'),
-          userId: localStorageService.get('userId')
-        };
+        var userContext = userContextConstructor.create(
+														localStorageService.get('token'),
+														localStorageService.get('userId'),
+														JSON.parse(localStorageService.get('profile'))
+				);
 
         if(userContext.token && userContext.userId) return userContext;
         else return null;
