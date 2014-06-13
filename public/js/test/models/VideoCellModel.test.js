@@ -42,7 +42,7 @@
 
 		});
 
-		describe('create', function() {
+		describe('construct', function() {
 
 			var mockApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json');
 
@@ -58,7 +58,7 @@
 
 		});
 
-		describe('prototype.toggleLike', function() {
+		describe('toggleLike', function() {
 
 			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
 					mockLikesApiResponse = getJSONFixture('likes/create.success.json'),
@@ -93,6 +93,7 @@
 				$rootScope.$apply(VideoCell.toggleLike());
 				expect(VideoCell.video.counts.likes).toBeGreaterThan(originalLikeCount);
 				expect(VideoCell.subjectiveMeta.like.forward).toBe(true);
+				expect(VideoCell.likes.length).toEqual(VideoCell.video.counts.likes);
 			});
 
 			it('should remove the like if the user does not already like the video', function() {

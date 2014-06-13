@@ -72,6 +72,10 @@ PDirectives.directive('videoCell', function() {
 				else scope.likesElem.css({'color' : '#47525D'});
 			});
 
+			scope.$watchCollection('videoCell.likes', function(newValues) {
+				console.log(newValues);
+			});
+
 		}
 	}
 });

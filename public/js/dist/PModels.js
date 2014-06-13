@@ -481,7 +481,7 @@ PModels.factory('ReplyModel', function() {
 
 /**
  * PModels.VideoCellModel
- *  Constructs the individual components of a video cell
+ * Constructs the individual components of a video cell
  */
 
  PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'LikesApiClient', 'CommentsApiClient',
@@ -540,15 +540,11 @@ PModels.factory('ReplyModel', function() {
 					}
 					LikesApiClient.destroy(this.video._id, userContext);
 				} else {
-					this.video.counts.likes++;
-					this.subjectiveMeta.like.forward = true;
-					var newLike = LikeModel.create(this.video._id, userContext.profile);
-					LikesApiClient.create(this.video._id, userContext)
-						.then(function(apiResponse) {
-							newLike._id = apiResponse.result.object._id;
-							_this.likes.push(newLike);
-						});
-				}
+						this.video.counts.likes++;
+						this.subjectiveMeta.like.forward = true;
+						this.likes.push(LikeModel.create(_this.video._id, userContext.profile));
+						//LikesApiClient.create(this.video._id, userContext);
+					}
 
 			};
 
