@@ -1,14 +1,14 @@
 /**
- * PConstructors.FeedConstructor
+ * PModels.FeedModel
  * Constructs the Feed, which is composed of Video Cells
- *   @dependency {Present} VideoCellConstructor
+ *   @dependency {Present} VideoCellModel
  */
 
-  PConstructors.factory('FeedConstructor', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellConstructor',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellModel',
 
-    function($q, UserContextManager, VideosApiClient, VideoCellConstructor) {
+    function($q, UserContextManager, VideosApiClient, VideoCellModel) {
       return {
-        create: function(type, requireUserContext) {
+        construct: function(type, requireUserContext) {
 
           function Feed(type, requireUserContext) {
 						this.type = type;
@@ -49,8 +49,8 @@
 							VideosApiClient[resourceMethod](this.cursor, userContext)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
-										var VideoCell = VideoCellConstructor
-											.create(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
+										var VideoCell = VideoCellModel
+											.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();

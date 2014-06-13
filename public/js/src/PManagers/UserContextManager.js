@@ -8,7 +8,7 @@
 PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
 																				 'UserContextModel',
 
-  function($q, localStorageService, logger, UserContextApiClient, UserContextConstructor) {
+  function($q, localStorageService, logger, UserContextApiClient, UserContextModel) {
 
     return {
 
@@ -26,7 +26,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         UserContextApiClient.create(username, password)
           .then(function(apiResponse) {
-          	var userContext = UserContextConstructor.construct(apiResponse);
+          	var userContext = UserContextModel.construct(apiResponse.result.object);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
@@ -53,13 +53,13 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         var destroyingUserContext = $q.defer();
 
-				var userContext = userContextConstructor.create(
-														localStorageService.get('token'),
-														localStorageService.get('userId'),
-														JSON.parse(localStorageService.get('profile'))
-				);
+				if (localStorageService.get('token') && localStorageService.get('userId') && localStorageService.get('profile')) {
 
-        if(userContext.token && userContext.userId) {
+					var userContext = UserContextModel.create(
+						localStorageService.get('token'),
+						localStorageService.get('userId'),
+						localStorageService.get('profile')
+					);
 
           UserContextApiClient.destroy(userContext)
             .then(function(apiResponse) {
@@ -92,14 +92,13 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       getActiveUserContext : function() {
 
-        var userContext = userContextConstructor.create(
-														localStorageService.get('token'),
-														localStorageService.get('userId'),
-														JSON.parse(localStorageService.get('profile'))
-				);
-
-        if(userContext.token && userContext.userId) return userContext;
-        else return null;
+        if (localStorageService.get('token') && localStorageService.get('userId') && localStorageService.get('profile')) {
+					return userContext = UserContextModel.create(
+						localStorageService.get('token'),
+						localStorageService.get('userId'),
+						localStorageService.get('profile')
+					);
+				} else return null;
 
       }
 

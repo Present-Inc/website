@@ -14,7 +14,7 @@
 
   var PControllers = angular.module('PControllers', []),
   		PDirectives = angular.module('PDirectives', []),
-  	  PConstructors = angular.module('PConstructors', []),
+  	  PModels = angular.module('PModels', []),
 			PLoaders = angular.module('PLoaders', []),
   		PManagers = angular.module('PManagers', []),
   		PUtilities = angular.module('PUtilities', []),
@@ -24,7 +24,7 @@
   * Initialize Angular Application
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
-  *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
+  *   @dependency {Present}   PModels       -- Constructs new client objects from API response objects
   *   @dependency {Present}   PManagers     -- Managers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -34,7 +34,7 @@
 
   var PresentWebApp = angular.module('PresentWebApp',
     ['ui.router', 'LocalStorageModule',
-     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
+     'PControllers', 'PDirectives', 'PModels', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
 
 
   /**
@@ -167,7 +167,7 @@
 		function($http, $q, logger, ApiConfig) {
 			return {
 
-				create: function(comment, targetVideo, userContext) {
+				construct: function(comment, targetVideo, userContext) {
 
 					var sendingRequest = $q.defer(),
 							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';
@@ -220,7 +220,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 	function($http, $q, logger, ApiConfig) {
 		return {
 
-			create: function(targetVideo, userContext) {
+			create : function(targetVideo, userContext) {
 
 				var sendingRequest = $q.defer(),
 					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/create';
@@ -573,99 +573,12 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
   ]);
 
 /**
- * PConstructors.ApplicationConstructor
- * Provides properties and methods to manage the state of the application
- * Only injected one per application, usually on the highest level scope
- * 	@dependency logger {PUtilities}
- * 	@dependency $state {Ui-Router}
- * 	@dependency UserContextManager {PManager}
+ * PModels.CommentModel.js
  */
 
-  PConstructors.factory('ApplicationConstructor', ['logger', '$state', 'UserContextManager', 'ProfileConstructor',
-
-		function(logger, $state, UserContextManager, ProfileConstructor) {
-			return {
-				create : function() {
-
-					function Application() {
-
-						this.user = {
-							active : ''
-						};
-
-					}
-
-					/**
-					 * Application.authorize
-					 * Checks to make sure the user has access to the requested state
-					 * 	@param event -- stateChangeStart event object which contains the preventDefault method
-					 * 	@param toState -- the state the the application is transitioning into
-					 */
-
-					Application.prototype.authorize = function(event, toState) {
-						var userContext = UserContextManager.getActiveUserContext();
-						if (toState.metaData.requireUserContext && !userContext) {
-							event.preventDefault();
-							$state.go('login');
-						}
-					};
-
-					/**
-					 * Application.login
-					 * Handles user context creation, sets the activeUser property and changes the state to home
-					 * 	@param username <String> -- the user provided username
-					 * 	@param password <String> -- the user provided password
-					 */
-
-					Application.prototype.login = function(username, password) {
-
-						var userContext = UserContextManager.getActiveUserContext();
-						user = this.user;
-
-						if (!userContext) {
-							UserContextManager.createNewUserContext(username, password)
-								.then(function (newUserContext) {
-									user.active = ProfileConstructor.create(newUserContext.profile);
-									$state.go('home');
-								})
-								.catch(function () {
-									//TODO: better error handling
-									alert('username and/or password is incorrect');
-								});
-
-						} else {
-							$state.go('home');
-						}
-
-					};
-
-					/**
-					 * Application.logout
-					 * Handles user context deletion and changes the state to splash
-					 */
-
-					Application.prototype.logout = function() {
-						UserContextManager.destroyActiveUserContext()
-							.then(function() {
-								$state.go('splash');
-							});
-					};
-
-					return new Application();
-
-				}
-			};
-  	}
-
-	]);
-
-/**
- * PConstructors.CommentConstructor.js
- */
-
-	PConstructors.factory('CommentConstructor', function() {
+	PModels.factory('CommentModel', function() {
 		return{
-			create : function(apiCommentObject) {
+			construct : function(apiCommentObject) {
 
 				function Comment(apiCommentObject) {
 					this._id = apiCommentObject._id;
@@ -684,16 +597,16 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 	});
 
 /**
- * PConstructors.FeedConstructor
+ * PModels.FeedModel
  * Constructs the Feed, which is composed of Video Cells
- *   @dependency {Present} VideoCellConstructor
+ *   @dependency {Present} VideoCellModel
  */
 
-  PConstructors.factory('FeedConstructor', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellConstructor',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellModel',
 
-    function($q, UserContextManager, VideosApiClient, VideoCellConstructor) {
+    function($q, UserContextManager, VideosApiClient, VideoCellModel) {
       return {
-        create: function(type, requireUserContext) {
+        construct: function(type, requireUserContext) {
 
           function Feed(type, requireUserContext) {
 						this.type = type;
@@ -734,8 +647,8 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 							VideosApiClient[resourceMethod](this.cursor, userContext)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
-										var VideoCell = VideoCellConstructor
-											.create(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
+										var VideoCell = VideoCellModel
+											.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
@@ -758,12 +671,13 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
   ]);
 
 /**
- * PConstructors.LikeConstructor
+ * PModels.LikeModel
  */
 
-	PConstructors.factory('LikeConstructor', function() {
+	PModels.factory('LikeModel', function() {
 		return {
-			create: function(apiLikeObject) {
+
+			construct: function(apiLikeObject) {
 
 				function Like(apiLikeObject) {
 					this._id = apiLikeObject._id;
@@ -778,12 +692,30 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
 				return new Like(apiLikeObject);
 
+			},
+
+			create : function(targetVideo, sourceUser) {
+
+				function Like(targetVideo, sourceUser) {
+					this._id = "";
+					this.sourceUser = {
+						_id : sourceUser._id,
+						username : sourceUser.username
+					};
+					this.targetVideo = targetVideo;
+					//TODO: implement a momentjs utility service
+					this.timeAgo = 'Just now'
+				}
+
+				return new Like(targetVideo, sourceUser);
+
 			}
+
 		}
 	});
 
 /**
- * PConstructors.NavbarConstructor
+ * PModels.NavbarModel
  * Properties and methods to handle the state of the Navbar
  * 	@dependency $q {Angular}
  * 	@dependency $state {Ui-Router}
@@ -791,20 +723,20 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
  * 	@dependency UserContextManager {PManagers}
  * 	@dependency VideosApiClient {PApiClient}
  * 	@dependency UsersApiClient {PApiClient}
- * 	@dependency VideoCellConstructor {PConstructors}
- * 	@dependency ProfileConstructor {PConstructors}
+ * 	@dependency VideoModel {PModels}
+ * 	@dependency ProfileModel {PModels}
  */
 
-PConstructors.factory('NavbarConstructor', ['$q',
+PModels.factory('NavbarModel', ['$q',
 																					 '$state',
 																					 'logger',
 																					 'UserContextManager',
 																					 'VideosApiClient',
 																					 'UsersApiClient',
-																					 'VideoConstructor',
-																					 'ProfileConstructor',
+																					 'VideoModel',
+																					 'ProfileModel',
 
-	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoConstructor, ProfileConstructor) {
+	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoModel, ProfileModel) {
 
 		return {
 			create : function() {
@@ -893,7 +825,7 @@ PConstructors.factory('NavbarConstructor', ['$q',
 					VideosApiClient.search(query, limit, userContext)
 						.then(function(apiResponse){
 							for (var i = 0;  i < apiResponse.results.length; i++) {
-								var Video = VideoConstructor.create(apiResponse.results[i].object);
+								var Video = VideoModel.construct(apiResponse.results[i].object);
 								videosSearchResults.push(Video);
 							}
 							logger.debug(['PManagers.NavbarManager', videosSearchResults]);
@@ -903,7 +835,7 @@ PConstructors.factory('NavbarConstructor', ['$q',
 					UsersApiClient.search(query, limit, userContext)
 						.then(function(apiResponse) {
 							for (var i=0; i < apiResponse.results.length; i++) {
-								var Profile = ProfileConstructor.create(apiResponse.results[i].object);
+								var Profile = ProfileModel.construct(apiResponse.results[i].object);
 								usersSearchResults.push(Profile);
 							}
 							logger.debug(['PManagers.NavbarManager', usersSearchResults]);
@@ -941,12 +873,12 @@ PConstructors.factory('NavbarConstructor', ['$q',
 
 ]);
 /**
- * PConstructors.ProfileConstructor
+ * PModels.ProfileModel
  */
 
-  PConstructors.factory('ProfileConstructor', ['$q', 'logger', 'UsersApiClient', function() {
+  PModels.factory('ProfileModel', function() {
     return {
-     create : function(apiProfileObject) {
+     construct : function(apiProfileObject) {
 
        function Profile(apiProfileObject) {
          this._id = apiProfileObject._id;
@@ -979,15 +911,15 @@ PConstructors.factory('NavbarConstructor', ['$q',
 
 		 }
     }
- }]);
+ });
 
 /**
- * PConstructors.ReplyConstructor
+ * PModels.ReplyModel
  */
 
-PConstructors.factory('ReplyConstructor', function() {
+PModels.factory('ReplyModel', function() {
 	return {
-		create: function(apiLikesObject) {
+		construct: function(apiLikesObject) {
 
 			function Reply(apiLikeObject) {
 				this._id = apiLikeObject._id;
@@ -1002,27 +934,141 @@ PConstructors.factory('ReplyConstructor', function() {
 });
 
 /**
- * PConstructors.VideoCellConstructor
+ * PModels.UserContextConstructor
+ */
+
+	PModels.factory('UserContextModel', ['ProfileModel', function(ProfileModel) {
+		return {
+
+			construct: function(apiResponseObject) {
+
+				function UserContext (apiResponseObject) {
+					this.token  = apiResponseObject.sessionToken;
+					this.userId = apiResponseObject.user.object._id;
+					this.profile = ProfileModel.construct(apiResponseObject.user.object);
+				}
+
+				return new UserContext(apiResponseObject);
+
+			},
+
+			create: function(token, userId, profile) {
+
+				function UserContext () {
+					this.token = token;
+					this.userId = userId;
+					this.profile = profile;
+				}
+
+				return new UserContext(token, userId, profile);
+
+			}
+
+		}
+	}]);
+/**
+ * PModels.UserSessionModel
+ * Provides properties and methods to manage the state of the UserSession
+ * Only injected one per UserSession, usually on the highest level scope
+ * 	@dependency logger {PUtilities}
+ * 	@dependency $state {Ui-Router}
+ * 	@dependency UserContextManager {PManager}
+ */
+
+  PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
+
+		function(logger, $state, UserContextManager) {
+			return {
+				create : function() {
+
+					function UserSession() {
+
+						this.user = {
+							active : ''
+						};
+
+					}
+
+					/**
+					 * UserSession.authorize
+					 * Checks to make sure the user has access to the requested state
+					 * 	@param event -- stateChangeStart event object which contains the preventDefault method
+					 * 	@param toState -- the state the the UserSession is transitioning into
+					 */
+
+					UserSession.prototype.authorize = function(event, toState) {
+						var userContext = UserContextManager.getActiveUserContext();
+						if (toState.metaData.requireUserContext && !userContext) {
+							event.preventDefault();
+							$state.go('login');
+						}
+					};
+
+					/**
+					 * UserSession.login
+					 * Handles user context creation, sets the activeUser property and changes the state to home
+					 * 	@param username <String> -- the user provided username
+					 * 	@param password <String> -- the user provided password
+					 */
+
+					UserSession.prototype.login = function(username, password) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								_this = this;
+
+						if (!userContext) {
+							UserContextManager.createNewUserContext(username, password)
+								.then(function (newUserContext) {
+									_this.user.active = newUserContext.profile;
+									$state.go('home');
+								})
+								.catch(function () {
+									//TODO: better error handling
+									alert('username and/or password is incorrect');
+								});
+
+						} else {
+							$state.go('home');
+						}
+
+					};
+
+					/**
+					 * UserSession.logout
+					 * Handles user context deletion and changes the state to splash
+					 */
+
+					UserSession.prototype.logout = function() {
+						UserContextManager.destroyActiveUserContext()
+							.then(function() {
+								$state.go('splash');
+							});
+					};
+
+					return new UserSession();
+
+				}
+			};
+  	}
+
+	]);
+
+/**
+ * PModels.VideoCellModel
  *  Constructs the individual components of a video cell
  */
 
- PConstructors.factory('VideoCellConstructor', ['$state',
-	 																							'UserContextManager',
-	 																							'LikesApiClient',
-	 																							'CommentsApiClient',
-	 																							'VideoConstructor',
-	 																							'CommentConstructor',
-	 																							'LikeConstructor',
-	 																							'ReplyConstructor',
+ PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'LikesApiClient', 'CommentsApiClient',
+	 																				'VideoModel', 'CommentModel', 'LikeModel', 'ReplyModel',
 
 	 function($state, UserContextManager, LikesApiClient, CommentsApiClient,
-						VideoConstructor, CommentConstructor, LikeConstructor, ReplyConstructor) {
+						VideoModel, CommentModel, LikeModel, ReplyModel) {
 
    return {
-		create: function(apiVideoObject, subjectiveMeta) {
+		construct: function(apiVideoObject, subjectiveMeta) {
 
-			function VideoCellConstructor(apiVideoObject, subjectiveMeta) {
-				this.video = VideoConstructor.create(apiVideoObject);
+			function VideoCell(apiVideoObject, subjectiveMeta) {
+				this.video = VideoModel.construct(apiVideoObject);
 				this.subjectiveMeta = subjectiveMeta;
 				this.comments = [];
 				this.likes = [];
@@ -1035,39 +1081,23 @@ PConstructors.factory('ReplyConstructor', function() {
 				};
 
 				for(var i = 0;  i < embededResults.comments.length; i++) {
-					var Comment = CommentConstructor.create(embededResults.comments[i].object);
+					var Comment = CommentModel.construct(embededResults.comments[i].object);
 					this.comments.push(Comment);
 				}
 
 				for(var j = 0; j < embededResults.likes.length;  j++) {
-					var Like = LikeConstructor.create(embededResults.likes[j].object);
+					var Like = LikeModel.construct(embededResults.likes[j].object);
 					this.likes.push(Like);
 				}
 
 				for(var k = 0; k < embededResults.replies.length; k++) {
-					var Reply = ReplyConstructor.create(embededResults.replies[k].object);
+					var Reply = ReplyModel.construct(embededResults.replies[k].object);
 					this.replies.push(Reply);
 				}
 
 			}
 
-			VideoCellConstructor.prototype.addLike = function(apiResponse) {
-				if(apiResponse.status == 'OK') {
-					console.log('hi');
-					this.likes.push(LikeConstructor.create(apiResponse.result.object));
-				}
-			};
-
-			VideoCellConstructor.prototype.removeLike = function(apiResponse, userContext) {
-				if(apiResponse.status == 'OK') {
-					for (var i=0; i < this.likes.length; i ++) {
-						if (this.likes[i].sourceUser._id == userContext.userId);
-						this.likes.splice(i, 1);
-					}
-				}
-			};
-
-			VideoCellConstructor.prototype.toggleLike = function() {
+			VideoCell.prototype.toggleLike = function() {
 
 				var userContext = UserContextManager.getActiveUserContext(),
 						_this = this;
@@ -1078,40 +1108,45 @@ PConstructors.factory('ReplyConstructor', function() {
 				else if (this.subjectiveMeta.like.forward) {
 					this.video.counts.likes--;
 					this.subjectiveMeta.like.forward = false;
-					LikesApiClient.destroy(this.video._id, userContext)
-						.then(function(apiResponse) {
-							_this.removeLike(apiResponse, userContext);
-						})
-						.catch(function(apiResponse) {
-							_this.removeLike(apiResponse, userContext);
-						})
+					for (var i=0; i < this.likes.length; i ++) {
+						if (this.likes[i].sourceUser._id == userContext.userId)
+						this.likes.splice(i, 1);
+					}
+					LikesApiClient.destroy(this.video._id, userContext);
 				} else {
 					this.video.counts.likes++;
 					this.subjectiveMeta.like.forward = true;
+					var newLike = LikeModel.create(this.video._id, userContext.profile);
 					LikesApiClient.create(this.video._id, userContext)
 						.then(function(apiResponse) {
-							_this.addLike(apiResponse);
-						})
-						.catch(function(apiResponse) {
-							_this.addLike(apiResponse);
+							newLike._id = apiResponse.result.object._id;
+							_this.likes.push(newLike);
 						});
 				}
 
 			};
 
-			return new VideoCellConstructor(apiVideoObject, subjectiveMeta);
+			VideoCell.prototype.createComment = function() {
+
+			};
+
+			VideoCell.prototype.deleteComment = function() {
+
+			};
+
+			return new VideoCell(apiVideoObject, subjectiveMeta);
 		}
    }
 
  }]);
 
 /**
- * PConstructors.VideoConstructor
+ * PModels.VideoModel
  */
 
-	PConstructors.factory('VideoConstructor', function() {
+	PModels.factory('VideoModel', function() {
 		return {
-			create : function(apiVideoObject) {
+			construct : function(apiVideoObject) {
 
 				function Video(apiVideoObject) {
 					this._id = apiVideoObject._id;
@@ -1173,12 +1208,12 @@ PConstructors.factory('ReplyConstructor', function() {
  * PLoaders.FeedLoader
  */
 
-	PLoaders.factory('FeedLoader', ['$q', 'FeedConstructor', function($q, FeedConstructor) {
+	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
 		return {
 			preLoad : function(type, requireUserContext) {
 
 				var preLoadingFeed = $q.defer(),
-						Feed = FeedConstructor.create(type, requireUserContext);
+						Feed = FeedModel.construct(type, requireUserContext);
 
 				Feed.load()
 					.then(function() {
@@ -1204,9 +1239,9 @@ PConstructors.factory('ReplyConstructor', function() {
  *   @dependency UserContextManager {PManagers}
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileModel', 'UserContextManager',
 
-	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
+	function($q, logger, UsersApiClient, ProfileModel, UserContextManager) {
 
 		return {
 
@@ -1218,7 +1253,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 				if(userContext) {
 					UsersApiClient.showMe(userContext)
 						.then(function(apiResponse) {
-							var Profile = ProfileConstructor.create(apiResponse.result.object);
+							var Profile = ProfileModel.construct(apiResponse.result.object);
 							loadingProfile.resolve(Profile);
 						})
 						.catch(function() {
@@ -1237,7 +1272,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
 				UsersApiClient.show(username, userContext)
 					.then(function(apiResponse) {
-						var Profile = ProfileConstructor.create(apiResponse.result.object);
+						var Profile = ProfileModel.construct(apiResponse.result.object);
 						loadingProfile.resolve(Profile);
 					})
 					.catch(function() {
@@ -1261,8 +1296,9 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
  */
 
 PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+																				 'UserContextModel',
 
-  function($q, localStorageService, logger, UserContextApiClient) {
+  function($q, localStorageService, logger, UserContextApiClient, UserContextModel) {
 
     return {
 
@@ -1280,14 +1316,11 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         UserContextApiClient.create(username, password)
           .then(function(apiResponse) {
-            var userContext = {
-              token   : apiResponse.result.object.sessionToken,
-              userId  : apiResponse.result.object.user.object._id,
-							profile : apiResponse.result.object.user.object
-            };
+          	var userContext = UserContextModel.construct(apiResponse.result.object);
             localStorageService.clearAll();
             localStorageService.set('token', userContext.token);
             localStorageService.set('userId', userContext.userId);
+						localStorageService.set('profile', JSON.stringify(userContext.profile));
 						logger.debug(['PServices.UserContextManager.createNewUserContext', 'creating new user context', userContext]);
             creatingNewUserContext.resolve(userContext);
           })
@@ -1310,15 +1343,16 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         var destroyingUserContext = $q.defer();
 
-        var userContext = {
-          token  : localStorageService.get('token'),
-          userId : localStorageService.get('userId')
-        };
+				if (localStorageService.get('token') && localStorageService.get('userId') && localStorageService.get('profile')) {
 
-        if(userContext.token && userContext.userId) {
+					var userContext = UserContextModel.create(
+						localStorageService.get('token'),
+						localStorageService.get('userId'),
+						localStorageService.get('profile')
+					);
 
           UserContextApiClient.destroy(userContext)
-            .then(function() {
+            .then(function(apiResponse) {
               logger.debug(['PServices.UserContextManager.destroyActiveUserContext',
                             'User context deleted. User context data being deleted from local storage']);
               localStorageService.clearAll();
@@ -1348,13 +1382,13 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
       getActiveUserContext : function() {
 
-        var userContext = {
-          token : localStorageService.get('token'),
-          userId: localStorageService.get('userId')
-        };
-
-        if(userContext.token && userContext.userId) return userContext;
-        else return null;
+        if (localStorageService.get('token') && localStorageService.get('userId') && localStorageService.get('profile')) {
+					return userContext = UserContextModel.create(
+						localStorageService.get('token'),
+						localStorageService.get('userId'),
+						localStorageService.get('profile')
+					);
+				} else return null;
 
       }
 
@@ -1470,20 +1504,20 @@ PUtilities.directive('registerElement', function() {
  *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationConstructor',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'UserSessionModel',
 
-    function($scope, logger, ApplicationConstructor) {
+    function($scope, logger, UserSessionModel) {
 
-      $scope.Application = ApplicationConstructor.create();
+      $scope.UserSession = UserSessionModel.create();
 
-			$scope.$watch('Application');
+			$scope.$watch('UserSession');
 
-			$scope.$watch('Application.user.active', function(user) {
+			$scope.$watch('UserSession.user.active', function(user) {
 				$scope.$broadcast('_newUserLoggedIn', user);
 			});
 
       $scope.$on('$stateChangeStart', function(event, toState) {
-				$scope.Application.authorize(event, toState);
+				$scope.UserSession.authorize(event, toState);
       });
 
     }
@@ -1542,10 +1576,10 @@ PUtilities.directive('registerElement', function() {
 			templateUrl: 'views/partials/navbar',
 			replace: true,
 
-			controller: function($scope, $state, logger, UserContextManager, NavbarConstructor) {
+			controller: function($scope, $state, logger, UserContextManager, NavbarModel) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
-				$scope.Navbar = NavbarConstructor.create();
+				$scope.Navbar = NavbarModel.create();
 				$scope.Navbar.loadHub();
 
 				$scope.$watch('Navbar');

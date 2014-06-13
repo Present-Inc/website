@@ -1,10 +1,10 @@
 /**
- * CommentConstructor.test.js
+ * CommentModel.test.js
  */
 
-describe('CommentConstructor', function() {
+describe('CommentModel', function() {
 
-	var CommentConstructor;
+	var CommentModel;
 
 	jasmine.getJSONFixtures().fixturesPath = '/base/test/fixtures';
 
@@ -15,7 +15,7 @@ describe('CommentConstructor', function() {
 		inject(function($injector) {
 
 			//Service being tested
-			CommentConstructor = $injector.get('CommentConstructor');
+			CommentModel = $injector.get('CommentModel');
 
 		});
 
@@ -28,7 +28,7 @@ describe('CommentConstructor', function() {
 		it('should create a new comment object', function() {
 
 			for(var i=0; i < mockApiResponse.results.length; i++) {
-				var Comment = CommentConstructor.create(mockApiResponse.results[i].object);
+				var Comment = CommentModel.construct(mockApiResponse.results[i].object);
 				expect(Comment._id).toBeDefined();
 				expect(Comment.body).toBeDefined();
 				expect(Comment.sourceUser.username).toBeDefined();

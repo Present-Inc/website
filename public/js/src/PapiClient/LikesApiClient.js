@@ -12,7 +12,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 	function($http, $q, logger, ApiConfig) {
 		return {
 
-			create: function(targetVideo, userContext) {
+			create : function(targetVideo, userContext) {
 
 				var sendingRequest = $q.defer(),
 					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/create';

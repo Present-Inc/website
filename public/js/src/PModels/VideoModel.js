@@ -1,10 +1,10 @@
 /**
- * PConstructors.VideoConstructor
+ * PModels.VideoModel
  */
 
-	PConstructors.factory('VideoConstructor', function() {
+	PModels.factory('VideoModel', function() {
 		return {
-			create : function(apiVideoObject) {
+			construct : function(apiVideoObject) {
 
 				function Video(apiVideoObject) {
 					this._id = apiVideoObject._id;

@@ -2,12 +2,12 @@
  * PLoaders.FeedLoader
  */
 
-	PLoaders.factory('FeedLoader', ['$q', 'FeedConstructor', function($q, FeedConstructor) {
+	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
 		return {
 			preLoad : function(type, requireUserContext) {
 
 				var preLoadingFeed = $q.defer(),
-						Feed = FeedConstructor.create(type, requireUserContext);
+						Feed = FeedModel.construct(type, requireUserContext);
 
 				Feed.load()
 					.then(function() {

@@ -1,10 +1,10 @@
 /**
- * PConstructors.CommentConstructor.js
+ * PModels.CommentModel.js
  */
 
-	PConstructors.factory('CommentConstructor', function() {
+	PModels.factory('CommentModel', function() {
 		return{
-			create : function(apiCommentObject) {
+			construct : function(apiCommentObject) {
 
 				function Comment(apiCommentObject) {
 					this._id = apiCommentObject._id;

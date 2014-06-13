@@ -23,10 +23,10 @@
 			templateUrl: 'views/partials/navbar',
 			replace: true,
 
-			controller: function($scope, $state, logger, UserContextManager, NavbarConstructor) {
+			controller: function($scope, $state, logger, UserContextManager, NavbarModel) {
 
 				logger.test(['PDirectives -- Navbar initialized']);
-				$scope.Navbar = NavbarConstructor.create();
+				$scope.Navbar = NavbarModel.create();
 				$scope.Navbar.loadHub();
 
 				$scope.$watch('Navbar');

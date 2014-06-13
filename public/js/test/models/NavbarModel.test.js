@@ -1,15 +1,14 @@
 /**
- * NavbarManager.text.js
+ * NavbarModel.text.js
  * Test Suite for the Navbar Manager
  */
 
-	describe('NavbarManager', function() {
+	describe('NavbarModel', function() {
 
 		var Navbar,
 				UserContextManager,
 				VideosApiClient,
 				UsersApiClient,
-				VideoCellConstructor,
 				logger,
 				$state,
 				$q,
@@ -25,14 +24,13 @@
 			inject(function($injector) {
 
 				//Service Being Tested
-				var NavbarConstructor = $injector.get('NavbarConstructor');
-				Navbar = NavbarConstructor.create();
+				var NavbarModel = $injector.get('NavbarModel');
+				Navbar = NavbarModel.create();
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
 				VideosApiClient = $injector.get('VideosApiClient');
 				UsersApiClient = $injector.get('UsersApiClient');
-				VideoCellConstructor = $injector.get('VideoCellConstructor');
 				logger = $injector.get('logger');
 				$state = $injector.get('$state');
 

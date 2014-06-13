@@ -1755,7 +1755,7 @@ function setupModuleLoader(window) {
            * @name angular.Module#controller
            * @module ng
            * @param {string|Object} name Controller name, or an object map of PControllers where the
-           *    keys are the names and the values are the PConstructors.
+           *    keys are the names and the values are the PModels.
            * @param {Function} constructor Controller constructor function.
            * @description
            * See {@link ng.$controllerProvider#register $controllerProvider.register()}.
@@ -7079,7 +7079,7 @@ function $ControllerProvider() {
    * @ngdoc method
    * @name $controllerProvider#register
    * @param {string|Object} name Controller name, or an object map of PControllers where the keys are
-   *    the names and the values are the PConstructors.
+   *    the names and the values are the PModels.
    * @param {Function|Array} constructor Controller constructor fn (optionally decorated with DI
    *    annotations in the array notation).
    */

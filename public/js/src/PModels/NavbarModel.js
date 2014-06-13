@@ -1,5 +1,5 @@
 /**
- * PConstructors.NavbarConstructor
+ * PModels.NavbarModel
  * Properties and methods to handle the state of the Navbar
  * 	@dependency $q {Angular}
  * 	@dependency $state {Ui-Router}
@@ -7,20 +7,20 @@
  * 	@dependency UserContextManager {PManagers}
  * 	@dependency VideosApiClient {PApiClient}
  * 	@dependency UsersApiClient {PApiClient}
- * 	@dependency VideoCellConstructor {PConstructors}
- * 	@dependency ProfileConstructor {PConstructors}
+ * 	@dependency VideoModel {PModels}
+ * 	@dependency ProfileModel {PModels}
  */
 
-PConstructors.factory('NavbarConstructor', ['$q',
+PModels.factory('NavbarModel', ['$q',
 																					 '$state',
 																					 'logger',
 																					 'UserContextManager',
 																					 'VideosApiClient',
 																					 'UsersApiClient',
-																					 'VideoConstructor',
-																					 'ProfileConstructor',
+																					 'VideoModel',
+																					 'ProfileModel',
 
-	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoConstructor, ProfileConstructor) {
+	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoModel, ProfileModel) {
 
 		return {
 			create : function() {
@@ -109,7 +109,7 @@ PConstructors.factory('NavbarConstructor', ['$q',
 					VideosApiClient.search(query, limit, userContext)
 						.then(function(apiResponse){
 							for (var i = 0;  i < apiResponse.results.length; i++) {
-								var Video = VideoConstructor.create(apiResponse.results[i].object);
+								var Video = VideoModel.construct(apiResponse.results[i].object);
 								videosSearchResults.push(Video);
 							}
 							logger.debug(['PManagers.NavbarManager', videosSearchResults]);
@@ -119,7 +119,7 @@ PConstructors.factory('NavbarConstructor', ['$q',
 					UsersApiClient.search(query, limit, userContext)
 						.then(function(apiResponse) {
 							for (var i=0; i < apiResponse.results.length; i++) {
-								var Profile = ProfileConstructor.create(apiResponse.results[i].object);
+								var Profile = ProfileModel.construct(apiResponse.results[i].object);
 								usersSearchResults.push(Profile);
 							}
 							logger.debug(['PManagers.NavbarManager', usersSearchResults]);

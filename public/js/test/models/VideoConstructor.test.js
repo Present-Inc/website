@@ -1,10 +1,10 @@
 /**
- * VideoConstructor.test.js
+ * VideoModel.test.js
  */
 
-describe('VideoConstructor', function() {
+describe('VideoModel', function() {
 
-	var VideoConstructor;
+	var VideoModel;
 
 	jasmine.getJSONFixtures().fixturesPath = '/base/test/fixtures';
 
@@ -15,7 +15,7 @@ describe('VideoConstructor', function() {
 		inject(function($injector) {
 
 			//Service being tested
-			VideoConstructor = $injector.get('VideoConstructor');
+			VideoModel = $injector.get('VideoModel');
 
 
 		});
@@ -29,7 +29,7 @@ describe('VideoConstructor', function() {
 		it('should create a new video object', function() {
 
 			for(var i=0; i < mockApiResponse.results.length; i++) {
-				var Video = VideoConstructor.create(mockApiResponse.results[i].object);
+				var Video = VideoModel.construct(mockApiResponse.results[i].object);
 				expect(Video._id).toBeDefined();
 				expect(Video.media.replayPlaylist).toBeDefined();
 				expect(Video.creator.displayName).toBeDefined();

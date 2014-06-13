@@ -5,7 +5,15 @@
 
 describe('UserContextManager', function() {
 
-  var UserContextManager, logger, localStorageService, UserContextApiClient,  ProfileConstructor, $q, $httpBackend, $rootScope;
+  var UserContextManager,
+			logger,
+			localStorageService,
+			UserContextApiClient,
+			UserContextModel,
+			$q,
+			$httpBackend,
+			$rootScope;
+
 	jasmine.getJSONFixtures().fixturesPath = '/base/test/fixtures/';
 
   beforeEach(function() {
@@ -21,7 +29,7 @@ describe('UserContextManager', function() {
       logger = $injector.get('logger');
       localStorageService = $injector.get('localStorageService');
       UserContextApiClient = $injector.get('UserContextApiClient');
-			ProfileConstructor = $injector.get('ProfileConstructor');
+			UserContextModel = $injector.get('UserContextModel');
 
       //Test dependencies
       $q = $injector.get('$q');
@@ -33,6 +41,12 @@ describe('UserContextManager', function() {
 
       spyOn(localStorageService, 'set').and.stub();
       spyOn(localStorageService, 'clearAll').and.stub();
+
+
+			var userContext = {token: '456', userId: '123', profile: {_id: '123', username:'ddluc32'}};
+			spyOn(UserContextModel, 'construct').and.returnValue(userContext);
+			spyOn(UserContextModel, 'create').and.returnValue(userContext);
+
 
     });
 
@@ -48,16 +62,14 @@ describe('UserContextManager', function() {
 			});
 		});
 
-    it('should accept a valid username and password, retrieve a remote user context, save it in local storage and return the user context',
+    it('should create a new user context, save it in local storage, and return a new user context',
       function() {
         var user = {name: 'ddluc32', password: 'hello'};
         var returnedPromise = UserContextManager.createNewUserContext(user.name, user.password);
         spyOn(returnedPromise, 'then').and.callThrough();
         $rootScope.$apply(function() {
             returnedPromise.then(function(userContext) {
-              expect(userContext.token).toEqual('fc7469fff6f82724640ebfa12cdcd80dc517fdb1cb0ec059f1d43a3847fe512f2d77733cf293dfd256f0bc46d225fba50e7f806b53c818256d7153ae5909a618');
-              expect(userContext.userId).toEqual('53744bf4650762a97c8c94f2');
-							expect(userContext.profile.username).toBeDefined('ddluc32');
+          		expect(UserContextModel.construct).toHaveBeenCalled();
               expect(localStorageService.set).toHaveBeenCalledWith('token', userContext.token);
               expect(localStorageService.set).toHaveBeenCalledWith('userId', userContext.userId);
             });
@@ -89,7 +101,7 @@ describe('UserContextManager', function() {
           defer.resolve(mockApiResponse.success);
           return defer.promise;
         });
-        spyOn(localStorageService, 'get').and.returnValue('123');
+				spyOn(localStorageService, 'get').and.returnValue(true);
         var returnedPromise = UserContextManager.destroyActiveUserContext();
         spyOn(returnedPromise, 'then').and.callThrough();
         $rootScope.$apply(function() {
@@ -104,7 +116,7 @@ describe('UserContextManager', function() {
     it('should do nothing if the user context is not defined',
       function() {
         spyOn(UserContextApiClient, 'destroy').and.stub();
-        spyOn(localStorageService, 'get').and.returnValue(undefined);
+        spyOn(localStorageService, 'get').and.returnValue(false);
         var returnedPromise = UserContextManager.destroyActiveUserContext();
         spyOn(returnedPromise, 'catch').and.callThrough();
         $rootScope.$apply(function() {
@@ -123,9 +135,9 @@ describe('UserContextManager', function() {
   describe('getActiveUserContext', function() {
 
     it('should return the active user context if it is saved in local storage', function() {
-      spyOn(localStorageService, 'get').and.returnValue('123');
+      spyOn(localStorageService, 'get').and.returnValue(true);
       var userContext = UserContextManager.getActiveUserContext();
-      expect(userContext.token).toEqual('123');
+      expect(userContext.token).toEqual('456');
       expect(userContext.userId).toEqual('123');
     });
 

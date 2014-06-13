@@ -67,20 +67,20 @@
  *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'ApplicationConstructor',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'UserSessionModel',
 
-    function($scope, logger, ApplicationConstructor) {
+    function($scope, logger, UserSessionModel) {
 
-      $scope.Application = ApplicationConstructor.create();
+      $scope.UserSession = UserSessionModel.create();
 
-			$scope.$watch('Application');
+			$scope.$watch('UserSession');
 
-			$scope.$watch('Application.user.active', function(user) {
+			$scope.$watch('UserSession.user.active', function(user) {
 				$scope.$broadcast('_newUserLoggedIn', user);
 			});
 
       $scope.$on('$stateChangeStart', function(event, toState) {
-				$scope.Application.authorize(event, toState);
+				$scope.UserSession.authorize(event, toState);
       });
 
     }

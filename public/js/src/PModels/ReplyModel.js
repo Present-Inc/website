@@ -1,10 +1,10 @@
 /**
- * PConstructors.ReplyConstructor
+ * PModels.ReplyModel
  */
 
-PConstructors.factory('ReplyConstructor', function() {
+PModels.factory('ReplyModel', function() {
 	return {
-		create: function(apiLikesObject) {
+		construct: function(apiLikesObject) {
 
 			function Reply(apiLikeObject) {
 				this._id = apiLikeObject._id;

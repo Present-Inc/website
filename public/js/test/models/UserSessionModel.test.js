@@ -1,11 +1,11 @@
 /**
- * ApplicationFactory.test.js
- * Test Suite for the ApplicationFactory
+ * UserSession.test.js
+ * Test Suite for the UserSession Model
  */
 
-	describe('Application', function() {
+	describe('UserSession', function() {
 
-		var Application,
+		var UserSession,
 			  UserContextManager,
 				$state,
 			  logger,
@@ -22,8 +22,8 @@
 			inject(function($injector) {
 
 				//Service being tested
-				var ApplicationConstructor = $injector.get('ApplicationConstructor');
-				Application = ApplicationConstructor.create();
+				var UserSessionModel = $injector.get('UserSessionModel');
+				UserSession = UserSessionModel.create();
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
@@ -59,13 +59,13 @@
 
 			it('should not authorize the user to access the private state if the user context is undefined', function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(undefined);
-				Application.authorize(event, toState);
+				UserSession.authorize(event, toState);
 				expect($state.go).toHaveBeenCalledWith('login');
 			});
 
 			it('should authorize the user to access the private state if there is a valid user context', function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
-				Application.authorize(event, toState);
+				UserSession.authorize(event, toState);
 				expect($state.go).not.toHaveBeenCalled();
 			});
 
@@ -89,9 +89,9 @@
 
 			it('should log the user in if the username and password are correct', function() {
 				$rootScope.$apply(function() {
-					Application.login(username, password);
+					UserSession.login(username, password);
 				});
-				expect(Application.user.active.username).toEqual('ddluc32');
+				expect(UserSession.user.active.username).toEqual('ddluc32');
 				expect($state.go).toHaveBeenCalledWith('home');
 			});
 
@@ -110,7 +110,7 @@
 
 			it('should the the user out', function() {
 				$rootScope.$apply(function() {
-					Application.logout();
+					UserSession.logout();
 				});
 				expect($state.go).toHaveBeenCalledWith('splash');
 			});

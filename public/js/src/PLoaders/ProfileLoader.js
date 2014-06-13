@@ -8,9 +8,9 @@
  *   @dependency UserContextManager {PManagers}
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileConstructor', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileModel', 'UserContextManager',
 
-	function($q, logger, UsersApiClient, ProfileConstructor, UserContextManager) {
+	function($q, logger, UsersApiClient, ProfileModel, UserContextManager) {
 
 		return {
 
@@ -22,7 +22,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 				if(userContext) {
 					UsersApiClient.showMe(userContext)
 						.then(function(apiResponse) {
-							var Profile = ProfileConstructor.create(apiResponse.result.object);
+							var Profile = ProfileModel.construct(apiResponse.result.object);
 							loadingProfile.resolve(Profile);
 						})
 						.catch(function() {
@@ -41,7 +41,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileCon
 
 				UsersApiClient.show(username, userContext)
 					.then(function(apiResponse) {
-						var Profile = ProfileConstructor.create(apiResponse.result.object);
+						var Profile = ProfileModel.construct(apiResponse.result.object);
 						loadingProfile.resolve(Profile);
 					})
 					.catch(function() {

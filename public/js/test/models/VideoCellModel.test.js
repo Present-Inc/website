@@ -1,16 +1,17 @@
 /**
- * VideoCellConstructor.test.js
+ * VideoCellModel.test.js
  */
 
-	describe('VideoCellConstructor', function() {
+	describe('VideoCellModel', function() {
 
-		var VideoCellConstructor,
+		var VideoCellModel,
 				$state,
 				UserContextManager,
 				LikesApiClient,
 				CommentsApiClient,
 				$q,
-				$rootScope;
+				$rootScope,
+				$httpBackend;
 
 		jasmine.getJSONFixtures().fixturesPath = '/base/test/fixtures';
 
@@ -21,7 +22,7 @@
 			inject(function ($injector) {
 
 				//Service Being Tested
-				VideoCellConstructor = $injector.get('VideoCellConstructor');
+				VideoCellModel = $injector.get('VideoCellModel');
 
 				//Service Dependencies
 				$state = $injector.get('$state');
@@ -33,7 +34,9 @@
 				//Test Dependencies
 				$q = $injector.get('$q');
 				$rootScope = $injector.get('$rootScope');
+				$httpBackend = $injector.get('$httpBackend');
 
+				$httpBackend.expectGET('views/splash').respond({});
 
 			});
 
@@ -45,18 +48,17 @@
 
 			it('should create a new VideoCell Object', function() {
 				for(var i= 0, length = mockApiResponse.results.length; i < length; i++) {
-					var VideoCell = VideoCellConstructor
-										.create(mockApiResponse.results[i].object, mockApiResponse.results[i].subjectiveObjectMeta);
+					var VideoCell = VideoCellModel
+										.construct(mockApiResponse.results[i].object, mockApiResponse.results[i].subjectiveObjectMeta);
 					expect(VideoCell.video).toBeDefined();
 					expect(VideoCell.subjectiveMeta).toBeDefined();
 				}
-
 			});
 
 
 		});
 
-		describe('prototype.toggleLike, prototype.addLike, prototype.removeLike', function() {
+		describe('prototype.toggleLike', function() {
 
 			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
 					mockLikesApiResponse = getJSONFixture('likes/create.success.json'),
@@ -66,11 +68,11 @@
 					mockUserContext;
 
 			beforeEach(function() {
-				VideoCell = VideoCellConstructor
-						.create(mockVideoApiResponse.results[0].object, mockVideoApiResponse.results[0].subjectiveObjectMeta);
+				VideoCell = VideoCellModel
+						.construct(mockVideoApiResponse.results[0].object, mockVideoApiResponse.results[0].subjectiveObjectMeta);
 				originalLikeCount = VideoCell.video.counts.likes;
 				UserContextManagerSpy = spyOn(UserContextManager, 'getActiveUserContext');
-				mockUserContext = {token : '456', userId: '123'};
+				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
 				spyOn($state, 'go').and.stub();
 				spyOn(LikesApiClient, 'create').and.callFake(function() {
 						var defer = $q.defer();

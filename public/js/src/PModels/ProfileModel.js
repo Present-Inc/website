@@ -1,10 +1,10 @@
 /**
- * PConstructors.ProfileConstructor
+ * PModels.ProfileModel
  */
 
-  PConstructors.factory('ProfileConstructor', ['$q', 'logger', 'UsersApiClient', function() {
+  PModels.factory('ProfileModel', function() {
     return {
-     create : function(apiProfileObject) {
+     construct : function(apiProfileObject) {
 
        function Profile(apiProfileObject) {
          this._id = apiProfileObject._id;
@@ -37,4 +37,4 @@
 
 		 }
     }
- }]);
+ });

@@ -1,19 +1,19 @@
 /**
- * PConstructors.ApplicationConstructor
- * Provides properties and methods to manage the state of the application
- * Only injected one per application, usually on the highest level scope
+ * PModels.UserSessionModel
+ * Provides properties and methods to manage the state of the UserSession
+ * Only injected one per UserSession, usually on the highest level scope
  * 	@dependency logger {PUtilities}
  * 	@dependency $state {Ui-Router}
  * 	@dependency UserContextManager {PManager}
  */
 
-  PConstructors.factory('ApplicationConstructor', ['logger', '$state', 'UserContextManager',
+  PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
 
 		function(logger, $state, UserContextManager) {
 			return {
 				create : function() {
 
-					function Application() {
+					function UserSession() {
 
 						this.user = {
 							active : ''
@@ -22,13 +22,13 @@
 					}
 
 					/**
-					 * Application.authorize
+					 * UserSession.authorize
 					 * Checks to make sure the user has access to the requested state
 					 * 	@param event -- stateChangeStart event object which contains the preventDefault method
-					 * 	@param toState -- the state the the application is transitioning into
+					 * 	@param toState -- the state the the UserSession is transitioning into
 					 */
 
-					Application.prototype.authorize = function(event, toState) {
+					UserSession.prototype.authorize = function(event, toState) {
 						var userContext = UserContextManager.getActiveUserContext();
 						if (toState.metaData.requireUserContext && !userContext) {
 							event.preventDefault();
@@ -37,13 +37,13 @@
 					};
 
 					/**
-					 * Application.login
+					 * UserSession.login
 					 * Handles user context creation, sets the activeUser property and changes the state to home
 					 * 	@param username <String> -- the user provided username
 					 * 	@param password <String> -- the user provided password
 					 */
 
-					Application.prototype.login = function(username, password) {
+					UserSession.prototype.login = function(username, password) {
 
 						var userContext = UserContextManager.getActiveUserContext(),
 								_this = this;
@@ -66,18 +66,18 @@
 					};
 
 					/**
-					 * Application.logout
+					 * UserSession.logout
 					 * Handles user context deletion and changes the state to splash
 					 */
 
-					Application.prototype.logout = function() {
+					UserSession.prototype.logout = function() {
 						UserContextManager.destroyActiveUserContext()
 							.then(function() {
 								$state.go('splash');
 							});
 					};
 
-					return new Application();
+					return new UserSession();
 
 				}
 			};

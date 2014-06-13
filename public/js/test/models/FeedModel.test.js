@@ -1,14 +1,14 @@
 /**
- * FeedConstructor.test.js
- * Test suite for the PManagers.FeedManager
+ * FeedModel.test.js
+ * Test suite for the PModels.FeedModel
  */
 
-describe('FeedConstructor', function() {
+describe('FeedModel', function() {
 
-	var FeedConstructor,
+	var FeedModel,
 			UserContextManager,
 			VideosApiClient,
-			VideoCellConstructor,
+			VideoCellModel,
 			logger,
 			$q,
 			$rootScope;
@@ -20,12 +20,12 @@ describe('FeedConstructor', function() {
 		inject(function($injector) {
 
 			//Service being tested
-			FeedConstructor = $injector.get('FeedConstructor');
+			FeedModel = $injector.get('FeedModel');
 
 			//Service Dependencies
 			UserContextManager = $injector.get('UserContextManager');
 			VideosApiClient = $injector.get('VideosApiClient');
-			VideoCellConstructor = $injector.get('VideoCellConstructor');
+			VideoCellModel = $injector.get('VideoCellModel');
 			logger = $injector.get('logger');
 
 			//Test Dependencies

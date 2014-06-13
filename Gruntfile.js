@@ -13,8 +13,8 @@ module.exports = function(grunt) {
             dest: 'public/js/dist/PApiClient.js'
           },
           constructors: {
-            src: ['public/js/src/PConstructors/**/*.js'],
-            dest: 'public/js/dist/PConstructors.js'
+            src: ['public/js/src/PModels/**/*.js'],
+            dest: 'public/js/dist/PModels.js'
           },
 					loaders : {
 						src: ['public/js/src/PLoaders/**/*.js'],
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
           app: {
             src: ['public/js/src/app.js',
                   'public/js/dist/PApiClient.js',
-                  'public/js/dist/PConstructors.js',
+                  'public/js/dist/PModels.js',
 									'public/js/dist/PLoaders.js',
                   'public/js/dist/PManagers.js',
                   'public/js/dist/PUtilities.js',

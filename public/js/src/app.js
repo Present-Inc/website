@@ -14,7 +14,7 @@
 
   var PControllers = angular.module('PControllers', []),
   		PDirectives = angular.module('PDirectives', []),
-  	  PConstructors = angular.module('PConstructors', []),
+  	  PModels = angular.module('PModels', []),
 			PLoaders = angular.module('PLoaders', []),
   		PManagers = angular.module('PManagers', []),
   		PUtilities = angular.module('PUtilities', []),
@@ -24,7 +24,7 @@
   * Initialize Angular Application
   *   @dependency {Angular}   Angular       -- It's AngularJS
   *   @dependency {UI-Router} UI-Router     -- Handles all client side routing using a state configuration
-  *   @dependency {Present}   PConstructors -- Constructs new client objects from API response objects
+  *   @dependency {Present}   PModels       -- Constructs new client objects from API response objects
   *   @dependency {Present}   PManagers     -- Managers that control the state of the application components
   *   @dependency {Present}   PApiClient    -- Handles all requests and responses from the Present API
   *   @dependency {Present}   PControllers  -- Creates view models (MVVVM)
@@ -34,7 +34,7 @@
 
   var PresentWebApp = angular.module('PresentWebApp',
     ['ui.router', 'LocalStorageModule',
-     'PControllers', 'PDirectives', 'PConstructors', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
+     'PControllers', 'PDirectives', 'PModels', 'PLoaders', 'PManagers', 'PApiClient', 'PUtilities']);
 
 
   /**
