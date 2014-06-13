@@ -58,7 +58,7 @@
 
 		});
 
-		describe('toggleLike', function() {
+		describe('Likes', function() {
 
 			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
 					mockLikesApiResponse = getJSONFixture('likes/create.success.json'),
@@ -69,7 +69,7 @@
 
 			beforeEach(function() {
 				VideoCell = VideoCellModel
-						.construct(mockVideoApiResponse.results[0].object, mockVideoApiResponse.results[0].subjectiveObjectMeta);
+						.construct(mockVideoApiResponse.results[3].object, mockVideoApiResponse.results[3].subjectiveObjectMeta);
 				originalLikeCount = VideoCell.video.counts.likes;
 				UserContextManagerSpy = spyOn(UserContextManager, 'getActiveUserContext');
 				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
@@ -78,6 +78,11 @@
 						var defer = $q.defer();
 						defer.resolve(mockLikesApiResponse);
 						return defer.promise;
+				});
+				spyOn(LikesApiClient, 'destroy').and.callFake(function() {
+					var defer = $q.defer();
+					defer.resolve();
+					return defer.promise;
 				});
 			});
 
@@ -97,21 +102,69 @@
 			});
 
 			it('should remove the like if the user does not already like the video', function() {
-
+				UserContextManagerSpy.and.returnValue(mockUserContext);
+				VideoCell.subjectiveMeta.like.forward = true;
+				VideoCell.likes[0].sourceUser._id = '123';
+				$rootScope.$apply(VideoCell.toggleLike());
+				expect(VideoCell.video.counts.likes).toBeLessThan(originalLikeCount);
+				expect(VideoCell.subjectiveMeta.like.forward).toBe(false);
+				expect(VideoCell.likes.length).toEqual(VideoCell.video.counts.likes);
 			});
 
 		});
 
 
 
-		describe('prototype.addComment', function() {
+		describe('Comments', function() {
+
+			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
+					mockCommentsApiResponse = getJSONFixture('likes/create.success.json'),
+					VideoCell,
+					originalCommentCount,
+					mockComment,
+				  mockUserContext,
+					UserContextManagerSpy;
 
 			beforeEach(function() {
+				VideoCell = VideoCellModel
+					.construct(mockVideoApiResponse.results[7].object, mockVideoApiResponse.results[7].subjectiveObjectMeta);
+				originalCommentCount = VideoCell.comments.length;
 
+				UserContextManagerSpy = spyOn(UserContextManager, 'getActiveUserContext');
+				mockComment = {id: '234', body : 'this is a new comment'};
+				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
+				spyOn($state, 'go').and.stub();
+				spyOn(CommentsApiClient, 'create').and.callFake(function() {
+					var defer = $q.defer();
+					defer.resolve(mockCommentsApiResponse);
+					return defer.promise;
+				});
+				spyOn(CommentsApiClient, 'destroy').and.callFake(function() {
+					var defer = $q.defer();
+					defer.resolve();
+					return defer.promise;
+				});
+			});
+
+			it('should redirect the user if there is an invalid context', function() {
+				UserContextManagerSpy.and.returnValue(null);
+				VideoCell.addComment();
+				expect($state.go).toHaveBeenCalled();
 			});
 
 			it('should add a new comment to the video cell', function() {
+				UserContextManagerSpy.and.returnValue(mockUserContext);
+				$rootScope.$apply(VideoCell.addComment(mockComment.body));
+				expect(VideoCell.video.counts.comments).toBeGreaterThan(originalCommentCount);
+				expect(VideoCell.comments.length).toBeGreaterThan(originalCommentCount);
+				expect(VideoCell.input.comment).toBeFalsy();
+			});
 
+			it('should remove a comment from the video cell', function() {
+				UserContextManagerSpy.and.returnValue(mockUserContext);
+				$rootScope.$apply(VideoCell.removeComment(mockComment));
+				expect(VideoCell.video.counts.comments).toBeLessThan(originalCommentCount);
+				expect(VideoCell.comments.length).toEqual(originalCommentCount);
 			});
 
 

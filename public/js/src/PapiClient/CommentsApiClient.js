@@ -12,7 +12,7 @@
 		function($http, $q, logger, ApiConfig) {
 			return {
 
-				construct: function(comment, targetVideo, userContext) {
+				create: function(body, targetVideo, userContext) {
 
 					var sendingRequest = $q.defer(),
 							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';
@@ -21,7 +21,7 @@
 						$http({
 							method: 'POST',
 							url: resourceUrl,
-							data: {comment: comment, target_video: targetVideo},
+							data: {body: comment, video_id: targetVideo},
 							headers: {
 								'Present-User-Context-Session-Token' : userContext.token,
 								'Present-User-Context-User-Id': userContext.userId

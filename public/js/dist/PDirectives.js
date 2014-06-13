@@ -58,6 +58,20 @@
 		}
 
 	}]);
+
+PDirectives.directive('pEnter', function() {
+	return function (scope, element, attrs) {
+		element.bind("keydown keypress", function (event) {
+			if(event.which === 13) {
+				scope.$apply(function (){
+					scope.$eval(attrs.pEnter);
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
 /**
  * VideoCellDirective.js
  */
@@ -72,9 +86,7 @@ PDirectives.directive('videoCell', function() {
 				else scope.likesElem.css({'color' : '#47525D'});
 			});
 
-			scope.$watchCollection('videoCell.likes', function(newValues) {
-				console.log(newValues);
-			});
+			scope.$watchCollection('videoCell.likes', function(){});
 
 		}
 	}

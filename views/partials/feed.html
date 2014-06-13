@@ -38,12 +38,12 @@
       <!-- commentsPreview -->
       <div class="commentsPreview">
         <div ng-repeat="comment in videoCell.comments">
-          <img class="commentProfilePicture" ng-src="{{comment.sourceUser.profilePicture.url}}" />
+          <img class="commentProfilePicture" ng-src="{{comment.sourceUser.profilePicture}}" />
           <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
           <div class="commentBody" ng-bind="comment.body"></div>
         </div>
-        <input class="commentInput" type="text" />
-        <button class="mainBtn">Add Comment</button>
+        <input class="commentInput" type="text" ng-model="videoCell.input.comment" p-enter="videoCell.addComment()"/>
+        <button class="mainBtn" ng-click="videoCell.addComment()">Add Comment</button>
       </div>
       <!-- end commentsPreview -->
 

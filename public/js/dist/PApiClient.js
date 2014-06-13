@@ -28,7 +28,7 @@
 		function($http, $q, logger, ApiConfig) {
 			return {
 
-				construct: function(comment, targetVideo, userContext) {
+				create: function(comment, targetVideo, userContext) {
 
 					var sendingRequest = $q.defer(),
 							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';

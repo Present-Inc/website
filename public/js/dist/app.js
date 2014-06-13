@@ -167,7 +167,7 @@
 		function($http, $q, logger, ApiConfig) {
 			return {
 
-				construct: function(comment, targetVideo, userContext) {
+				create: function(comment, targetVideo, userContext) {
 
 					var sendingRequest = $q.defer(),
 							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';
@@ -578,6 +578,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 
 	PModels.factory('CommentModel', function() {
 		return{
+
 			construct : function(apiCommentObject) {
 
 				function Comment(apiCommentObject) {
@@ -585,14 +586,32 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 					this.body = apiCommentObject.body;
 					this.sourceUser = {
 						username: apiCommentObject.sourceUser.object.username,
-						profilePicture: apiCommentObject.sourceUser.object.profile.picture
+						profilePicture: apiCommentObject.sourceUser.object.profile.picture.url
 					};
 					this.timeAgo = '5 min'
 				}
 
 				return new Comment(apiCommentObject);
 
+			},
+
+			create : function(body, targetVideo, sourceUser) {
+
+				function Comment(body, targetVideo, sourceUser) {
+					this._id = "";
+					this.body = body;
+					this.sourceUser = {
+						username: sourceUser.username,
+						profilePicture: sourceUser.profilePicture
+					};
+					this.targetVideo = targetVideo;
+					this.timeAgo = '5 min';
+				}
+
+				return new Comment(body, targetVideo, sourceUser)
+
 			}
+
 		}
 	});
 
@@ -1073,6 +1092,9 @@ PModels.factory('ReplyModel', function() {
 				this.comments = [];
 				this.likes = [];
 				this.replies = [];
+				this.input = {
+					comment : ''
+				};
 
 				var embededResults = {
 					comments : apiVideoObject.comments.results,
@@ -1094,7 +1116,6 @@ PModels.factory('ReplyModel', function() {
 					var Reply = ReplyModel.construct(embededResults.replies[k].object);
 					this.replies.push(Reply);
 				}
-
 			}
 
 			VideoCell.prototype.toggleLike = function() {
@@ -1116,17 +1137,38 @@ PModels.factory('ReplyModel', function() {
 				} else {
 						this.video.counts.likes++;
 						this.subjectiveMeta.like.forward = true;
-						this.likes.push(LikeModel.create(_this.video._id, userContext.profile));
+						this.likes.push(LikeModel.create(this.video._id, userContext.profile));
 						//LikesApiClient.create(this.video._id, userContext);
 					}
 
 			};
 
-			VideoCell.prototype.createComment = function() {
+			VideoCell.prototype.addComment = function() {
+				var userContext = UserContextManager.getActiveUserContext();
+
+				if(!userContext) {
+					$state.go('login');
+				} else {
+					this.video.counts.comments++;
+					this.comments.push(CommentModel.create(this.input.comment, this.video._id, userContext.profile));
+					this.input.comment = '';
+				}
 
 			};
 
-			VideoCell.prototype.deleteComment = function() {
+			VideoCell.prototype.removeComment = function(comment) {
+				var userContext = UserContextManager.getActiveUserContext();
+
+				if(!userContext) {
+					$state.go('login');
+				} else {
+					this.video.counts.comments--;
+					for (var i = 0; i < this.comments.length; i ++) {
+						if (this.comments[i]._id == comment._id) {
+							this.comments.splice(i, 1);
+						}
+					}
+				}
 
 			};
 
@@ -1607,6 +1649,20 @@ PUtilities.directive('registerElement', function() {
 		}
 
 	}]);
+
+PDirectives.directive('pEnter', function() {
+	return function (scope, element, attrs) {
+		element.bind("keydown keypress", function (event) {
+			if(event.which === 13) {
+				scope.$apply(function (){
+					scope.$eval(attrs.pEnter);
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
 /**
  * VideoCellDirective.js
  */
@@ -1621,9 +1677,7 @@ PDirectives.directive('videoCell', function() {
 				else scope.likesElem.css({'color' : '#47525D'});
 			});
 
-			scope.$watchCollection('videoCell.likes', function(newValues) {
-				console.log(newValues);
-			});
+			scope.$watchCollection('videoCell.likes', function(){});
 
 		}
 	}

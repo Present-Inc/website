@@ -18,6 +18,9 @@
 				this.comments = [];
 				this.likes = [];
 				this.replies = [];
+				this.input = {
+					comment : ''
+				};
 
 				var embededResults = {
 					comments : apiVideoObject.comments.results,
@@ -39,7 +42,6 @@
 					var Reply = ReplyModel.construct(embededResults.replies[k].object);
 					this.replies.push(Reply);
 				}
-
 			}
 
 			VideoCell.prototype.toggleLike = function() {
@@ -57,21 +59,46 @@
 						if (this.likes[i].sourceUser._id == userContext.userId)
 						this.likes.splice(i, 1);
 					}
-					LikesApiClient.destroy(this.video._id, userContext);
+					//ApiManager.likes('destroy', userContext, {targetVideo : this.video_id});
 				} else {
+						var newLike = LikeModel.create(this.video._id, userContext.profile);
 						this.video.counts.likes++;
 						this.subjectiveMeta.like.forward = true;
-						this.likes.push(LikeModel.create(_this.video._id, userContext.profile));
-						//LikesApiClient.create(this.video._id, userContext);
+						this.likes.push(newLike);
+						//ApiManager.likes('create', userContext, {targetVideo : this.video._id});
 					}
 
 			};
 
-			VideoCell.prototype.createComment = function() {
+			VideoCell.prototype.addComment = function() {
+				var userContext = UserContextManager.getActiveUserContext();
+
+				if(!userContext) {
+					$state.go('login');
+				} else {
+					var newComment = CommentModel.create(this.input.comment, this.video._id, userContext.profile);
+					this.video.counts.comments++;
+					this.input.comment = '';
+					this.comments.push(newComment);
+					//ApiManager.comments.('create', userContext, {body : newComment.body, targetVideo: newComment.targetVideo});
+				}
 
 			};
 
-			VideoCell.prototype.deleteComment = function() {
+			VideoCell.prototype.removeComment = function(comment) {
+				var userContext = UserContextManager.getActiveUserContext();
+
+				if(!userContext) {
+					$state.go('login');
+				} else {
+					this.video.counts.comments--;
+					for (var i = 0; i < this.comments.length; i ++) {
+						if (this.comments[i]._id == comment._id) {
+							this.comments.splice(i, 1);
+						}
+					}
+					//ApiManager.comments('destroy', userContext, {id : comment._id});
+				}
 
 			};
 
