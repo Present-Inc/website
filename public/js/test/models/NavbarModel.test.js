@@ -7,8 +7,7 @@
 
 		var Navbar,
 				UserContextManager,
-				VideosApiClient,
-				UsersApiClient,
+				ApiManager,
 				logger,
 				$state,
 				$q,
@@ -29,8 +28,7 @@
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
-				VideosApiClient = $injector.get('VideosApiClient');
-				UsersApiClient = $injector.get('UsersApiClient');
+				ApiManager = $injector.get('ApiManager');
 				logger = $injector.get('logger');
 				$state = $injector.get('$state');
 
@@ -75,7 +73,7 @@
 
 			beforeEach(function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
-				spyOn(UsersApiClient, 'showMe').and.callFake(function() {
+				spyOn(ApiManager, 'users').and.callFake(function() {
 					var defer = $q.defer();
 					defer.resolve(getJSONFixture('users/show.success.json'));
 					return defer.promise;
@@ -99,13 +97,13 @@
 
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({});
 
-				spyOn(VideosApiClient, 'search').and.callFake(function() {
+				spyOn(ApiManager, 'videos').and.callFake(function() {
 					var defer = $q.defer();
 					defer.resolve(getJSONFixture('videos/search.success.json'));
 					return defer.promise;
 				});
 
-				spyOn(UsersApiClient, 'search').and.callFake(function() {
+				spyOn(ApiManager, 'users').and.callFake(function() {
 					var defer = $q.defer();
 					defer.resolve(getJSONFixture('users/search.success.json'));
 					return defer.promise;
@@ -125,8 +123,8 @@
 					});
 				});
 				expect(returnedPromise.then).toHaveBeenCalled();
-				expect(VideosApiClient.search).toHaveBeenCalled();
-				expect(UsersApiClient.search).toHaveBeenCalled();
+				expect(ApiManager.videos).toHaveBeenCalled();
+				expect(ApiManager.users).toHaveBeenCalled();
 			});
 
 		});

@@ -4,9 +4,9 @@
  *   @dependency {Present} VideoCellModel
  */
 
-  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellModel',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel',
 
-    function($q, UserContextManager, VideosApiClient, VideoCellModel) {
+    function($q, UserContextManager, ApiManager, VideoCellModel) {
       return {
         construct: function(type, requireUserContext) {
 
@@ -46,7 +46,7 @@
 							loadingFeed.reject();
 						} else {
 							var _this = this;
-							VideosApiClient[resourceMethod](this.cursor, userContext)
+							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 5})
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
 										var VideoCell = VideoCellModel

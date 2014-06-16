@@ -7,8 +7,7 @@
 		var VideoCellModel,
 				$state,
 				UserContextManager,
-				LikesApiClient,
-				CommentsApiClient,
+				ApiManager,
 				$q,
 				$rootScope,
 				$httpBackend;
@@ -27,9 +26,7 @@
 				//Service Dependencies
 				$state = $injector.get('$state');
 				UserContextManager = $injector.get('UserContextManager');
-				LikesApiClient = $injector.get('LikesApiClient');
-				CommentsApiClient = $injector.get('CommentsApiClient');
-
+				ApiManager = $injector.get('ApiManager');
 
 				//Test Dependencies
 				$q = $injector.get('$q');
@@ -74,15 +71,10 @@
 				UserContextManagerSpy = spyOn(UserContextManager, 'getActiveUserContext');
 				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
 				spyOn($state, 'go').and.stub();
-				spyOn(LikesApiClient, 'create').and.callFake(function() {
+				spyOn(ApiManager, 'likes').and.callFake(function() {
 						var defer = $q.defer();
 						defer.resolve(mockLikesApiResponse);
 						return defer.promise;
-				});
-				spyOn(LikesApiClient, 'destroy').and.callFake(function() {
-					var defer = $q.defer();
-					defer.resolve();
-					return defer.promise;
 				});
 			});
 
@@ -134,14 +126,9 @@
 				mockComment = {id: '234', body : 'this is a new comment'};
 				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
 				spyOn($state, 'go').and.stub();
-				spyOn(CommentsApiClient, 'create').and.callFake(function() {
+				spyOn(ApiManager, 'comments').and.callFake(function() {
 					var defer = $q.defer();
 					defer.resolve(mockCommentsApiResponse);
-					return defer.promise;
-				});
-				spyOn(CommentsApiClient, 'destroy').and.callFake(function() {
-					var defer = $q.defer();
-					defer.resolve();
 					return defer.promise;
 				});
 			});

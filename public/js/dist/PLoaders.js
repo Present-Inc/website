@@ -33,9 +33,9 @@
  *   @dependency UserContextManager {PManagers}
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileModel', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'ApiManager', 'ProfileModel', 'UserContextManager',
 
-	function($q, logger, UsersApiClient, ProfileModel, UserContextManager) {
+	function($q, logger, ApiManager, ProfileModel, UserContextManager) {
 
 		return {
 
@@ -45,7 +45,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileMod
 				var userContext = UserContextManager.getActiveUserContext();
 
 				if(userContext) {
-					UsersApiClient.showMe(userContext)
+					ApiManager.users('showMe', userContext, {})
 						.then(function(apiResponse) {
 							var Profile = ProfileModel.construct(apiResponse.result.object);
 							loadingProfile.resolve(Profile);
@@ -64,7 +64,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileMod
 				var loadingProfile = $q.defer(),
 						userContext = UserContextManager.getActiveUserContext();
 
-				UsersApiClient.show(username, userContext)
+				APiManger.users('show', userContext, {})
 					.then(function(apiResponse) {
 						var Profile = ProfileModel.construct(apiResponse.result.object);
 						loadingProfile.resolve(Profile);

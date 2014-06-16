@@ -8,7 +8,7 @@ describe('UserContextManager', function() {
   var UserContextManager,
 			logger,
 			localStorageService,
-			UserContextApiClient,
+			ApiManager,
 			UserContextModel,
 			$q,
 			$httpBackend,
@@ -28,7 +28,7 @@ describe('UserContextManager', function() {
       //Service dependencies
       logger = $injector.get('logger');
       localStorageService = $injector.get('localStorageService');
-      UserContextApiClient = $injector.get('UserContextApiClient');
+      ApiManager = $injector.get('ApiManager');
 			UserContextModel = $injector.get('UserContextModel');
 
       //Test dependencies
@@ -55,7 +55,7 @@ describe('UserContextManager', function() {
   describe('createNewUserContext', function() {
 
 		beforeEach(function() {
-			spyOn(UserContextApiClient, 'create').and.callFake(function() {
+			spyOn(ApiManager, 'userContexts').and.callFake(function() {
 				var defer = $q.defer();
 				defer.resolve(getJSONFixture('userContexts/create.success.json'));
 				return defer.promise;
@@ -96,7 +96,7 @@ describe('UserContextManager', function() {
 
     it('should destroy the local user context from local storage, and then destroy the remote user context',
       function() {
-        spyOn(UserContextApiClient, 'destroy').and.callFake(function() {
+        spyOn(ApiManager, 'userContexts').and.callFake(function() {
           var defer = $q.defer();
           defer.resolve(mockApiResponse.success);
           return defer.promise;
@@ -115,13 +115,13 @@ describe('UserContextManager', function() {
 
     it('should do nothing if the user context is not defined',
       function() {
-        spyOn(UserContextApiClient, 'destroy').and.stub();
+        spyOn(ApiManager, 'userContexts').and.stub();
         spyOn(localStorageService, 'get').and.returnValue(false);
         var returnedPromise = UserContextManager.destroyActiveUserContext();
         spyOn(returnedPromise, 'catch').and.callThrough();
         $rootScope.$apply(function() {
           returnedPromise.catch(function(error) {
-              expect(UserContextApiClient.destroy).not.toHaveBeenCalled();
+              expect(ApiManager.userContexts).not.toHaveBeenCalled();
               expect(error).toBeDefined();
           });
         });

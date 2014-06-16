@@ -138,439 +138,163 @@
 
 
 /**
-* PApiClient.ApiClientConfig
-* Provides configuration properties and methods to the ApiClient
-*/
-
-  PApiClient.factory('ApiConfig', [function(){
-   return {
-     getAddress : function() {
-       return 'https://api.present.tv'
-     },
-     getVideoQueryLimit: function() {
-       return 5;
-     }
-   }
-  }]);
-
-/**
- * PApiClient.CommentsApiClient
- * Handles all API requests to the Comments resource
- * 	@dependency $http {Angular}
- * 	@dependency $q {Angular}
- * 	@dependency logger {PUtilities} -- Configurable log for development and testing
- * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
+ * PApiClient.ApiClient
  */
 
-	PApiClient.factory('CommentsApiClient', ['$http', '$q', 'logger', 'ApiConfig',
+	PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', function($http, $q, logger, ApiConfig) {
+		return {
+			createRequest : function(resource, method, userContext, params) {
 
-		function($http, $q, logger, ApiConfig) {
-			return {
+				function Request(resource, method, userContext, params) {
 
-				create: function(comment, targetVideo, userContext) {
+					var config = ApiConfig;
 
-					var sendingRequest = $q.defer(),
-							resourceUrl = ApiConfig.getAddress() + '/v1/comments/create';
+					logger.debug('Sending Request: ' + config.resources[resource][method].url);
+
+					this.httpMethod = config.resources[resource][method].httpMethod;
+					this.url = config.baseUrl + config.resources[resource][method].url;
+
+					if(this.httpMethod == 'POST') {
+						this.data = params;
+					}
+					else {
+						this.params = params;
+					}
 
 					if (userContext) {
-						$http({
-							method: 'POST',
-							url: resourceUrl,
-							data: {comment: comment, target_video: targetVideo},
-							headers: {
-								'Present-User-Context-Session-Token' : userContext.token,
-								'Present-User-Context-User-Id': userContext.userId
-							}
-						})
-							.success(function(data, status, headers) {
-								logger.debug();
-								sendingRequest.resolve(data);
-							})
-							.error(function(data, status, headers) {
-								logger.error();
-								sendingRequest.reject(data);
-							});
+						this.headers = {
+							'Present-User-Context-Session-Token': userContext.token,
+							'Present-User-Context-User-Id': userContext.userId
+						};
+						this.validUserContextHeaders = true;
 					} else {
-							logger.error();
-							sendingRequest.reject({status: 'ERROR', mock: true});
+						this.headers = {};
+						this.validUserContextHeaders = false;
+
+						this.requiresUserContext = config.resources[resource][method].requiresUserContext;
+
 					}
-					return sendingRequest.promise;
-
-				},
-
-				destroy: function(comment, userContext) {
-
 				}
 
+				Request.prototype.exec = function () {
+					var sendingRequest = $q.defer();
+
+					if (this.requiresUserContext && !this.validUserContextHeaders) {
+						sendingRequest.reject({status: 'ERROR', result: 'missing required user context headers'});
+					} else {
+						$http({
+							method: this.httpMethod,
+							url: this.url,
+							params: this.params,
+							data: this.data,
+							headers: this.headers
+						})
+							.success(function (data, status, headers) {
+								logger.debug(['PApiClient http success block ', status, data]);
+								sendingRequest.resolve(data);
+							})
+							.error(function (data, status, headers) {
+								logger.error(['PApiClient http error block', status, data]);
+								sendingRequest.reject(data);
+							});
+					}
+
+					return sendingRequest.promise;
+
+				};
+
+				return new Request(resource, method, userContext, params);
 			}
 		}
+	}]);
 
-	]);
-/**
- * PApiClient.LikesApiClient
- * Handles all API requests to the Comments resource
- * 	@dependency $http {Angular}
- * 	@dependency $q {Angular}
- * 	@dependency logger {PUtilities} -- Configurable log for development and testing
- * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
- */
-
-PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
-
-	function($http, $q, logger, ApiConfig) {
+	PApiClient.factory('ApiClientConfig', function() {
 		return {
 
-			create : function(targetVideo, userContext) {
+			baseUrl : 'https://api.present.tv/v1/',
 
-				var sendingRequest = $q.defer(),
-					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/create';
+			videoQueryLimit : 5,
 
-				if (userContext) {
-					$http({
-						method: 'POST',
-						url: resourceUrl,
-						data: {video_id: targetVideo},
-						headers: {
-							'Present-User-Context-Session-Token' : userContext.token,
-							'Present-User-Context-User-Id': userContext.userId
-						}
-					})
-						.success(function(data, status, headers) {
-							logger.debug(['PApiClient.LikesApiClient.create', 'http success block', data]);
-							sendingRequest.resolve(data);
-						})
-						.error(function(data, status, headers) {
-							logger.error(['PApiClient.LikesApiClient.create', 'http error block', data]);
-							sendingRequest.reject(data);
-						});
-				} else {
-					logger.error(['PApiClient.LikesApiClient.create', 'invalid user context']);
-					sendingRequest.reject({status: 'ERROR', mock: true});
-				}
+			resources : {
 
-				return sendingRequest.promise;
+				userContexts : {
+					create : {
+						httpMethod : 'POST',
+						url : 'user_contexts/create',
+						requiresUserContext : false
+					},
+					destroy : {
+						httpMethod : 'POST',
+						url : 'user_contexts/destroy',
+						requiresUserContext : true
+					}
+				},
 
-			},
+				videos : {
+					listBrandNewVideos : {
+						httpMethod : 'GET',
+						url : 'videos/list_brand_new_videos',
+						requiresUserContext : false
+					},
+					listHomeVideos : {
+						httpMethod : 'GET',
+						url : 'videos/list_home_videos',
+						requiresUserContext : true
+					},
+					search : {
+						httpMethod : 'GET',
+						url : 'videos/search',
+						requiresUserContext : false
+					}
+				},
 
-			destroy: function(targetVideo, userContext) {
-				var sendingRequest = $q.defer(),
-					  resourceUrl = ApiConfig.getAddress() + '/v1/likes/destroy';
+				users : {
+					show : {
+						httpMethod : 'GET',
+						url : 'users/show',
+						requiresUserContext : false
+					},
+					showMe : {
+						httpMethod : 'GET',
+						url : 'users/show_me',
+						requiresUserContext : true
+					}
+				},
 
-				if (userContext) {
-					$http({
-						method: 'POST',
-						url: resourceUrl,
-						data: {video_id: targetVideo},
-						headers: {
-							'Present-User-Context-Session-Token' : userContext.token,
-							'Present-User-Context-User-Id': userContext.userId
-						}
-					})
-						.success(function(data, status, headers) {
-							logger.debug(['PApiClient.LikesApiClient.destroy', 'http success block', data]);
-							sendingRequest.resolve(data);
-						})
-						.error(function(data, status, headers) {
-							logger.error(['PApiClient.LikesApiClient.create', 'http error block', data]);
-							sendingRequest.reject(data);
-						});
-				} else {
-					logger.error(['PApiClient.LikesApiClient.destroy', 'invalid user context']);
-					sendingRequest.reject({status: 'ERROR', mock:true});
-				}
+				likes : {
+					create : {
+						httpMethod : 'POST',
+						url : 'likes/create',
+						requiresUserContext : true
+					},
+					destroy : {
+						httpMethod : 'POST',
+						url : 'likes/destroy',
+						requiresUserContext : true
+					}
+				},
 
-				return sendingRequest.promise;
+				comments : {
+					create : {
+						httpMethod : 'POST',
+						url : 'comments/create',
+						requiresUserContext : true
+					},
+					destroy : {
+						httpMethod : 'POST',
+						url : 'comments/destroy',
+						requiresUserContext : false
+					}
+				},
+
+				views : {},
+				demands : {},
+				friendships : {},
+				activities : {}
+
 			}
-
 		}
-	}
-
-]);
-/**
- * PApiClient.UserContextApiClient
- * Creates, updates, and destroys User Context Tokens
- *   @dependency $http {Angular}
- *   @dependency $q {Angular}
- *   @dependency logger {PUtilities} -- Configurable log for development
- *   @dependency ApiConfig {PApiClient} -- Provides API configuration properties
- */
-
-  PApiClient.factory('UserContextApiClient', ['$http', '$q', 'logger', 'ApiConfig',
-
-   function($http, $q, logger, ApiConfig) {
-     return {
-
-        create : function(username, password) {
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/create';
-          $http({
-            method: 'POST',
-            url: resourceUrl,
-            data: {username: username, password: password}
-          })
-            .success(function(data, status, headers) {
-              logger.debug(['PServices.UserContextApiClient.createNewUserContext', 'http success block', status, data]);
-              sendingRequest.resolve(data);
-            })
-            .error(function(data, status, headers) {
-              logger.error(['PServices.UserContextApiClient.createNewUserContext', 'http error block', status, data]);
-              sendingRequest.reject(data);
-            });
-          return sendingRequest.promise;
-        },
-
-        destroy: function(userContext) {
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/user_contexts/destroy';
-          if(userContext) {
-              $http({
-                method: 'POST',
-                url: resourceUrl,
-								headers: {
-									'Present-User-Context-Session-Token' : userContext.token,
-									'Present-User-Context-User-Id': userContext.userId
-								}
-              })
-              .success(function(data, status, headers) {
-                logger.debug(['PServices.UserContextApiClient.destroyUserContext -- http success block', status, data]);
-                sendingRequest.resolve(data);
-              })
-              .error(function(data, status, headers) {
-                logger.error(['PServices.UserContextApiClient.destroyUserContext -- http error block', status, data]);
-                sendingRequest.reject(data);
-              })
-          } else {
-            logger.error(['PApiClient.UserContextApiClient.destroyUserContext', 'request not sent: invalid userContext']);
-						sendingRequest.reject({status: 'ERROR', mock:true});
-          }
-          return sendingRequest.promise;
-        }
-
-     }
-   }
-
-  ]);
-
-  /**
-   * PApiClient.UsersApiClient
-   * Handles all API requests to the Users resource.
-	 * 	@dependency $http {Angular}
-	 * 	@dependency $q {Angular}
-	 * 	@dependency logger {PUtilities} -- Configurable log for development and testing
-	 * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
-   */
-
-  PApiClient.factory('UsersApiClient', ['$http', '$q', 'logger', 'ApiConfig',
-
-    function($http, $q, logger, ApiConfig) {
-
-      return {
-
-        show: function(username, userContext) {
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/users/show';
-          if (username) {
-            $http({
-             method: 'GET',
-             url: resourceUrl,
-             params: {username: username},
-             headers: {
-               'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
-               'Present-User-Context-User-Id': userContext ? userContext.userId : null
-             }
-            })
-             .success(function(data, status, headers) {
-               logger.debug(['PApiClient.UsersApiClient.show -- http success block', status, data]);
-               sendingRequest.resolve(data);
-             })
-             .error(function (data, status, headers) {
-               logger.error(['PApiClient.UsersApiClsdient.show -- http error block', status, data]);
-               sendingRequest.reject(data);
-             })
-          } else {
-           logger.error(['PServices.UsersApiClient.show', 'no valid user provided']);
-           sendingRequest.reject({status: "ERROR", mock: true});
-          }
-          return sendingRequest.promise;
-       },
-
-        showMe: function(userContext) {
-          var sendingRequest = $q.defer();
-          var resourceUrl = ApiConfig.getAddress() + '/v1/users/show_me';
-          if (userContext) {
-            $http({
-             method: 'GET',
-             url: resourceUrl,
-             headers: {
-               'Present-User-Context-Session-Token' : userContext.token,
-               'Present-User-Context-User-Id': userContext.userId
-             }
-            })
-              .success(function(data, status, headers) {
-                logger.debug(['PApiClient.UsersApiClient.showMe -- http success block', status, data]);
-                sendingRequest.resolve(data);
-              })
-              .error(function (data, status, headers) {
-                logger.error(['PApiClient.UsersApiClient.showMe -- http error block', status, data]);
-                sendingRequest.reject(data);
-              });
-          } else {
-            	logger.error(['PApiClient.UsersApiClient.show', 'no valid user context']);
-            	sendingRequest.reject({status: 'ERROR', mock: true});
-          }
-          return sendingRequest.promise;
-        },
-
-				search : function(query, limit, userContext) {
-					var sendingRequest  = $q.defer();
-					var resourceUrl = ApiConfig.getAddress() + '/v1/users/search';
-					if (query) {
-						$http({
-							method: 'GET',
-							url: resourceUrl,
-							params: {query: query, limit: limit ? limit : null},
-							headers: {
-								'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
-								'Present-User-Context-User-Id': userContext ? userContext.token : null
-							}
-						})
-							.success(function(data, status, headers) {
-								logger.debug(['PApiClient.UsersApiClient.search', 'http success block', status, data]);
-								sendingRequest.resolve(data);
-							})
-							.error(function(data, status, headers) {
-								logger.error(['PApiClient.UsersApiClient.search', 'http error block',  status, data]);
-								sendingRequest.reject(data);
-							});
-					} else {
-							logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
-							sendingRequest.reject({status: 'ERROR', mock: true});
-					}
-					return sendingRequest.promise;
-				}
-
-      }
-
-    }
-
-  ]);
-
-/**
- * PApiClient.CommentsApiClient
- * Handles all API requests to the Comments resource
- * 	@dependency $http {Angular}
- * 	@dependency $q {Angular}
- * 	@dependency logger {PUtilities} -- Configurable log for development and testing
- * 	@dependency ApiConfig {PApiClient} -- Provides API client configuration properties
- */
-
-  PApiClient.factory('VideosApiClient', ['$http', '$q', 'logger', 'ApiConfig',
-
-    function($http, $q, logger, ApiConfig) {
-
-      return {
-
-        listBrandNewVideos: function(cursor, userContext) {
-
-					var sendingRequest = $q.defer(),
-          		resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_brand_new_videos';
-
-					$http({
-            method: 'GET',
-            url: resourceUrl,
-            params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null},
-            headers: {
-              'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
-              'Present-User-Context-User-Id': userContext ? userContext.userId : null
-            }
-          })
-            .success(function(data, status, headers) {
-                logger.debug(['PServices.VideosApiClient.listBrandNewVideos -- http success block', status, data]);
-                sendingRequest.resolve(data);
-            })
-            .error(function(data, status, headers) {
-                logger.error(['PServices.VideosApiClient.listBrandNewVideos -- http error block', status, data]);
-                sendingRequest.reject(data);
-            });
-
-          return sendingRequest.promise;
-
-        },
-
-        listHomeVideos: function(cursor, userContext) {
-
-          var sendingRequest = $q.defer(),
-          		resourceUrl = ApiConfig.getAddress() + '/v1/videos/list_home_videos';
-
-          if(userContext) {
-            $http({
-              method: 'GET',
-              url: resourceUrl,
-              params: {limit: ApiConfig.getVideoQueryLimit(), cursor: cursor ? cursor : null},
-              headers: {
-                'Present-User-Context-Session-Token' : userContext.token,
-                'Present-User-Context-User-Id': userContext.userId
-              }
-
-            })
-            .success(function(data, status, headers) {
-                logger.debug(['PServices.VideosApiClient.listHomeVideos -- http success block', status, data]);
-                sendingRequest.resolve(data);
-            })
-            .error(function(data, status, headers) {
-                logger.error(['PServices.VideosApiClient.listHomeVideos -- http error block', status, data]);
-                sendingRequest.reject(data);
-            });
-          } else {
-            var mockResponse = {
-              status: 'ERROR',
-              result: 'Please log in and try again',
-              mock: true
-            };
-            logger.error(['PServices.VideosApiClient.listHomeVideos', 'invalid user context']);
-            sendingRequest.reject(mockResponse);
-          }
-
-          return sendingRequest.promise;
-
-        },
-
-				search : function(query, limit, userContext ) {
-
-					var sendingRequest  = $q.defer(),
-							resourceUrl = ApiConfig.getAddress() + '/v1/videos/search';
-
-					if (query) {
-						$http({
-							method: 'GET',
-							url: resourceUrl,
-							params: {query: query, limit: limit ? limit : null},
-							headers: {
-								'Present-User-Context-Session-Token' : userContext ? userContext.token : null,
-								'Present-User-Context-User-Id': userContext ? userContext.token : null
-							}
-						})
-							.success(function(data, status, headers) {
-								logger.debug(['PApiClient.UsersApiClient.search', 'http success block', status, data]);
-								sendingRequest.resolve(data);
-							})
-							.error(function(data, status, headers) {
-								logger.error(['PApiClient.UsersApiClient.search', 'http error block',  status, data]);
-								sendingRequest.reject(data);
-							});
-					} else {
-						logger.error(['PApiClient.UsersApiClient', 'query is undefined']);
-						sendingRequest.reject({status: 'ERROR', mock: true});
-					}
-
-					return sendingRequest.promise;
-
-				}
-
-      }
-    }
-
-  ]);
+	});
 
 /**
  * PModels.CommentModel.js
@@ -588,6 +312,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 						username: apiCommentObject.sourceUser.object.username,
 						profilePicture: apiCommentObject.sourceUser.object.profile.picture.url
 					};
+					this.targetVideo = apiCommentObject.targetVideo;
 					this.timeAgo = '5 min'
 				}
 
@@ -621,9 +346,9 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
  *   @dependency {Present} VideoCellModel
  */
 
-  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'VideosApiClient', 'VideoCellModel',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel',
 
-    function($q, UserContextManager, VideosApiClient, VideoCellModel) {
+    function($q, UserContextManager, ApiManager, VideoCellModel) {
       return {
         construct: function(type, requireUserContext) {
 
@@ -663,7 +388,7 @@ PApiClient.factory('LikesApiClient', ['$http', '$q', 'logger', 'ApiConfig',
 							loadingFeed.reject();
 						} else {
 							var _this = this;
-							VideosApiClient[resourceMethod](this.cursor, userContext)
+							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 5})
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
 										var VideoCell = VideoCellModel
@@ -750,12 +475,11 @@ PModels.factory('NavbarModel', ['$q',
 																					 '$state',
 																					 'logger',
 																					 'UserContextManager',
-																					 'VideosApiClient',
-																					 'UsersApiClient',
+																					 'ApiManager',
 																					 'VideoModel',
 																					 'ProfileModel',
 
-	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoModel, ProfileModel) {
+	function($q, $state, logger, UserContextManager, ApiManager, VideoModel, ProfileModel) {
 
 		return {
 			create : function() {
@@ -812,7 +536,7 @@ PModels.factory('NavbarModel', ['$q',
 					var userContext = UserContextManager.getActiveUserContext();
 					var hub = this.hub;
 					if (userContext) {
-						UsersApiClient.showMe(userContext)
+						ApiManager.users('showMe', userContext, {})
 							.then(function(apiResponse) {
 								hub.username = apiResponse.result.object.username;
 								hub.profilePicture = apiResponse.result.object.profile.picture.url;
@@ -841,7 +565,7 @@ PModels.factory('NavbarModel', ['$q',
 					videosSearchResults.length = 0;
 					usersSearchResults.length = 0;
 
-					VideosApiClient.search(query, limit, userContext)
+					ApiManager.videos('search', userContext, {query: query, limit: 5})
 						.then(function(apiResponse){
 							for (var i = 0;  i < apiResponse.results.length; i++) {
 								var Video = VideoModel.construct(apiResponse.results[i].object);
@@ -851,7 +575,7 @@ PModels.factory('NavbarModel', ['$q',
 							sendingVideosSearch.resolve();
 						});
 
-					UsersApiClient.search(query, limit, userContext)
+					ApiManager.users('search', userContext, {query: query, limit: 5})
 						.then(function(apiResponse) {
 							for (var i=0; i < apiResponse.results.length; i++) {
 								var Profile = ProfileModel.construct(apiResponse.results[i].object);
@@ -1077,10 +801,10 @@ PModels.factory('ReplyModel', function() {
  * Constructs the individual components of a video cell
  */
 
- PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'LikesApiClient', 'CommentsApiClient',
+ PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager',
 	 																				'VideoModel', 'CommentModel', 'LikeModel', 'ReplyModel',
 
-	 function($state, UserContextManager, LikesApiClient, CommentsApiClient,
+	 function($state, UserContextManager, ApiManager,
 						VideoModel, CommentModel, LikeModel, ReplyModel) {
 
    return {
@@ -1133,12 +857,13 @@ PModels.factory('ReplyModel', function() {
 						if (this.likes[i].sourceUser._id == userContext.userId)
 						this.likes.splice(i, 1);
 					}
-					LikesApiClient.destroy(this.video._id, userContext);
+					//ApiManager.likes('destroy', userContext, {targetVideo : this.video_id});
 				} else {
+						var newLike = LikeModel.create(this.video._id, userContext.profile);
 						this.video.counts.likes++;
 						this.subjectiveMeta.like.forward = true;
-						this.likes.push(LikeModel.create(this.video._id, userContext.profile));
-						//LikesApiClient.create(this.video._id, userContext);
+						this.likes.push(newLike);
+						//ApiManager.likes('create', userContext, {targetVideo : this.video._id});
 					}
 
 			};
@@ -1149,9 +874,11 @@ PModels.factory('ReplyModel', function() {
 				if(!userContext) {
 					$state.go('login');
 				} else {
+					var newComment = CommentModel.create(this.input.comment, this.video._id, userContext.profile);
 					this.video.counts.comments++;
-					this.comments.push(CommentModel.create(this.input.comment, this.video._id, userContext.profile));
 					this.input.comment = '';
+					this.comments.push(newComment);
+					//ApiManager.comments.('create', userContext, {body : newComment.body, targetVideo: newComment.targetVideo});
 				}
 
 			};
@@ -1168,6 +895,7 @@ PModels.factory('ReplyModel', function() {
 							this.comments.splice(i, 1);
 						}
 					}
+					//ApiManager.comments('destroy', userContext, {id : comment._id});
 				}
 
 			};
@@ -1277,9 +1005,9 @@ PModels.factory('ReplyModel', function() {
  *   @dependency UserContextManager {PManagers}
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileModel', 'UserContextManager',
+PLoaders.factory('ProfileLoader', ['$q', 'logger', 'ApiManager', 'ProfileModel', 'UserContextManager',
 
-	function($q, logger, UsersApiClient, ProfileModel, UserContextManager) {
+	function($q, logger, ApiManager, ProfileModel, UserContextManager) {
 
 		return {
 
@@ -1289,7 +1017,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileMod
 				var userContext = UserContextManager.getActiveUserContext();
 
 				if(userContext) {
-					UsersApiClient.showMe(userContext)
+					ApiManager.users('showMe', userContext, {})
 						.then(function(apiResponse) {
 							var Profile = ProfileModel.construct(apiResponse.result.object);
 							loadingProfile.resolve(Profile);
@@ -1308,7 +1036,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileMod
 				var loadingProfile = $q.defer(),
 						userContext = UserContextManager.getActiveUserContext();
 
-				UsersApiClient.show(username, userContext)
+				APiManger.users('show', userContext, {})
 					.then(function(apiResponse) {
 						var Profile = ProfileModel.construct(apiResponse.result.object);
 						loadingProfile.resolve(Profile);
@@ -1327,16 +1055,51 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'UsersApiClient', 'ProfileMod
 ]);
 
 /**
+ * PManagers.ApiManager.js
+ */
+
+PManagers.factory('ApiManager', ['ApiClient', function(ApiClient) {
+	return {
+		userContexts: function(method, userContext, params) {
+			return ApiClient.createRequest('userContexts', method, userContext, params).exec();
+		},
+		videos: function(method, userContext, params) {
+			return ApiClient.createRequest('videos', method, userContext, params).exec();
+		},
+		users: function(method, userContext, params) {
+			return ApiClient.createRequest('users', method, userContext, params).exec();
+		},
+		comments: function(method, userContext, params) {
+			return ApiClient.createRequest('comments', method, userContext, params).exec();
+		},
+		likes: function(method, userContext, params) {
+			return ApiClient.createRequest('likes', method, userContext, params).exec();
+		},
+		views: function(method, userContext, params) {
+			return ApiClient.createRequest('views', method, userContext, params).exec();
+		},
+		demands: function(method, userContext, params) {
+			return ApiClient.createRequest('demands', method, userContext, params).exec();
+		},
+		friendships: function(method, userContext, params) {
+			return ApiClient.createRequest('friendships', method, userContext, params).exec();
+		},
+		activities: function(method, userContext, params) {
+			return ApiClient.createRequest('activities', method, userContext, params).exec();
+		}
+	}
+}]);
+/**
  * PManagers.UserContextManager
  *   @dependency {Angular} $q
  *   @dependency {Present} logger -- configurable logger for development
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'ApiManager',
 																				 'UserContextModel',
 
-  function($q, localStorageService, logger, UserContextApiClient, UserContextModel) {
+  function($q, localStorageService, logger, ApiManager, UserContextModel) {
 
     return {
 
@@ -1352,7 +1115,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         var creatingNewUserContext = $q.defer();
 
-        UserContextApiClient.create(username, password)
+        ApiManager.userContexts('create', null, {username : username, password: password})
           .then(function(apiResponse) {
           	var userContext = UserContextModel.construct(apiResponse.result.object);
             localStorageService.clearAll();
@@ -1389,7 +1152,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 						localStorageService.get('profile')
 					);
 
-          UserContextApiClient.destroy(userContext)
+					ApiManager.userContexts('destroy', userContext, {})
             .then(function(apiResponse) {
               logger.debug(['PServices.UserContextManager.destroyActiveUserContext',
                             'User context deleted. User context data being deleted from local storage']);

@@ -7,7 +7,7 @@ describe('FeedModel', function() {
 
 	var FeedModel,
 			UserContextManager,
-			VideosApiClient,
+			ApiManager,
 			VideoCellModel,
 			logger,
 			$q,
@@ -24,7 +24,7 @@ describe('FeedModel', function() {
 
 			//Service Dependencies
 			UserContextManager = $injector.get('UserContextManager');
-			VideosApiClient = $injector.get('VideosApiClient');
+			ApiManager = $injector.get('ApiManager');
 			VideoCellModel = $injector.get('VideoCellModel');
 			logger = $injector.get('logger');
 

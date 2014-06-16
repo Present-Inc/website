@@ -3,10 +3,10 @@
  * Constructs the individual components of a video cell
  */
 
- PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'LikesApiClient', 'CommentsApiClient',
+ PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager',
 	 																				'VideoModel', 'CommentModel', 'LikeModel', 'ReplyModel',
 
-	 function($state, UserContextManager, LikesApiClient, CommentsApiClient,
+	 function($state, UserContextManager, ApiManager,
 						VideoModel, CommentModel, LikeModel, ReplyModel) {
 
    return {

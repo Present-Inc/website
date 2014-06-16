@@ -1,14 +1,49 @@
 /**
+ * PManagers.ApiManager.js
+ */
+
+PManagers.factory('ApiManager', ['ApiClient', function(ApiClient) {
+	return {
+		userContexts: function(method, userContext, params) {
+			return ApiClient.createRequest('userContexts', method, userContext, params).exec();
+		},
+		videos: function(method, userContext, params) {
+			return ApiClient.createRequest('videos', method, userContext, params).exec();
+		},
+		users: function(method, userContext, params) {
+			return ApiClient.createRequest('users', method, userContext, params).exec();
+		},
+		comments: function(method, userContext, params) {
+			return ApiClient.createRequest('comments', method, userContext, params).exec();
+		},
+		likes: function(method, userContext, params) {
+			return ApiClient.createRequest('likes', method, userContext, params).exec();
+		},
+		views: function(method, userContext, params) {
+			return ApiClient.createRequest('views', method, userContext, params).exec();
+		},
+		demands: function(method, userContext, params) {
+			return ApiClient.createRequest('demands', method, userContext, params).exec();
+		},
+		friendships: function(method, userContext, params) {
+			return ApiClient.createRequest('friendships', method, userContext, params).exec();
+		},
+		activities: function(method, userContext, params) {
+			return ApiClient.createRequest('activities', method, userContext, params).exec();
+		}
+	}
+}]);
+/**
  * PManagers.UserContextManager
  *   @dependency {Angular} $q
  *   @dependency {Present} logger -- configurable logger for development
  *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
  */
 
-PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'UserContextApiClient',
+PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'ApiManager',
 																				 'UserContextModel',
 
-  function($q, localStorageService, logger, UserContextApiClient, UserContextModel) {
+  function($q, localStorageService, logger, ApiManager, UserContextModel) {
 
     return {
 
@@ -24,7 +59,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
         var creatingNewUserContext = $q.defer();
 
-        UserContextApiClient.create(username, password)
+        ApiManager.userContexts('create', null, {username : username, password: password})
           .then(function(apiResponse) {
           	var userContext = UserContextModel.construct(apiResponse.result.object);
             localStorageService.clearAll();
@@ -61,7 +96,7 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 						localStorageService.get('profile')
 					);
 
-          UserContextApiClient.destroy(userContext)
+					ApiManager.userContexts('destroy', userContext, {})
             .then(function(apiResponse) {
               logger.debug(['PServices.UserContextManager.destroyActiveUserContext',
                             'User context deleted. User context data being deleted from local storage']);

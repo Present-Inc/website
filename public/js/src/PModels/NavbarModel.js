@@ -15,12 +15,11 @@ PModels.factory('NavbarModel', ['$q',
 																					 '$state',
 																					 'logger',
 																					 'UserContextManager',
-																					 'VideosApiClient',
-																					 'UsersApiClient',
+																					 'ApiManager',
 																					 'VideoModel',
 																					 'ProfileModel',
 
-	function($q, $state, logger, UserContextManager, VideosApiClient, UsersApiClient, VideoModel, ProfileModel) {
+	function($q, $state, logger, UserContextManager, ApiManager, VideoModel, ProfileModel) {
 
 		return {
 			create : function() {
@@ -77,7 +76,7 @@ PModels.factory('NavbarModel', ['$q',
 					var userContext = UserContextManager.getActiveUserContext();
 					var hub = this.hub;
 					if (userContext) {
-						UsersApiClient.showMe(userContext)
+						ApiManager.users('showMe', userContext, {})
 							.then(function(apiResponse) {
 								hub.username = apiResponse.result.object.username;
 								hub.profilePicture = apiResponse.result.object.profile.picture.url;
@@ -106,7 +105,7 @@ PModels.factory('NavbarModel', ['$q',
 					videosSearchResults.length = 0;
 					usersSearchResults.length = 0;
 
-					VideosApiClient.search(query, limit, userContext)
+					ApiManager.videos('search', userContext, {query: query, limit: 5})
 						.then(function(apiResponse){
 							for (var i = 0;  i < apiResponse.results.length; i++) {
 								var Video = VideoModel.construct(apiResponse.results[i].object);
@@ -116,7 +115,7 @@ PModels.factory('NavbarModel', ['$q',
 							sendingVideosSearch.resolve();
 						});
 
-					UsersApiClient.search(query, limit, userContext)
+					ApiManager.users('search', userContext, {query: query, limit: 5})
 						.then(function(apiResponse) {
 							for (var i=0; i < apiResponse.results.length; i++) {
 								var Profile = ProfileModel.construct(apiResponse.results[i].object);
