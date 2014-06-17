@@ -4,7 +4,7 @@
  */
 
 
-	PDirectives.directive('navbar', [function() {
+	PDirectives.directive('pNavbar', [function() {
 
 		return {
 			restrict: 'EA',

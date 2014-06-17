@@ -4,4 +4,4 @@
  * I.E custom extension for ui-view
  */
 
-  PDirectives.directive('viewContainer', function() {});
+  PDirectives.directive('pViewContainer', function() {});

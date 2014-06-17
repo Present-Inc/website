@@ -2,7 +2,7 @@
  * HTML directive for a video cell element
  */
 
-PDirectives.directive('videoCell', function() {
+PDirectives.directive('pVideoCell', function() {
 	return {
 		restrict : 'EA',
 		link : function(scope, element, attrs) {

@@ -3,7 +3,7 @@
  * HTML Directive for the video feed
  */
 
-  PDirectives.directive('feed', [function() {
+  PDirectives.directive('pFeed', [function() {
     return {
       restrict: 'EA',
       templateUrl: 'views/partials/feed'

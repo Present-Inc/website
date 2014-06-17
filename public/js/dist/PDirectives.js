@@ -17,7 +17,7 @@ PDirectives.directive('pEnter', function() {
  * HTML Directive for the video feed
  */
 
-  PDirectives.directive('feed', [function() {
+  PDirectives.directive('pFeed', [function() {
     return {
       restrict: 'EA',
       templateUrl: 'views/partials/feed'
@@ -30,7 +30,7 @@ PDirectives.directive('pEnter', function() {
  */
 
 
-	PDirectives.directive('navbar', [function() {
+	PDirectives.directive('pNavbar', [function() {
 
 		return {
 			restrict: 'EA',
@@ -73,10 +73,10 @@ PDirectives.directive('pEnter', function() {
 
 	}]);
 /**
- * VideoCellDirective.js
+ * HTML directive for a video cell element
  */
 
-PDirectives.directive('videoCell', function() {
+PDirectives.directive('pVideoCell', function() {
 	return {
 		restrict : 'EA',
 		link : function(scope, element, attrs) {
@@ -98,4 +98,4 @@ PDirectives.directive('videoCell', function() {
  * I.E custom extension for ui-view
  */
 
-  PDirectives.directive('viewContainer', function() {});
+  PDirectives.directive('pViewContainer', function() {});

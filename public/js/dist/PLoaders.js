@@ -1,5 +1,7 @@
 /**
- * PLoaders.FeedLoader
+ * Loads a new Feed Model which will be resolved, and injected into a controller
+ * @param {Angular} $q
+ * @param {PModels} FeedModel
  */
 
 	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
@@ -24,13 +26,11 @@
 		}
 	}]);
 /**
- * PLoader.ProfileManager
- * Provides and interface to the VideosApiClient to the view controllers
- * Parses and prepares the results provided from the UserApiClient
- *   @dependency $q {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency UsersApiClient {PApiClient}
- *   @dependency UserContextManager {PManagers}
+ * Loads a new Profile Model which will be resolved, and injected into a controller
+ * @param {Angular} $q
+ * @param {Putilities} logger
+ * @param {PManagers} ApiManager
+ * @param {PManagers} UserContextManager
  */
 
 PLoaders.factory('ProfileLoader', ['$q', 'logger', 'ApiManager', 'ProfileModel', 'UserContextManager',
