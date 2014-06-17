@@ -11,6 +11,7 @@
 					this._id = apiCommentObject._id;
 					this.body = apiCommentObject.body;
 					this.sourceUser = {
+						_id: apiCommentObject.sourceUser.object._id,
 						username: apiCommentObject.sourceUser.object.username,
 						profilePicture: apiCommentObject.sourceUser.object.profile.picture.url
 					};
@@ -28,6 +29,7 @@
 					this._id = "";
 					this.body = body;
 					this.sourceUser = {
+						_id: sourceUser._id,
 						username: sourceUser.username,
 						profilePicture: sourceUser.profilePicture
 					};
@@ -90,7 +92,7 @@
 							loadingFeed.reject();
 						} else {
 							var _this = this;
-							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 5})
+							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 15})
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
 										var VideoCell = VideoCellModel
@@ -530,7 +532,7 @@ PModels.factory('ReplyModel', function() {
 
 				for(var i = 0;  i < embededResults.comments.length; i++) {
 					var Comment = CommentModel.construct(embededResults.comments[i].object);
-					this.comments.push(Comment);
+					this.comments.splice(0, 0, Comment);
 				}
 
 				for(var j = 0; j < embededResults.likes.length;  j++) {
@@ -559,45 +561,50 @@ PModels.factory('ReplyModel', function() {
 						if (this.likes[i].sourceUser._id == userContext.userId)
 						this.likes.splice(i, 1);
 					}
-					//ApiManager.likes('destroy', userContext, {targetVideo : this.video_id});
+					ApiManager.likes('destroy', userContext, {video_id : this.video_id});
 				} else {
 						var newLike = LikeModel.create(this.video._id, userContext.profile);
 						this.video.counts.likes++;
 						this.subjectiveMeta.like.forward = true;
 						this.likes.push(newLike);
-						//ApiManager.likes('create', userContext, {targetVideo : this.video._id});
+						ApiManager.likes('create', userContext, {video_id : this.video._id});
 					}
 
 			};
 
 			VideoCell.prototype.addComment = function() {
-				var userContext = UserContextManager.getActiveUserContext();
+
+				var userContext = UserContextManager.getActiveUserContext(),
+						_this = this;
 
 				if(!userContext) {
 					$state.go('login');
-				} else {
+				}
+				else if (this.input.comment.length >= 1) {
 					var newComment = CommentModel.create(this.input.comment, this.video._id, userContext.profile);
 					this.video.counts.comments++;
 					this.input.comment = '';
-					this.comments.push(newComment);
-					//ApiManager.comments.('create', userContext, {body : newComment.body, targetVideo: newComment.targetVideo});
+					ApiManager.comments('create', userContext, {body : newComment.body, video_id: newComment.targetVideo})
+						.then(function(apiResponse) {
+							newComment._id = apiResponse.result.object._id;
+							_this.comments.push(newComment);
+						});
 				}
 
 			};
 
 			VideoCell.prototype.removeComment = function(comment) {
 				var userContext = UserContextManager.getActiveUserContext();
-
 				if(!userContext) {
 					$state.go('login');
-				} else {
+				} else if(comment.sourceUser._id == userContext.userId) {
 					this.video.counts.comments--;
 					for (var i = 0; i < this.comments.length; i ++) {
 						if (this.comments[i]._id == comment._id) {
 							this.comments.splice(i, 1);
 						}
 					}
-					//ApiManager.comments('destroy', userContext, {id : comment._id});
+					ApiManager.comments('destroy', userContext, {comment_id : comment._id});
 				}
 
 			};

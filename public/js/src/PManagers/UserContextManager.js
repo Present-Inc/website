@@ -1,8 +1,11 @@
 /**
- * PManagers.UserContextManager
- *   @dependency {Angular} $q
- *   @dependency {Present} logger -- configurable logger for development
- *   @dependency {Present} UserContextApiClient -- handles present api requests for the user context resource
+ * Manages the user context for the active user session
+ * @namespace
+ * @param {Angular} $q
+ * @param {LStorage} localStorageService
+ * @param {PUtilties} logger
+ * @param {PManager} ApiManager
+ * @param {PModel} UserContextModel
  */
 
 PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 'ApiManager',
@@ -10,14 +13,17 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
 
   function($q, localStorageService, logger, ApiManager, UserContextModel) {
 
+		/**
+		 * @static service for managing user context
+		 */
+
     return {
 
       /**
-       * UserContextManager.createNewUserContext
        * Sends a request to create a new user context and stores it to local storage on success
-       *   @param username <String> -- username in which the user context will be created with
-       *   @param password <String> -- password to validate the user
-			 *   @returns promise <Object>
+       * @param {String} username - username in which the user context will be created with
+       * @param {String} password - password to validate the user
+			 * @returns {*}
        */
 
       createNewUserContext : function(username, password) {
@@ -44,9 +50,8 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * UserContextManager.destroyActiveUserContext
        * Sends a request to delete the user context and clears userContext token from local storage
-			 * @returns promise <Object>
+			 * @returns {*}
        */
 
       destroyActiveUserContext : function() {
@@ -85,9 +90,8 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
       },
 
       /**
-       * UserContextManager.getActiveUserContext
-       * @returns userContext <Object> token if it exists
-			 * @returns null <Null> if the userContext token is invalid
+       * Retrieves the active user context from session storage
+       * @return {UserContext} [userContext]
        */
 
       getActiveUserContext : function() {

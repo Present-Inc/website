@@ -1,5 +1,5 @@
 /**
- * PModels.ReplyModel
+ * Constructs a new Reply Model
  */
 
 PModels.factory('ReplyModel', function() {

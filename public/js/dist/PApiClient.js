@@ -1,10 +1,38 @@
 /**
- * PApiClient.ApiClient
+ * Handles sending and receiving requests from the Present
+ * @namespace
+ * @param  $http  <Angular>
+ * @param  $q <Angular>
+ * @param  logger <PUtilities>
+ * @param PApiClientConfig <PApiClient>
+ * @returns {Function} createRequest
  */
 
 	PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', function($http, $q, logger, ApiConfig) {
 		return {
+
+			/**
+			 * Factory method that returns a new Request instance
+			 * @returns {Request}
+			 */
+
 			createRequest : function(resource, method, userContext, params) {
+
+				/**
+				 * @constructor
+				 * @param {String} resource - API resource being requested ex: 'videos'
+				 * @param {String} method - Resource method being requested ex 'listBrandNewVideos'
+				 * @param {UserContext} userContext - the active user context
+				 * @param {Object} params - Request params, which will either be assigned as body params or query strings
+				 *
+				 * @property {String} httpMethod - HTTP verb e.g. 'POST
+				 * @property {String} url - Url where the resource method is located
+				 * @property {Object} data -  Params attached to the request body
+				 * @property {Object} params - Params included in the query string
+				 * @property {Object} headers - Present user context headers
+				 * @property {Boolean} validUserContextHeaders - Indicates whether the user context headers were set
+				 * @property {boolean} requiresUserContext - Determines if the request requires a valid user context
+ 				 */
 
 				function Request(resource, method, userContext, params) {
 
@@ -31,11 +59,15 @@
 					} else {
 						this.headers = {};
 						this.validUserContextHeaders = false;
-
 						this.requiresUserContext = config.resources[resource][method].requiresUserContext;
 
 					}
 				}
+
+				/**
+				 * Executes the XHR call with failure and success blocks
+				 * @returns {*}
+				 */
 
 				Request.prototype.exec = function () {
 					var sendingRequest = $q.defer();
@@ -68,6 +100,13 @@
 			}
 		}
 	}]);
+
+
+/**
+ * Api Configuration:
+ * @namespace
+ * @returns {Object}
+ */
 
 	PApiClient.factory('ApiClientConfig', function() {
 		return {

@@ -1,3 +1,17 @@
+
+PDirectives.directive('pEnter', function() {
+	return function (scope, element, attrs) {
+		element.bind("keydown keypress", function (event) {
+			if(event.which === 13) {
+				scope.$apply(function (){
+					scope.$eval(attrs.pEnter);
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
 /*
  * PDirectives.feedDirective
  * HTML Directive for the video feed
@@ -58,20 +72,6 @@
 		}
 
 	}]);
-
-PDirectives.directive('pEnter', function() {
-	return function (scope, element, attrs) {
-		element.bind("keydown keypress", function (event) {
-			if(event.which === 13) {
-				scope.$apply(function (){
-					scope.$eval(attrs.pEnter);
-				});
-
-				event.preventDefault();
-			}
-		});
-	};
-});
 /**
  * VideoCellDirective.js
  */
@@ -80,13 +80,14 @@ PDirectives.directive('videoCell', function() {
 	return {
 		restrict : 'EA',
 		link : function(scope, element, attrs) {
-
 			scope.$watch('videoCell.subjectiveMeta.like.forward', function(newValue) {
 				if (newValue) scope.likesElem.css({'color' : '#FF557F'});
 				else scope.likesElem.css({'color' : '#47525D'});
 			});
 
 			scope.$watchCollection('videoCell.likes', function(){});
+
+			scope.$watchCollection('videoCell.comments', function(){});
 
 		}
 	}

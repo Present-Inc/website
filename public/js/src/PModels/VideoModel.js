@@ -1,10 +1,23 @@
 /**
- * PModels.VideoModel
+ * Constructs a new Video Model
+ * @namespace
  */
 
 	PModels.factory('VideoModel', function() {
 		return {
+
+			/**
+			 * Factory method that returns a new Video instance constructed from an API response.
+			 * @param apiVideoObject
+			 * @returns {Video}
+			 */
+
 			construct : function(apiVideoObject) {
+
+				/**
+				 * @constructor
+				 * @param {Object} apiVideoObject
+				 */
 
 				function Video(apiVideoObject) {
 					this._id = apiVideoObject._id;
@@ -15,7 +28,7 @@
 						replayPlaylist : apiVideoObject.mediaUrls.playlists.replay.master || null
 					};
 
-					//Check to see if the video is live
+					/** Check to see if the video is live **/
 					if(!apiVideoObject.creationTimeRange.endDate) {
 						this.isLive = true;
 						this.media.livePlaylist = apiVideoObject.mediaUrls.playlists.live.master;
@@ -40,7 +53,7 @@
 						altName					: ''
 					};
 
-					//Determine the display name(s)
+					/** Determine the display name(s) **/
 					if(apiVideoObject.creatorUser.object.profile.fullName) {
 						this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
 						this.creator.altName = apiVideoObject.creatorUser.object.username;

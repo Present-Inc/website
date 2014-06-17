@@ -1,5 +1,7 @@
 /**
- * PLoaders.FeedLoader
+ * Loads a new Feed Model which will be resolved, and injected into a controller
+ * @param {Angular} $q
+ * @param {PModels} FeedModel
  */
 
 	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {

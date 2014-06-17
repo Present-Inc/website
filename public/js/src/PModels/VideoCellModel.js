@@ -1,109 +1,167 @@
 /**
- * PModels.VideoCellModel
- * Constructs the individual components of a video cell
+ * @namespace
+ * @param {UIRouter} $state
+ * @param {PManagers} UserContextManager
+ * @param {PManagers} ApiManager
+ * @param {PModels} VideoModel
+ * @param {PModels} CommentModel
+ * @param {PModels} LikeModel
+ * @param {PModels} ReplyModel
  */
 
- PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager',
-	 																				'VideoModel', 'CommentModel', 'LikeModel', 'ReplyModel',
+ PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager', 'VideoModel',
+	 																	'CommentModel', 'LikeModel', 'ReplyModel',
 
-	 function($state, UserContextManager, ApiManager,
-						VideoModel, CommentModel, LikeModel, ReplyModel) {
+	 function($state, UserContextManager, ApiManager, VideoModel,
+						CommentModel, LikeModel, ReplyModel) {
 
    return {
-		construct: function(apiVideoObject, subjectiveMeta) {
 
-			function VideoCell(apiVideoObject, subjectiveMeta) {
-				this.video = VideoModel.construct(apiVideoObject);
-				this.subjectiveMeta = subjectiveMeta;
-				this.comments = [];
-				this.likes = [];
-				this.replies = [];
-				this.input = {
-					comment : ''
-				};
+		 /**
+			* Factory method that returns a new Request instance constructed from an API response
+			* @returns {VideoCell}
+			*/
 
-				var embededResults = {
-					comments : apiVideoObject.comments.results,
-					likes : apiVideoObject.likes.results,
-					replies : apiVideoObject.replies.results
-				};
+	 	 construct: function(apiVideoObject, subjectiveMeta) {
 
-				for(var i = 0;  i < embededResults.comments.length; i++) {
-					var Comment = CommentModel.construct(embededResults.comments[i].object);
-					this.comments.push(Comment);
-				}
+			 /**
+				* @constructor
+				* @param {Object} apiVideoObject - Video result object returned from the API
+				* @param subjectiveMeta - Subjective meta data for the video result object
+				*
+				* @property {Video} video - Video contained within the cell
+				* @property {Comments[]} comments -  Array of comments associated with the video
+				* @property {Likes[]} likes - Array of likes associated with the video
+				* @property {Replies[]} replies - Array of replies associated with the video
+				* @property {Object} input - Object containing bindable text input values
+				*/
 
-				for(var j = 0; j < embededResults.likes.length;  j++) {
-					var Like = LikeModel.construct(embededResults.likes[j].object);
-					this.likes.push(Like);
-				}
+				function VideoCell(apiVideoObject, subjectiveMeta) {
+					this.video = VideoModel.construct(apiVideoObject);
+					this.comments = [];
+					this.likes = [];
+					this.replies = [];
 
-				for(var k = 0; k < embededResults.replies.length; k++) {
-					var Reply = ReplyModel.construct(embededResults.replies[k].object);
-					this.replies.push(Reply);
-				}
-			}
+					this.input = {
+						comment : ''
+					};
 
-			VideoCell.prototype.toggleLike = function() {
+					this.subjectiveMeta = subjectiveMeta;
 
-				var userContext = UserContextManager.getActiveUserContext(),
-						_this = this;
+					var embededResults = {
+						comments : apiVideoObject.comments.results,
+						likes : apiVideoObject.likes.results,
+						replies : apiVideoObject.replies.results
+					};
 
-				if(!userContext) {
-					$state.go('login');
-				}
-				else if (this.subjectiveMeta.like.forward) {
-					this.video.counts.likes--;
-					this.subjectiveMeta.like.forward = false;
-					for (var i=0; i < this.likes.length; i ++) {
-						if (this.likes[i].sourceUser._id == userContext.userId)
-						this.likes.splice(i, 1);
-					}
-					//ApiManager.likes('destroy', userContext, {targetVideo : this.video_id});
-				} else {
-						var newLike = LikeModel.create(this.video._id, userContext.profile);
-						this.video.counts.likes++;
-						this.subjectiveMeta.like.forward = true;
-						this.likes.push(newLike);
-						//ApiManager.likes('create', userContext, {targetVideo : this.video._id});
+				 /**
+					* Loop through comment results, create  a new comment and add it to the comments array on the video cell
+					*/
+
+					for(var i = 0;  i < embededResults.comments.length; i++) {
+						var Comment = CommentModel.construct(embededResults.comments[i].object);
+						this.comments.splice(0, 0, Comment);
 					}
 
-			};
+					for(var j = 0; j < embededResults.likes.length;  j++) {
+						var Like = LikeModel.construct(embededResults.likes[j].object);
+						this.likes.push(Like);
+					}
 
-			VideoCell.prototype.addComment = function() {
-				var userContext = UserContextManager.getActiveUserContext();
-
-				if(!userContext) {
-					$state.go('login');
-				} else {
-					var newComment = CommentModel.create(this.input.comment, this.video._id, userContext.profile);
-					this.video.counts.comments++;
-					this.input.comment = '';
-					this.comments.push(newComment);
-					//ApiManager.comments.('create', userContext, {body : newComment.body, targetVideo: newComment.targetVideo});
+					for(var k = 0; k < embededResults.replies.length; k++) {
+						var Reply = ReplyModel.construct(embededResults.replies[k].object);
+						this.replies.push(Reply);
+					}
 				}
 
-			};
+			 /**
+				* Either adds or removes a like depending on the user's current relationship with the video
+				*/
 
-			VideoCell.prototype.removeComment = function(comment) {
-				var userContext = UserContextManager.getActiveUserContext();
+			 VideoCell.prototype.toggleLike = function() {
 
-				if(!userContext) {
-					$state.go('login');
-				} else {
-					this.video.counts.comments--;
-					for (var i = 0; i < this.comments.length; i ++) {
-						if (this.comments[i]._id == comment._id) {
-							this.comments.splice(i, 1);
+					var userContext = UserContextManager.getActiveUserContext(),
+							_this = this;
+
+				  /** Redirect the user to log in if there is no active user context **/
+					if(!userContext) {
+						$state.go('login');
+					}
+					/** Remove the like if the user already has a forward like relationship with the video **/
+					else if (this.subjectiveMeta.like.forward) {
+						this.video.counts.likes--;
+						this.subjectiveMeta.like.forward = false;
+						for (var i=0; i < this.likes.length; i ++) {
+							if (this.likes[i].sourceUser._id == userContext.userId)
+							this.likes.splice(i, 1);
 						}
+						ApiManager.likes('destroy', userContext, {video_id : this.video_id});
+					/** Add a like if there is no forward like relationship with the video **/
+					} else {
+							var newLike = LikeModel.create(this.video._id, userContext.profile);
+							this.video.counts.likes++;
+							this.subjectiveMeta.like.forward = true;
+							this.likes.push(newLike);
+							ApiManager.likes('create', userContext, {video_id : this.video._id});
+						}
+
+			 };
+
+			 /**
+				* Adds a comment to the video cell, and informs the API
+				*/
+
+			 VideoCell.prototype.addComment = function() {
+
+					var userContext = UserContextManager.getActiveUserContext(),
+							_this = this;
+
+				 /** Redirect the user to log in if there is no active user context **/
+				 if(!userContext) {
+						$state.go('login');
 					}
-					//ApiManager.comments('destroy', userContext, {id : comment._id});
-				}
+				 /** Add the comment to the video cell **/
+				 else if (this.input.comment.length >= 1) {
+						var newComment = CommentModel.create(this.input.comment, this.video._id, userContext.profile);
+						this.video.counts.comments++;
+						this.input.comment = '';
+						ApiManager.comments('create', userContext, {body : newComment.body, video_id: newComment.targetVideo})
+							.then(function(apiResponse) {
+								newComment._id = apiResponse.result.object._id;
+								_this.comments.push(newComment);
+							});
+				 }
 
-			};
+			 };
 
-			return new VideoCell(apiVideoObject, subjectiveMeta);
-		}
+			 /**
+				* Deletes the selected comment from the video cell and informs the API
+				* @param {Comment} comment - The comment to be deleted
+				*/
+
+			 VideoCell.prototype.removeComment = function(comment) {
+
+				 var userContext = UserContextManager.getActiveUserContext();
+
+				 /** Redirect the user if there is no active user context **/
+				 if(!userContext) {
+				 	$state.go('login');
+				 /** Remove the comment if the active user is the source user of the comment **/
+				 } else if(comment.sourceUser._id == userContext.userId) {
+						this.video.counts.comments--;
+						for (var i = 0; i < this.comments.length; i ++) {
+							if (this.comments[i]._id == comment._id) {
+								this.comments.splice(i, 1);
+							}
+						}
+					ApiManager.comments('destroy', userContext, {comment_id : comment._id});
+				 }
+
+			 };
+
+			 return new VideoCell(apiVideoObject, subjectiveMeta);
+
+		 }
    }
 
  }]);

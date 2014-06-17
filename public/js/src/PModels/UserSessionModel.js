@@ -1,10 +1,8 @@
 /**
- * PModels.UserSessionModel
  * Provides properties and methods to manage the state of the UserSession
- * Only injected one per UserSession, usually on the highest level scope
- * 	@dependency logger {PUtilities}
- * 	@dependency $state {Ui-Router}
- * 	@dependency UserContextManager {PManager}
+ * @dependency logger {PUtilities}
+ * @dependency $state {Ui-Router}
+ * @dependency UserContextManager {PManager}
  */
 
   PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
@@ -22,10 +20,9 @@
 					}
 
 					/**
-					 * UserSession.authorize
 					 * Checks to make sure the user has access to the requested state
-					 * 	@param event -- stateChangeStart event object which contains the preventDefault method
-					 * 	@param toState -- the state the the UserSession is transitioning into
+					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
+					 * @param {Object }toState -- the state the the UserSession is transitioning into
 					 */
 
 					UserSession.prototype.authorize = function(event, toState) {
@@ -37,10 +34,9 @@
 					};
 
 					/**
-					 * UserSession.login
 					 * Handles user context creation, sets the activeUser property and changes the state to home
-					 * 	@param username <String> -- the user provided username
-					 * 	@param password <String> -- the user provided password
+					 * @param {String} username - The user provided username
+					 * @param {String} password - The user provided password
 					 */
 
 					UserSession.prototype.login = function(username, password) {
@@ -66,7 +62,6 @@
 					};
 
 					/**
-					 * UserSession.logout
 					 * Handles user context deletion and changes the state to splash
 					 */
 

@@ -64,7 +64,7 @@ PLoaders.factory('ProfileLoader', ['$q', 'logger', 'ApiManager', 'ProfileModel',
 				var loadingProfile = $q.defer(),
 						userContext = UserContextManager.getActiveUserContext();
 
-				APiManger.users('show', userContext, {})
+				ApiManager.users('show', userContext, {username : username})
 					.then(function(apiResponse) {
 						var Profile = ProfileModel.construct(apiResponse.result.object);
 						loadingProfile.resolve(Profile);

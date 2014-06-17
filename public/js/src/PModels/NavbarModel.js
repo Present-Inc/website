@@ -1,14 +1,13 @@
 /**
- * PModels.NavbarModel
  * Properties and methods to handle the state of the Navbar
- * 	@dependency $q {Angular}
- * 	@dependency $state {Ui-Router}
- * 	@dependency logger {PUtilities}
- * 	@dependency UserContextManager {PManagers}
- * 	@dependency VideosApiClient {PApiClient}
- * 	@dependency UsersApiClient {PApiClient}
- * 	@dependency VideoModel {PModels}
- * 	@dependency ProfileModel {PModels}
+ * 	@param $q {Angular}
+ * 	@param $state {Ui-Router}
+ * 	@param logger {PUtilities}
+ * 	@param UserContextManager {PManagers}
+ * 	@param VideosApiClient {PApiClient}
+ * 	@param UsersApiClient {PApiClient}
+ * 	@param VideoModel {PModels}
+ * 	@param ProfileModel {PModels}
  */
 
 PModels.factory('NavbarModel', ['$q',
@@ -22,7 +21,21 @@ PModels.factory('NavbarModel', ['$q',
 	function($q, $state, logger, UserContextManager, ApiManager, VideoModel, ProfileModel) {
 
 		return {
+
+			/**
+			 * Factory method that returns a new Navbar instance
+			 * @returns {Navbar}
+			 */
 			create : function() {
+
+				/**
+				 * @constructor
+				 *
+				 * @property {Object} mode
+				 * @property {Boolean} isEnabled - Indicates whether the current view has the navbar enabled (visible)
+				 * @property {Object} hub - Contains the profile information of the active user
+				 * @property {Object search - Contains the properties and results of the search bar
+				 */
 
 				function Navbar(){
 
@@ -49,9 +62,8 @@ PModels.factory('NavbarModel', ['$q',
 				}
 
 				/**
-				 * Navbar.configure
 				 * Configuration method that is called on the ui router stateChangeStart event
-				 *  @param toState <Object> Ui-Router object that defines the requested state
+				 * @param {Object} toState Ui-Router object that defines the requested state
 				 */
 
 				Navbar.prototype.configure = function(toState) {
@@ -67,7 +79,6 @@ PModels.factory('NavbarModel', ['$q',
 				};
 
 				/**
-				 * Navbar.loadHub
 				 * Load the hub data if the user is still logged in when they enter the site
 				 * Otherwise, the data is set on the _newUserLoggedIn event
 				 */
@@ -85,10 +96,9 @@ PModels.factory('NavbarModel', ['$q',
 				};
 
 				/**
-				 * Navbar.sendSearchQuery
 				 * Sends Users and Videos search API requests in parallel and then updates the search result properties
-				 * 	@param query <String> the search query string provided by the user
-				 * 	@returns promise <Object>
+				 * @param {String} query the search query string provided by the user
+				 * @returns {*}
 				 */
 
 				Navbar.prototype.sendSearchQuery = function(query) {
@@ -130,7 +140,6 @@ PModels.factory('NavbarModel', ['$q',
 				};
 
 				/**
-				 * NavbarManager.showDropdown
 				 * Sets the search.dropdownEnabled to true
 				 */
 
@@ -139,7 +148,6 @@ PModels.factory('NavbarModel', ['$q',
 				};
 
 				/**
-				 * NavbarManager.hideDropdown
 				 * Sets the search.dropdownEnabled to false
 				 */
 

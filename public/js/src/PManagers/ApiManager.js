@@ -1,5 +1,6 @@
 /**
- * PManagers.ApiManager.js
+ * Provides an interface to the API client to be used throughout the App
+ * @namespace
  */
 
 PManagers.factory('ApiManager', ['ApiClient', function(ApiClient) {

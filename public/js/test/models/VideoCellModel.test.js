@@ -123,7 +123,7 @@
 				originalCommentCount = VideoCell.comments.length;
 
 				UserContextManagerSpy = spyOn(UserContextManager, 'getActiveUserContext');
-				mockComment = {id: '234', body : 'this is a new comment'};
+				mockComment = {_id: '234', body : 'this is a new comment', sourceUser: {_id:'123'}};
 				mockUserContext = {token : '456', userId: '123', profile: {_id:'123', username: 'ddluc32'}};
 				spyOn($state, 'go').and.stub();
 				spyOn(ApiManager, 'comments').and.callFake(function() {
@@ -141,7 +141,8 @@
 
 			it('should add a new comment to the video cell', function() {
 				UserContextManagerSpy.and.returnValue(mockUserContext);
-				$rootScope.$apply(VideoCell.addComment(mockComment.body));
+				VideoCell.input.comment = mockComment.body;
+				$rootScope.$apply(VideoCell.addComment());
 				expect(VideoCell.video.counts.comments).toBeGreaterThan(originalCommentCount);
 				expect(VideoCell.comments.length).toBeGreaterThan(originalCommentCount);
 				expect(VideoCell.input.comment).toBeFalsy();
