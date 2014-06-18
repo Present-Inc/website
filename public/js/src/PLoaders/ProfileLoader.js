@@ -1,52 +1,36 @@
 /**
  * Loads a new Profile Model which will be resolved, and injected into a controller
  * @param {Angular} $q
- * @param {Putilities} logger
+ * @param {PUtilities} logger
  * @param {PManagers} ApiManager
  * @param {PManagers} UserContextManager
  */
 
-PLoaders.factory('ProfileLoader', ['$q', 'logger', 'ApiManager', 'ProfileModel', 'UserContextManager',
+PLoaders.factory('UserLoader', ['$q', 'logger', 'ApiManager', 'UserModel', 'UserContextManager',
 
-	function($q, logger, ApiManager, ProfileModel, UserContextManager) {
+	function($q, logger, ApiManager, UserModel, UserContextManager) {
 
 		return {
 
-			loadOwnProfile : function() {
+			preLoad : function(method, requiresUserContext, username) {
 
-				var loadingProfile = $q.defer();
+				var loadingUser = $q.defer();
 				var userContext = UserContextManager.getActiveUserContext();
 
-				if(userContext) {
-					ApiManager.users('showMe', userContext, {})
+				if(requiresUserContext && !userContext) {
+					$state.go('login');
+				} else {
+					ApiManager.users(method, userContext, {username: username})
 						.then(function(apiResponse) {
-							var Profile = ProfileModel.construct(apiResponse.result.object);
-							loadingProfile.resolve(Profile);
+							var User = UserModel.construct(apiResponse.result.object);
+							loadingUser.resolve(User);
 						})
 						.catch(function() {
-							loadingProfile.reject();
+							loadingUser.reject();
 						});
-				} else loadingProfile.resolve(false);
+				}
 
-				return loadingProfile.promise;
-
-			},
-
-			loadUserProfile : function(username) {
-
-				var loadingProfile = $q.defer(),
-						userContext = UserContextManager.getActiveUserContext();
-
-				ApiManager.users('show', userContext, {username : username})
-					.then(function(apiResponse) {
-						var Profile = ProfileModel.construct(apiResponse.result.object);
-						loadingProfile.resolve(Profile);
-					})
-					.catch(function() {
-						loadingProfile.reject();
-					});
-
-				return loadingProfile.promise;
+				return loadingUser.promise;
 
 			}
 

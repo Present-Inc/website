@@ -1,8 +1,8 @@
 /**
  * Provides properties and methods to manage the state of the UserSession
- * @dependency logger {PUtilities}
- * @dependency $state {Ui-Router}
- * @dependency UserContextManager {PManager}
+ * @param {PUtilities} logger
+ * @param {UIRouter} $state
+ * @param {PManagaers} UserContextManager
  */
 
   PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',

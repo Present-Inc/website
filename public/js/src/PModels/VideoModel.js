@@ -3,7 +3,7 @@
  * @namespace
  */
 
-	PModels.factory('VideoModel', function() {
+	PModels.factory('VideoModel', [function() {
 		return {
 
 			/**
@@ -45,28 +45,38 @@
 						long: null
 					};
 
-					this.creator = {
-						_id             : apiVideoObject.creatorUser.object._id,
-						profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
-						username				: apiVideoObject.creatorUser.object.username,
-						displayName     : '',
-						altName					: ''
-					};
-
-					/** Determine the display name(s) **/
-					if(apiVideoObject.creatorUser.object.profile.fullName) {
-						this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
-						this.creator.altName = apiVideoObject.creatorUser.object.username;
-					} else {
-						this.creator.displayName = apiVideoObject.creatorUser.object.username;
-						this.creator.altName = null;
-					}
-
 					this.counts = {
 						comments : apiVideoObject.comments.count,
 						likes    : apiVideoObject.likes.count,
 						replies  : apiVideoObject.replies.count
 					};
+
+					/**
+					 * TODO: use the Profile model to create sourceUser objects
+					 */
+
+					if(apiVideoObject.creatorUser.object) {
+
+						this.creator = {
+							_id: apiVideoObject.creatorUser.object._id,
+							profilePicture: apiVideoObject.creatorUser.object.profile.picture.url,
+							username: apiVideoObject.creatorUser.object.username,
+							displayName: '',
+							altName: ''
+						};
+
+
+						/** Determine the display name(s) **/
+						if (apiVideoObject.creatorUser.object.profile.fullName) {
+							this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
+							this.creator.altName = apiVideoObject.creatorUser.object.username;
+						} else {
+							this.creator.displayName = apiVideoObject.creatorUser.object.username;
+							this.creator.altName = null;
+						}
+
+					}
+
 
 				}
 
@@ -74,4 +84,4 @@
 
 			}
 		}
-	});
+	}]);

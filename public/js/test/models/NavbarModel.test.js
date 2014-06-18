@@ -72,7 +72,10 @@
 		describe('loadHub', function() {
 
 			beforeEach(function() {
-				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({
+						token: '456',
+						userId: '123',
+						profile: {username: 'ddluc32', profilePicture: 'api.present.tv/ddluc/profilepic'}});
 				spyOn(ApiManager, 'users').and.callFake(function() {
 					var defer = $q.defer();
 					defer.resolve(getJSONFixture('users/show.success.json'));

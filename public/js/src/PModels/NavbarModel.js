@@ -11,12 +11,12 @@
  */
 
 PModels.factory('NavbarModel', ['$q',
-																					 '$state',
-																					 'logger',
-																					 'UserContextManager',
-																					 'ApiManager',
-																					 'VideoModel',
-																					 'ProfileModel',
+																'$state',
+																'logger',
+																'UserContextManager',
+																'ApiManager',
+																'VideoModel',
+																'ProfileModel',
 
 	function($q, $state, logger, UserContextManager, ApiManager, VideoModel, ProfileModel) {
 
@@ -87,11 +87,8 @@ PModels.factory('NavbarModel', ['$q',
 					var userContext = UserContextManager.getActiveUserContext();
 					var hub = this.hub;
 					if (userContext) {
-						ApiManager.users('showMe', userContext, {})
-							.then(function(apiResponse) {
-								hub.username = apiResponse.result.object.username;
-								hub.profilePicture = apiResponse.result.object.profile.picture.url;
-							});
+						hub.username = userContext.profile.username;
+						hub.profilePicture = userContext.profile.profilePicture;
 					}
 				};
 

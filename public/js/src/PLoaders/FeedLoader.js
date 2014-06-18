@@ -5,11 +5,20 @@
  */
 
 	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
+
 		return {
-			preLoad : function(type, requireUserContext) {
+
+			/**
+			 * @param type
+			 * @param {String} requireUserContext - Determines whether or not
+			 * @param {String} [username] -- Optional username for user feeds
+			 * @returns {*}
+			 */
+
+			preLoad : function(type, requireUserContext, username) {
 
 				var preLoadingFeed = $q.defer(),
-						Feed = FeedModel.construct(type, requireUserContext);
+						Feed = FeedModel.construct(type, requireUserContext, username);
 
 				Feed.load()
 					.then(function() {
@@ -23,5 +32,7 @@
 				return preLoadingFeed.promise;
 
 			}
+
 		}
+
 	}]);

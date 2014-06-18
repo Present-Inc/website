@@ -87,7 +87,7 @@
 				 * @returns {Feed}
 				 */
 
-        construct: function(type, requireUserContext) {
+        construct: function(type, requireUserContext, username) {
 
 					/**
 					 * @constructor
@@ -102,13 +102,20 @@
 					 * @property {VideoCell[]} videoCells - Array of video cells which make the feed
 					 */
 
-          function Feed(type, requireUserContext) {
+          function Feed(type, requireUserContext, username) {
 						this.type = type;
 						this.requireUserContext = requireUserContext;
 						this.activeVideo = null;
 						this.cursor = null;
 						this.isLoading = false;
 						this.videoCells = [];
+
+						/**
+						 * TODO : determine if there is a better way add a user to a feed
+						 */
+
+						if(username) this.username = username
+
 					}
 
 					var loadResourceMethod = function(feedType) {
@@ -119,6 +126,9 @@
 								break;
 							case 'home':
 								resourceMethod = 'listHomeVideos';
+								break;
+							case 'user':
+								resourceMethod = 'listUserVideos';
 								break;
 							default:
 								resourceMethod = 'listBrandNewVideos';
@@ -138,16 +148,22 @@
 								userContext = UserContextManager.getActiveUserContext();
 
 						var resourceMethod = loadResourceMethod(this.type);
+						var params = {
+									cursor: this.cursor,
+									limit: 15
+								};
 
-						if(this.requireUserContext && !userContext) {
+						if (this.type == 'user') params.username = this.username;
+
+						if (this.requireUserContext && !userContext) {
 							loadingFeed.reject();
 						} else {
 							var _this = this;
-							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 15})
+							ApiManager.videos(resourceMethod, userContext, params)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
 										var VideoCell = VideoCellModel
-											.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
+																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
@@ -157,11 +173,11 @@
 								});
 						}
 
-					return loadingFeed.promise;
+						return loadingFeed.promise;
 
 					};
 
-          return new Feed(type, requireUserContext);
+          return new Feed(type, requireUserContext, username);
 
         }
       }
@@ -255,12 +271,12 @@
  */
 
 PModels.factory('NavbarModel', ['$q',
-																					 '$state',
-																					 'logger',
-																					 'UserContextManager',
-																					 'ApiManager',
-																					 'VideoModel',
-																					 'ProfileModel',
+																'$state',
+																'logger',
+																'UserContextManager',
+																'ApiManager',
+																'VideoModel',
+																'ProfileModel',
 
 	function($q, $state, logger, UserContextManager, ApiManager, VideoModel, ProfileModel) {
 
@@ -331,11 +347,8 @@ PModels.factory('NavbarModel', ['$q',
 					var userContext = UserContextManager.getActiveUserContext();
 					var hub = this.hub;
 					if (userContext) {
-						ApiManager.users('showMe', userContext, {})
-							.then(function(apiResponse) {
-								hub.username = apiResponse.result.object.username;
-								hub.profilePicture = apiResponse.result.object.profile.picture.url;
-							});
+						hub.username = userContext.profile.username;
+						hub.profilePicture = userContext.profile.profilePicture;
 					}
 				};
 
@@ -407,65 +420,40 @@ PModels.factory('NavbarModel', ['$q',
 	}
 
 ]);
-/**
- * Constructs a new Profile Model
- * @namespace
- */
 
-  PModels.factory('ProfileModel', function() {
-    return {
+PModels.factory('ProfileModel', function() {
 
-			/**
-			 * Factory method that returns a new instance of the Profile Model
- 			 * @param apiProfileObject
-			 * @returns {Profile}
-			 */
+	return {
 
-			construct : function(apiProfileObject) {
+		construct : function(apiProfileObject) {
 
-			/**
-			 * @constructor
-			 * @param {Object} subjectiveObjectMeta
-			 * @param {Object} apiProfileObject
-			 */
-
-			 function Profile(apiProfileObject, subjectiveObjectMeta) {
-				 this._id = apiProfileObject._id;
-				 this.username = apiProfileObject.username;
-				 this.fullName = apiProfileObject.profile.fullName || '';
-				 this.profilePicture = apiProfileObject.profile.picture.url;
-				 this.description = apiProfileObject.profile.description;
-				this.subjectiveMeta = subjectiveObjectMeta;
-
-				 this.counts = {
-					 videos: apiProfileObject.videos.count,
-					 views: apiProfileObject.views.count,
-					 likes: apiProfileObject.likes.count,
-					 followers: apiProfileObject.followers.count,
-					 friends: apiProfileObject.friends.count
-				 };
-
-				 this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
-				 this.email = apiProfileObject.email ? apiProfileObject.email : null;
+			function Profile(apiProfileObject) {
+				this._id = apiProfileObject._id;
+				this.username = apiProfileObject.username;
+				this.fullName = apiProfileObject.profile.fullName || '';
+				this.profilePicture = apiProfileObject.profile.picture.url;
+				this.description = apiProfileObject.profile.description;
 
 
+				this.counts = {
+					videos: apiProfileObject.videos.count,
+					views: apiProfileObject.views.count,
+					likes: apiProfileObject.likes.count,
+					followers: apiProfileObject.followers.count,
+					friends: apiProfileObject.friends.count
+				};
 
-			 }
-
-			 Profile.prototype.follow = function() {
-
-			 };
-
-			 Profile.prototype.demand = function() {
-
-			 };
-
-			  return new Profile(apiProfileObject);
-
+				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
+				this.email = apiProfileObject.email ? apiProfileObject.email : null;
 			}
-    }
- });
 
+			return new Profile(apiProfileObject);
+
+		}
+
+	}
+
+});
 /**
  * Constructs a new Reply Model
  */
@@ -540,10 +528,101 @@ PModels.factory('ReplyModel', function() {
 		}
 	}]);
 /**
+ * Constructs a new Profile Model
+ * @namespace
+ */
+
+PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
+
+	function(logger, $state, ProfileModel, UserContextManager, ApiManager) {
+
+			return {
+
+			/**
+			 * Factory method that returns a new instance of the Profile Model
+			 * @param apiProfileObject
+			 * @param subjectiveObjectMeta
+			 * @returns {Profile}
+			 */
+
+				construct : function(apiUserObject, subjectiveObjectMeta) {
+
+				/**
+				 * @constructor
+				 * @param {Object} subjectiveObjectMeta
+				 * @param {Object} apiProfileObject
+				 */
+
+					function User(apiProfileObject, subjectiveObjectMeta) {
+						this.profile = ProfileModel.construct(apiProfileObject, subjectiveObjectMeta);
+						this.subjectiveMeta = subjectiveObjectMeta;
+						this.input = {
+							fullName: this.fullName,
+							description: this.description,
+							gender: this.gender,
+							location: this.location,
+							website: this.website,
+							email: this.email,
+							phoneNumber: this.phoneNumber
+						};
+					}
+
+
+					User.prototype.follow = function() {
+
+						var userContext = UserContextManager.getActiveUserContext();
+
+						if(!userContext) {
+							$state.go('login');
+						} else if(this.subjectiveMeta.friendship.forward) {
+							this.subjectiveMeta.friendship.forward = false;
+							ApiManager.friendships('destroy', userContext, {});
+						} else {
+							this.subjectiveMeta.friendship.forward = true;
+							ApiManager.friendships('create', userContext, {});
+						}
+
+					};
+
+					User.prototype.demand = function() {
+
+						var userContext = UserContextManager.getActiveUserContext();
+
+						if(!userContext) {
+							$state.go('login');
+						} else {
+							this.subjectiveMeta.demand.forward = true;
+							ApiManager.demands('create', userContext, {});
+						}
+
+					};
+
+					User.prototype.update = function() {
+
+						var userContext = UserContextManager.getActiveUserContext();
+
+						if (userContext) {
+							ApiManager.users('update', userContext, this.input)
+								.then(function(apiResponse) {
+									return apiResponse.result;
+							});
+						}
+
+					};
+
+					return new User(apiUserObject, subjectiveObjectMeta);
+
+				}
+
+			}
+ 		}
+	]);
+
+/**
  * Provides properties and methods to manage the state of the UserSession
- * @dependency logger {PUtilities}
- * @dependency $state {Ui-Router}
- * @dependency UserContextManager {PManager}
+ * @param {PUtilities} logger
+ * @param {UIRouter} $state
+ * @param {PManagaers} UserContextManager
  */
 
   PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
@@ -794,7 +873,7 @@ PModels.factory('ReplyModel', function() {
  * @namespace
  */
 
-	PModels.factory('VideoModel', function() {
+	PModels.factory('VideoModel', [function() {
 		return {
 
 			/**
@@ -836,28 +915,38 @@ PModels.factory('ReplyModel', function() {
 						long: null
 					};
 
-					this.creator = {
-						_id             : apiVideoObject.creatorUser.object._id,
-						profilePicture  : apiVideoObject.creatorUser.object.profile.picture.url,
-						username				: apiVideoObject.creatorUser.object.username,
-						displayName     : '',
-						altName					: ''
-					};
-
-					/** Determine the display name(s) **/
-					if(apiVideoObject.creatorUser.object.profile.fullName) {
-						this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
-						this.creator.altName = apiVideoObject.creatorUser.object.username;
-					} else {
-						this.creator.displayName = apiVideoObject.creatorUser.object.username;
-						this.creator.altName = null;
-					}
-
 					this.counts = {
 						comments : apiVideoObject.comments.count,
 						likes    : apiVideoObject.likes.count,
 						replies  : apiVideoObject.replies.count
 					};
+
+					/**
+					 * TODO: use the Profile model to create sourceUser objects
+					 */
+
+					if(apiVideoObject.creatorUser.object) {
+
+						this.creator = {
+							_id: apiVideoObject.creatorUser.object._id,
+							profilePicture: apiVideoObject.creatorUser.object.profile.picture.url,
+							username: apiVideoObject.creatorUser.object.username,
+							displayName: '',
+							altName: ''
+						};
+
+
+						/** Determine the display name(s) **/
+						if (apiVideoObject.creatorUser.object.profile.fullName) {
+							this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
+							this.creator.altName = apiVideoObject.creatorUser.object.username;
+						} else {
+							this.creator.displayName = apiVideoObject.creatorUser.object.username;
+							this.creator.altName = null;
+						}
+
+					}
+
 
 				}
 
@@ -865,4 +954,4 @@ PModels.factory('ReplyModel', function() {
 
 			}
 		}
-	});
+	}]);

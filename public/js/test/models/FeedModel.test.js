@@ -44,7 +44,7 @@ describe('FeedModel', function() {
 
 	});
 
-	describe('Feed.prototype.load', function() {
+	describe('load', function() {
 
 		beforeEach(function() {
 

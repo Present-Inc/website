@@ -6,7 +6,6 @@ PDirectives.directive('pEnter', function() {
 				scope.$apply(function (){
 					scope.$eval(attrs.pEnter);
 				});
-
 				event.preventDefault();
 			}
 		});

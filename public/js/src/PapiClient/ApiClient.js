@@ -57,9 +57,9 @@ PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', fun
 					};
 					this.validUserContextHeaders = true;
 				} else {
-					this.headers = {};
-					this.validUserContextHeaders = false;
-					this.requiresUserContext = config.resources[resource][method].requiresUserContext;
+						this.headers = {};
+						this.validUserContextHeaders = false;
+						this.requiresUserContext = config.resources[resource][method].requiresUserContext;
 
 				}
 			}
@@ -141,6 +141,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					url : 'videos/list_home_videos',
 					requiresUserContext : true
 				},
+				listUserVideos : {
+					httpMethod : 'GET',
+					url : 'videos/list_user_videos',
+					requiresUserContext : false
+				},
 				search : {
 					httpMethod : 'GET',
 					url : 'videos/search',
@@ -158,6 +163,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod : 'GET',
 					url : 'users/show_me',
 					requiresUserContext : true
+				},
+				search : {
+					httpMethod : 'GET',
+					url : 'users/search',
+					requiresUserContext : false
 				}
 			},
 

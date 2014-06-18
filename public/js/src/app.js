@@ -69,9 +69,9 @@
      /**
       * Configure Application states using ui router
       * State data -- sets properties of the ApplicationManager
-      *   @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
-      *   @property navbarEnabled <Boolean> -- When true navigation bar is visible
-      *   @property requireUserContext <Boolean> -- When true user context is required to access state
+      * @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
+      * @property navbarEnabled <Boolean> -- When true navigation bar is visible
+      * @property requireUserContext <Boolean> -- When true user context is required to access state
       */
 
 
@@ -88,22 +88,6 @@
           }
         })
 
-        .state('discover', {
-          url: '/discover',
-          templateUrl: 'views/discover',
-          controller: 'discoverCtrl',
-          metaData: {
-            fullscreenEnabled: false,
-            navbarEnabled: true,
-            requireUserContext: false
-          },
-          resolve: {
-						Feed : function(FeedLoader) {
-							return FeedLoader.preLoad('discover', false);
-						}
-          }
-        })
-
         .state('login', {
           url: '/login',
           templateUrl: 'views/login',
@@ -115,6 +99,22 @@
           }
         })
 
+				.state('discover', {
+					url: '/discover',
+					templateUrl: 'views/discover',
+					controller: 'discoverCtrl',
+					metaData: {
+						fullscreenEnabled: false,
+						navbarEnabled: true,
+						requireUserContext: false
+					},
+					resolve: {
+						Feed : function(FeedLoader) {
+							return FeedLoader.preLoad('discover', false);
+						}
+					}
+				})
+
         .state('home', {
           url: '/home',
           templateUrl: 'views/home',
@@ -125,14 +125,33 @@
             requireUserContext: true
           },
           resolve: {
-            Profile  : function(ProfileLoader) {
-             	return ProfileLoader.loadOwnProfile();
+            Profile  : function(UserLoader) {
+             	return UserLoader.preLoad('showMe', true);
             },
             Feed : function(FeedLoader) {
               return FeedLoader.preLoad('home', true);
             }
           }
-        });
+        })
+
+				.state('user', {
+					url: '/:user',
+					templateUrl: 'views/home',
+					controller: 'userCtrl',
+					metaData: {
+						fullscreenEnabled: true,
+						navbarEnabled: true,
+						requireUserContext: false
+					},
+					resolve : {
+						Profile : function(UserLoader, $stateParams) {
+							return UserLoader.preLoad('show', false, $stateParams.user);
+						},
+						Feed : function(FeedLoader, $stateParams) {
+							return FeedLoader.preLoad('user', false, $stateParams.user);
+						}
+					}
+				});
 
   }]);
 

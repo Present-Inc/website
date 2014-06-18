@@ -55,7 +55,7 @@
 
 		});
 
-		describe('Likes', function() {
+		describe('likes', function() {
 
 			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
 					mockLikesApiResponse = getJSONFixture('likes/create.success.json'),
@@ -107,7 +107,7 @@
 
 
 
-		describe('Comments', function() {
+		describe('comments', function() {
 
 			var mockVideoApiResponse = getJSONFixture('videos/list_brand_new_videos.success.json'),
 					mockCommentsApiResponse = getJSONFixture('likes/create.success.json'),

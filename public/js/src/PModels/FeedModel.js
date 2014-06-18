@@ -17,7 +17,7 @@
 				 * @returns {Feed}
 				 */
 
-        construct: function(type, requireUserContext) {
+        construct: function(type, requireUserContext, username) {
 
 					/**
 					 * @constructor
@@ -32,13 +32,20 @@
 					 * @property {VideoCell[]} videoCells - Array of video cells which make the feed
 					 */
 
-          function Feed(type, requireUserContext) {
+          function Feed(type, requireUserContext, username) {
 						this.type = type;
 						this.requireUserContext = requireUserContext;
 						this.activeVideo = null;
 						this.cursor = null;
 						this.isLoading = false;
 						this.videoCells = [];
+
+						/**
+						 * TODO : determine if there is a better way add a user to a feed
+						 */
+
+						if(username) this.username = username
+
 					}
 
 					var loadResourceMethod = function(feedType) {
@@ -49,6 +56,9 @@
 								break;
 							case 'home':
 								resourceMethod = 'listHomeVideos';
+								break;
+							case 'user':
+								resourceMethod = 'listUserVideos';
 								break;
 							default:
 								resourceMethod = 'listBrandNewVideos';
@@ -68,16 +78,22 @@
 								userContext = UserContextManager.getActiveUserContext();
 
 						var resourceMethod = loadResourceMethod(this.type);
+						var params = {
+									cursor: this.cursor,
+									limit: 15
+								};
 
-						if(this.requireUserContext && !userContext) {
+						if (this.type == 'user') params.username = this.username;
+
+						if (this.requireUserContext && !userContext) {
 							loadingFeed.reject();
 						} else {
 							var _this = this;
-							ApiManager.videos(resourceMethod, userContext, {cursor: this.cursor, limit: 15})
+							ApiManager.videos(resourceMethod, userContext, params)
 								.then(function(apiResponse) {
 									for(var i=0, length=apiResponse.results.length; i < length; i++) {
 										var VideoCell = VideoCellModel
-											.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
+																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
 									loadingFeed.resolve();
@@ -87,11 +103,11 @@
 								});
 						}
 
-					return loadingFeed.promise;
+						return loadingFeed.promise;
 
 					};
 
-          return new Feed(type, requireUserContext);
+          return new Feed(type, requireUserContext, username);
 
         }
       }
