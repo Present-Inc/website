@@ -38,6 +38,7 @@
 				$httpBackend.expectGET('views/splash').respond();
 
 			});
+
 		});
 
 
@@ -79,10 +80,9 @@
 		describe('follow', function() {
 
 			var mockUserApiResponse = getJSONFixture('users/show.success.json'),
-				User,
-				UserContextManagerSpy,
-				mockUserContext;
-
+					User,
+					UserContextManagerSpy,
+					mockUserContext;
 
 			beforeEach(function() {
 				User = UserModel

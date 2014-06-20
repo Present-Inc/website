@@ -34,6 +34,10 @@ PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', fun
 			 * @property {boolean} requiresUserContext - Determines if the request requires a valid user context
 			 */
 
+			/**
+			 * api.present.tv/v1/videos/list_brand_new_videos
+			 */
+
 			function Request(resource, method, userContext, params) {
 
 				var config = ApiConfig;

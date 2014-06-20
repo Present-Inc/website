@@ -4,15 +4,15 @@
 
 PModels.factory('ReplyModel', function() {
 	return {
-		construct: function(apiLikesObject) {
+		construct: function(apiReplyObject) {
 
-			function Reply(apiLikeObject) {
-				this._id = apiLikeObject._id;
-				this.sourceUser = apiLikeObject.sourceUser;
-				this.targetVideo = apiLikeObject.targetVideo;
+			function Reply(apiReplyObject) {
+				this._id = apiReplyObject._id;
+				this.sourceUser = apiReplyObject.sourceUser;
+				this.targetVideo = apiReplyObject.targetVideo;
 			}
 
-			return new Reply(apiLikeObject);
+			return new Reply(apiReplyObject);
 
 		}
 	}

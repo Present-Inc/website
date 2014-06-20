@@ -34,8 +34,12 @@
 @import 'videoCell';
 
 //login.scss
-//Sets all styles for the login page
+//Sets all styles for the login view
 @import 'login';
+
+//register.scss
+//Sets all styles for the register view
+@import 'register';
 
 //splash.scss
 //Sets all styles for the splash view
@@ -48,3 +52,7 @@
 //home.scss
 //Sets all styles for the discover view
 @import 'home';
+
+//user.scss
+//Sets all styles for the user view
+@import 'user';

@@ -49,10 +49,10 @@
 
     function($stateProvider, $locationProvider, localStorageServiceProvider) {
 
-    /**
-     * Enable client side routing by enabling the html5 history API
-     * Removes the '#' from url's
-     */
+     /**
+      * Enable client side routing by enabling the html5 history API
+      * Removes the '#' from url's
+      */
 
      $locationProvider.html5Mode(true);
 
@@ -66,14 +66,13 @@
 
       localStorageServiceProvider.setStorageType('sessionStorage');
 
-     /**
-      * Configure Application states using ui router
-      * State data -- sets properties of the ApplicationManager
-      * @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
-      * @property navbarEnabled <Boolean> -- When true navigation bar is visible
-      * @property requireUserContext <Boolean> -- When true user context is required to access state
-      */
-
+		  /**
+		 	 * Configure Application states using ui router
+			 * State data -- sets properties of the ApplicationManager
+			 * @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
+			 * @property navbarEnabled <Boolean> -- When true navigation bar is visible
+			 * @property requireUserContext <Boolean> -- When true user context is required to access state
+			 */
 
       $stateProvider
 
@@ -99,6 +98,17 @@
           }
         })
 
+				.state('register', {
+					url: '/register',
+					templateUrl: 'views/register',
+					controller: 'registerCtrl',
+					metaData: {
+						fullscreenEnabled: true,
+						navbarEnabled: false,
+						requireUserContext: false
+					}
+				})
+
 				.state('discover', {
 					url: '/discover',
 					templateUrl: 'views/discover',
@@ -110,6 +120,7 @@
 					},
 					resolve: {
 						Feed : function(FeedLoader) {
+							/** FeedLoader.preLoad(type, requiresUserContext) **/
 							return FeedLoader.preLoad('discover', false);
 						}
 					}
@@ -125,29 +136,33 @@
             requireUserContext: true
           },
           resolve: {
-            Profile  : function(UserLoader) {
-             	return UserLoader.preLoad('showMe', true);
+            User: function(UserLoader) {
+							/** UserLoader.preLoad(type, requiresUserContext) **/
+							return UserLoader.preLoad('showMe', true);
             },
-            Feed : function(FeedLoader) {
-              return FeedLoader.preLoad('home', true);
+            Feed: function(FeedLoader) {
+							/** FeedLoader.preLoad(type, requiresUserContext) **/
+							return FeedLoader.preLoad('home', true);
             }
           }
         })
 
 				.state('user', {
 					url: '/:user',
-					templateUrl: 'views/home',
+					templateUrl: 'views/user',
 					controller: 'userCtrl',
 					metaData: {
 						fullscreenEnabled: true,
 						navbarEnabled: true,
 						requireUserContext: false
 					},
-					resolve : {
-						Profile : function(UserLoader, $stateParams) {
+					resolve: {
+						User: function(UserLoader, $stateParams) {
+							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
 							return UserLoader.preLoad('show', false, $stateParams.user);
 						},
-						Feed : function(FeedLoader, $stateParams) {
+						Feed: function(FeedLoader, $stateParams) {
+							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
 							return FeedLoader.preLoad('user', false, $stateParams.user);
 						}
 					}
@@ -190,6 +205,10 @@ PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', fun
 			 * @property {Object} headers - Present user context headers
 			 * @property {Boolean} validUserContextHeaders - Indicates whether the user context headers were set
 			 * @property {boolean} requiresUserContext - Determines if the request requires a valid user context
+			 */
+
+			/**
+			 * api.present.tv/v1/videos/list_brand_new_videos
 			 */
 
 			function Request(resource, method, userContext, params) {
@@ -368,6 +387,8 @@ PApiClient.factory('ApiClientConfig', function() {
  * Constructs a new Comment Object
  * @namespace
  */
+
+
 
 	PModels.factory('CommentModel', function() {
 		return{
@@ -794,6 +815,7 @@ PModels.factory('ProfileModel', function() {
 		construct : function(apiProfileObject) {
 
 			function Profile(apiProfileObject) {
+
 				this._id = apiProfileObject._id;
 				this.username = apiProfileObject.username;
 				this.fullName = apiProfileObject.profile.fullName || '';
@@ -811,6 +833,7 @@ PModels.factory('ProfileModel', function() {
 
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
+
 			}
 
 			return new Profile(apiProfileObject);
@@ -826,15 +849,15 @@ PModels.factory('ProfileModel', function() {
 
 PModels.factory('ReplyModel', function() {
 	return {
-		construct: function(apiLikesObject) {
+		construct: function(apiReplyObject) {
 
-			function Reply(apiLikeObject) {
-				this._id = apiLikeObject._id;
-				this.sourceUser = apiLikeObject.sourceUser;
-				this.targetVideo = apiLikeObject.targetVideo;
+			function Reply(apiReplyObject) {
+				this._id = apiReplyObject._id;
+				this.sourceUser = apiReplyObject.sourceUser;
+				this.targetVideo = apiReplyObject.targetVideo;
 			}
 
-			return new Reply(apiLikeObject);
+			return new Reply(apiReplyObject);
 
 		}
 	}
@@ -898,16 +921,16 @@ PModels.factory('ReplyModel', function() {
  * @namespace
  */
 
-PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
+PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
 
-	function(logger, $state, ProfileModel, UserContextManager, ApiManager) {
+	function($q, logger, $state, ProfileModel, UserContextManager, ApiManager) {
 
 			return {
 
 			/**
 			 * Factory method that returns a new instance of the Profile Model
-			 * @param apiProfileObject
-			 * @param subjectiveObjectMeta
+			 * @param {Object} apiUserObject
+			 * @param {Object} subjectiveObjectMeta
 			 * @returns {Profile}
 			 */
 
@@ -922,17 +945,12 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					function User(apiProfileObject, subjectiveObjectMeta) {
 						this.profile = ProfileModel.construct(apiProfileObject, subjectiveObjectMeta);
 						this.subjectiveMeta = subjectiveObjectMeta;
-						this.input = {
-							fullName: this.fullName,
-							description: this.description,
-							gender: this.gender,
-							location: this.location,
-							website: this.website,
-							email: this.email,
-							phoneNumber: this.phoneNumber
-						};
 					}
 
+
+					/**
+					 * Follow / UnFollow a user
+					 */
 
 					User.prototype.follow = function() {
 
@@ -940,43 +958,126 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 
 						if(!userContext) {
 							$state.go('login');
-						} else if(this.subjectiveMeta.friendship.forward) {
-							this.subjectiveMeta.friendship.forward = false;
-							ApiManager.friendships('destroy', userContext, {});
+						} else if (this.subjectiveMeta.friendship.forward) {
+								this.subjectiveMeta.friendship.forward = false;
+								ApiManager.friendships('destroy', userContext, {});
 						} else {
-							this.subjectiveMeta.friendship.forward = true;
-							ApiManager.friendships('create', userContext, {});
+								this.subjectiveMeta.friendship.forward = true;
+								ApiManager.friendships('create', userContext, {});
 						}
 
 					};
+
+					/**
+					 * Demand a user
+					 */
 
 					User.prototype.demand = function() {
 
 						var userContext = UserContextManager.getActiveUserContext();
 
-						if(!userContext) {
+						if (!userContext) {
 							$state.go('login');
 						} else {
-							this.subjectiveMeta.demand.forward = true;
-							ApiManager.demands('create', userContext, {});
+								this.subjectiveMeta.demand.forward = true;
+								ApiManager.demands('create', userContext, {});
 						}
 
 					};
 
-					User.prototype.update = function() {
+					/**
+					 *
+					 * @param updatedProfile
+					 */
 
-						var userContext = UserContextManager.getActiveUserContext();
+					User.prototype.update = function(updatedProfile) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								updatingProfile = $q.defer();
+
 
 						if (userContext) {
-							ApiManager.users('update', userContext, this.input)
+							ApiManager.users('update', userContext, updatedProfile)
 								.then(function(apiResponse) {
-									return apiResponse.result;
-							});
+									defer.resolve(apiResponse.result);
+								})
+								.catch(function(apiResponse) {
+									defer.reject(apiResponse.result);
+								});
+						} else {
+							defer.reject('Please log in and try again');
 						}
+
+						return updatingProfile.promise;
+
+					};
+
+					User.prototype.resetPassword = function(password) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								resettingPassword = $q.defer();
+						ApiManager.users('resetPassword', userContext, password)
+							.then(function(apiResponse) {
+								resttingPassword.reject();
+							})
+							.reject(function(apiResponse) {
+								resettingPassword.reject();
+							});
+
+						return resettingPassword.promise;
 
 					};
 
 					return new User(apiUserObject, subjectiveObjectMeta);
+
+				},
+
+				/**
+				 * Class method for registering a new account with the API.
+				 * @returns {*}
+				 */
+
+				registerNewUserAccount : function(input) {
+
+					deletingAccount = $q.defer();
+
+					ApiManager.users('create', null, input)
+						.then(function(apiResponse) {
+							registeringAccount.resolve(apiResponse.result);
+						})
+						.catch(function() {
+							registeringAccount.resolve(apiResponse.result);
+						});
+
+					return registeringAccount.promise;
+
+				},
+
+				/**
+				 * Class method for deleting an account with the API
+				 * @returns {*}
+				 */
+
+				deleteUserAccount : function() {
+
+					var userContext = UserContextManager.getActiveUserContext(),
+							deletingAccount = $q.defer();
+
+					var params = {username: userContext.profile.username, user_id: userContext.userId};
+
+					if(userContext) {
+						ApiManager.users('destroy', userContext, params)
+							.then(function(apiResponse) {
+								deletingAccount.resolve(apiResponse.result);
+							})
+							.catch(function(apiResponse) {
+								deletingAccount.reject(apitResponse.result);
+							})
+					} else {
+						deletingAccount.reject('Please log in and try again');
+					}
+
+					return deletingAccount.promise;
 
 				}
 
@@ -1110,10 +1211,12 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					this.likes = [];
 					this.replies = [];
 
+				 //TODO: Extract this out of the videoCell Model
 					this.input = {
 						comment : ''
 					};
 
+				  //TODO: Move this subjective meta to the video model instead
 					this.subjectiveMeta = subjectiveMeta;
 
 					var embededResults = {
@@ -1123,7 +1226,8 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					};
 
 				 /**
-					* Loop through comment results, create  a new comment and add it to the comments array on the video cell
+					* Loop through comments likes and replies, creating a new instance of each and then adding it to the VideoCell
+					*
 					*/
 
 					for(var i = 0;  i < embededResults.comments.length; i++) {
@@ -1144,6 +1248,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 
 			 /**
 				* Either adds or removes a like depending on the user's current relationship with the video
+				* NOTE: Like create and destroy methods are stubbed intentionally
 				*/
 
 			 VideoCell.prototype.toggleLike = function() {
@@ -1179,6 +1284,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 				* Adds a comment to the video cell, and informs the API
 				*/
 
+			 //TODO: pass in the new comment input, since it is no longer an instance property
 			 VideoCell.prototype.addComment = function() {
 
 					var userContext = UserContextManager.getActiveUserContext(),
@@ -1222,7 +1328,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 								this.comments.splice(i, 1);
 							}
 						}
-					ApiManager.comments('destroy', userContext, {comment_id : comment._id});
+						ApiManager.comments('destroy', userContext, {comment_id : comment._id});
 				 }
 
 			 };
@@ -1619,15 +1725,15 @@ PUtilities.directive('registerElement', function() {
  *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'Profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'User',
 
-    function($scope, logger, Feed, Profile) {
+    function($scope, logger, Feed, User) {
 
-      logger.debug('PControllers.homeCtrl -- initializing Profile Data', Profile);
+      logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
       logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
       //Initialize Profile
-      $scope.Profile = Profile;
+      $scope.User = User;
 			$scope.Feed = Feed;
 
 			$scope.$watch(Feed);
@@ -1637,15 +1743,22 @@ PUtilities.directive('registerElement', function() {
   ]);
 
 /*
- * PControllers.loginCtrl
  * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope', function($scope) {
-      $scope.username = '';
-      $scope.password = '';
-  }]);
+  PControllers.controller('loginCtrl', ['$scope',
+
+		function($scope) {
+
+			$scope.input = {
+				username : '',
+				password : ''
+			};
+
+  	}
+
+	]);
 
 /**
  * PControllers.mainCtrl
@@ -1675,6 +1788,40 @@ PUtilities.directive('registerElement', function() {
     }
 
   ]);
+
+/*
+ * PControllers.loginCtrl
+ * Application Manager handles all login functionality
+ * 	@dependency $scope {Angular}
+ */
+
+	PControllers.controller('registerCtrl', ['$scope', 'UserModel', function($scope, UserModel) {
+
+		$scope.input = {
+			username: '',
+			password: '',
+			verifyPassword: '',
+			email: ''
+		};
+
+		$scope.feedback = {
+			error : {
+				missingUsername: 'Your username is required',
+				invalidUsername: 'Username must be between 1 and 20 characters'
+			}
+		};
+
+		$scope.accountSuccessfullyRegistered = false;
+
+		$scope.UserModel = UserModel;
+
+		$scope.submit = function(input) {
+			console.log($scope.registerForm.email.$valid);
+		};
+
+
+
+	}]);
 
  /*
   * PControllers.splashController
@@ -1712,15 +1859,15 @@ PUtilities.directive('registerElement', function() {
  *   @dependency Profile <Object>
  */
 
-PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'Profile',
+PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'User',
 
-	function($scope, logger, Feed, Profile) {
+	function($scope, logger, Feed, User) {
 
-		logger.debug('PControllers.homeCtrl -- initializing Profile Data', Profile);
+		logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
 		logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
 		//Initialize Profile
-		$scope.Profile = Profile;
+		$scope.User = User;
 		$scope.Feed = Feed;
 
 		$scope.$watch(Feed);
@@ -1729,6 +1876,20 @@ PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'Profile',
 
 ]);
 
+
+
+	PDirectives.directive('matchPasswords', function() {
+		return {
+			require: 'ngModel',
+			link: function(scope, element, attrs, ngModel) {
+				scope.$watch('input.confirmPassword', function(newValue, oldValue) {
+					 if(newValue == scope.input.password) {
+						 ngModel.$setValidity('matchPasswords', true)
+					 } else ngModel.$setValidity('matchPasswords', false);
+				});
+			}
+		}
+	});
 
 PDirectives.directive('pEnter', function() {
 	return function (scope, element, attrs) {

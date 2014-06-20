@@ -49,10 +49,10 @@
 
     function($stateProvider, $locationProvider, localStorageServiceProvider) {
 
-    /**
-     * Enable client side routing by enabling the html5 history API
-     * Removes the '#' from url's
-     */
+     /**
+      * Enable client side routing by enabling the html5 history API
+      * Removes the '#' from url's
+      */
 
      $locationProvider.html5Mode(true);
 
@@ -66,14 +66,13 @@
 
       localStorageServiceProvider.setStorageType('sessionStorage');
 
-     /**
-      * Configure Application states using ui router
-      * State data -- sets properties of the ApplicationManager
-      * @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
-      * @property navbarEnabled <Boolean> -- When true navigation bar is visible
-      * @property requireUserContext <Boolean> -- When true user context is required to access state
-      */
-
+		  /**
+		 	 * Configure Application states using ui router
+			 * State data -- sets properties of the ApplicationManager
+			 * @property fullscreenEnabled <Boolean> -- When true state is full screen (i.e doens't scroll)
+			 * @property navbarEnabled <Boolean> -- When true navigation bar is visible
+			 * @property requireUserContext <Boolean> -- When true user context is required to access state
+			 */
 
       $stateProvider
 
@@ -99,6 +98,17 @@
           }
         })
 
+				.state('register', {
+					url: '/register',
+					templateUrl: 'views/register',
+					controller: 'registerCtrl',
+					metaData: {
+						fullscreenEnabled: true,
+						navbarEnabled: false,
+						requireUserContext: false
+					}
+				})
+
 				.state('discover', {
 					url: '/discover',
 					templateUrl: 'views/discover',
@@ -110,6 +120,7 @@
 					},
 					resolve: {
 						Feed : function(FeedLoader) {
+							/** FeedLoader.preLoad(type, requiresUserContext) **/
 							return FeedLoader.preLoad('discover', false);
 						}
 					}
@@ -125,29 +136,33 @@
             requireUserContext: true
           },
           resolve: {
-            Profile  : function(UserLoader) {
-             	return UserLoader.preLoad('showMe', true);
+            User: function(UserLoader) {
+							/** UserLoader.preLoad(type, requiresUserContext) **/
+							return UserLoader.preLoad('showMe', true);
             },
-            Feed : function(FeedLoader) {
-              return FeedLoader.preLoad('home', true);
+            Feed: function(FeedLoader) {
+							/** FeedLoader.preLoad(type, requiresUserContext) **/
+							return FeedLoader.preLoad('home', true);
             }
           }
         })
 
 				.state('user', {
 					url: '/:user',
-					templateUrl: 'views/home',
+					templateUrl: 'views/user',
 					controller: 'userCtrl',
 					metaData: {
 						fullscreenEnabled: true,
 						navbarEnabled: true,
 						requireUserContext: false
 					},
-					resolve : {
-						Profile : function(UserLoader, $stateParams) {
+					resolve: {
+						User: function(UserLoader, $stateParams) {
+							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
 							return UserLoader.preLoad('show', false, $stateParams.user);
 						},
-						Feed : function(FeedLoader, $stateParams) {
+						Feed: function(FeedLoader, $stateParams) {
+							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
 							return FeedLoader.preLoad('user', false, $stateParams.user);
 						}
 					}

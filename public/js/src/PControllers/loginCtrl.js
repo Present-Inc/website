@@ -1,10 +1,17 @@
 /*
- * PControllers.loginCtrl
  * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope', function($scope) {
-      $scope.username = '';
-      $scope.password = '';
-  }]);
+  PControllers.controller('loginCtrl', ['$scope',
+
+		function($scope) {
+
+			$scope.input = {
+				username : '',
+				password : ''
+			};
+
+  	}
+
+	]);

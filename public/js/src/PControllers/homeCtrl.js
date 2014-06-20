@@ -8,15 +8,15 @@
  *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'Profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'User',
 
-    function($scope, logger, Feed, Profile) {
+    function($scope, logger, Feed, User) {
 
-      logger.debug('PControllers.homeCtrl -- initializing Profile Data', Profile);
+      logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
       logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
       //Initialize Profile
-      $scope.Profile = Profile;
+      $scope.User = User;
 			$scope.Feed = Feed;
 
 			$scope.$watch(Feed);

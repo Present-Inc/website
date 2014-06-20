@@ -13,21 +13,21 @@
 			email: ''
 		};
 
+		$scope.feedback = {
+			error : {
+				missingUsername: 'Your username is required',
+				invalidUsername: 'Username must be between 1 and 20 characters'
+			}
+		};
+
 		$scope.accountSuccessfullyRegistered = false;
 
+		$scope.UserModel = UserModel;
+
 		$scope.submit = function(input) {
-			console.log(input);
-			/**
-			UserModel.registerNewUserAccount(input)
-				.then(function() {
-					$scope.accountSuccessfullyCreated = true;
-				})
-				.catch(function(msg) {
-					//TODO: better user feedback
-					alert(msg);
-				});
-			 **/
+			console.log($scope.registerForm.email.$valid);
 		};
+
 
 
 	}]);

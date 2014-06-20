@@ -42,10 +42,12 @@
 					this.likes = [];
 					this.replies = [];
 
+				 //TODO: Extract this out of the videoCell Model
 					this.input = {
 						comment : ''
 					};
 
+				  //TODO: Move this subjective meta to the video model instead
 					this.subjectiveMeta = subjectiveMeta;
 
 					var embededResults = {
@@ -55,7 +57,8 @@
 					};
 
 				 /**
-					* Loop through comment results, create  a new comment and add it to the comments array on the video cell
+					* Loop through comments likes and replies, creating a new instance of each and then adding it to the VideoCell
+					*
 					*/
 
 					for(var i = 0;  i < embededResults.comments.length; i++) {
@@ -76,6 +79,7 @@
 
 			 /**
 				* Either adds or removes a like depending on the user's current relationship with the video
+				* NOTE: Like create and destroy methods are stubbed intentionally
 				*/
 
 			 VideoCell.prototype.toggleLike = function() {
@@ -111,6 +115,7 @@
 				* Adds a comment to the video cell, and informs the API
 				*/
 
+			 //TODO: pass in the new comment input, since it is no longer an instance property
 			 VideoCell.prototype.addComment = function() {
 
 					var userContext = UserContextManager.getActiveUserContext(),
@@ -154,7 +159,7 @@
 								this.comments.splice(i, 1);
 							}
 						}
-					ApiManager.comments('destroy', userContext, {comment_id : comment._id});
+						ApiManager.comments('destroy', userContext, {comment_id : comment._id});
 				 }
 
 			 };

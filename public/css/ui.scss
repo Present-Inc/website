@@ -61,3 +61,18 @@ input {
   border: solid 1px $light-grey;
   font-weight: 400;
 }
+
+input.ng-invalid {
+  border: 1px solid red;
+}
+
+input.ng-valid {
+  border: 1px solid green;
+}
+
+input.ng-pristine {
+  border: solid 1px $light-grey;
+}
+
+
+

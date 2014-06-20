@@ -30,15 +30,15 @@
  *   @dependency Profile <Object>
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'Profile',
+  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'User',
 
-    function($scope, logger, Feed, Profile) {
+    function($scope, logger, Feed, User) {
 
-      logger.debug('PControllers.homeCtrl -- initializing Profile Data', Profile);
+      logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
       logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
       //Initialize Profile
-      $scope.Profile = Profile;
+      $scope.User = User;
 			$scope.Feed = Feed;
 
 			$scope.$watch(Feed);
@@ -48,15 +48,22 @@
   ]);
 
 /*
- * PControllers.loginCtrl
  * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope', function($scope) {
-      $scope.username = '';
-      $scope.password = '';
-  }]);
+  PControllers.controller('loginCtrl', ['$scope',
+
+		function($scope) {
+
+			$scope.input = {
+				username : '',
+				password : ''
+			};
+
+  	}
+
+	]);
 
 /**
  * PControllers.mainCtrl
@@ -86,6 +93,40 @@
     }
 
   ]);
+
+/*
+ * PControllers.loginCtrl
+ * Application Manager handles all login functionality
+ * 	@dependency $scope {Angular}
+ */
+
+	PControllers.controller('registerCtrl', ['$scope', 'UserModel', function($scope, UserModel) {
+
+		$scope.input = {
+			username: '',
+			password: '',
+			verifyPassword: '',
+			email: ''
+		};
+
+		$scope.feedback = {
+			error : {
+				missingUsername: 'Your username is required',
+				invalidUsername: 'Username must be between 1 and 20 characters'
+			}
+		};
+
+		$scope.accountSuccessfullyRegistered = false;
+
+		$scope.UserModel = UserModel;
+
+		$scope.submit = function(input) {
+			console.log($scope.registerForm.email.$valid);
+		};
+
+
+
+	}]);
 
  /*
   * PControllers.splashController
@@ -123,15 +164,15 @@
  *   @dependency Profile <Object>
  */
 
-PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'Profile',
+PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'User',
 
-	function($scope, logger, Feed, Profile) {
+	function($scope, logger, Feed, User) {
 
-		logger.debug('PControllers.homeCtrl -- initializing Profile Data', Profile);
+		logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
 		logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
 		//Initialize Profile
-		$scope.Profile = Profile;
+		$scope.User = User;
 		$scope.Feed = Feed;
 
 		$scope.$watch(Feed);

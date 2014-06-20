@@ -16,7 +16,7 @@ body, html { width: 100%; }
 
 body { font-family: 'PresentFT', sans-serif; font-weight: 400; color: #47525d; font-size: 13px; background-color: #eff1f2; }
 
-.fullscreen { height: 100%; }
+.fullscreen { height: 100%; overflow: auto; }
 
 /* Typography
 =================================== */
@@ -32,12 +32,18 @@ h1 { font-weight: 100; font-size: 42px; color: #47525d; }
 
 .secondaryBtn:hover { background-color: rgba(165, 102, 255, 0.1); }
 
-.defaultFeed, #discover .feed, #home .feed { width: 480px; margin: 0 auto; padding: 20px; background-color: #FFF; border: solid 1px #CCC; }
-@media (max-width: 520px) { .defaultFeed, #discover .feed, #home .feed { width: 100%; padding: 0%; } }
+.defaultFeed, #discover .feed, #home .feed, #user .feed { width: 480px; margin: 0 auto; padding: 20px; background-color: #FFF; border: solid 1px #CCC; }
+@media (max-width: 520px) { .defaultFeed, #discover .feed, #home .feed, #user .feed { width: 100%; padding: 0%; } }
 
 /* Forms
 =================================*/
 input { display: block; width: 80%; padding: 10px; margin: 10px 0px; border: solid 1px #eff1f2; font-weight: 400; }
+
+input.ng-invalid { border: 1px solid red; }
+
+input.ng-valid { border: 1px solid green; }
+
+input.ng-pristine { border: solid 1px #eff1f2; }
 
 nav { width: 100%; position: fixed; height: auto; }
 
@@ -90,11 +96,18 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 #login button { margin: 10px 0px 0px 0px; }
 #login .formContainer { width: 60%; margin: 0 auto; }
 
+#register { text-align: center; width: 50%; margin: 200px auto 0px auto; }
+
+#register input { margin: 10px auto; }
+#register button { margin: 10px 0px 0px 0px; }
+#register form { width: 60%; margin: 0 auto; }
+
 /* splash.scss Styles for splash view */
-#splash { width: 100%; height: 100%; background-image: url(/assets/img/main-bg.jpg); background-position: right; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
+#splash { width: 100%; height: 100%; }
 
 #splash .content { width: 960px; margin: 0px auto; padding: 60px 0px 0px 0px; text-align: center; }
 @media (max-width: 960px) { #splash .content { overflow: auto; height: auto; width: 100%; } }
+#splash button { display: block; margin: 10px auto; width: 120px; height: 35px; }
 
 #discover { width: 960px; margin: 0 auto; padding: 80px 0px 20px 0px; text-align: center; }
 @media (max-width: 960px) { #discover { width: 100%; } }
@@ -109,4 +122,14 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 #home .profile .fullName { font-size: 22px; font-weight: bold; }
 #home .profile .counts { margin: 10px auto 5px auto; }
 #home .profile .counts span { margin: 0px 5px; }
-#home .loadMoreVidoes { display: block; margin: 0 auto; }
+#home .loadMoreVideos { display: block; margin: 0 auto; }
+
+#user { width: 960px; margin: 0 auto; padding: 100px 0px 20px 0px; text-align: center; }
+@media (max-width: 960px) { #user { width: 100%; } }
+
+#user .profile { width: 280px; margin: 0px auto 25px auto; padding: 20px; overflow: auto; font-size: 16px; }
+#user .profile .profilePicture { margin: 0px auto 10px auto; background-color: #FFF; border: solid 1px #CCC; padding: 1px; }
+#user .profile .fullName { font-size: 22px; font-weight: bold; }
+#user .profile .counts { margin: 10px auto 5px auto; }
+#user .profile .counts span { margin: 0px 5px; }
+#user .loadMoreVideos { display: block; margin: 0 auto; }

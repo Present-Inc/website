@@ -6,6 +6,7 @@ PModels.factory('ProfileModel', function() {
 		construct : function(apiProfileObject) {
 
 			function Profile(apiProfileObject) {
+
 				this._id = apiProfileObject._id;
 				this.username = apiProfileObject.username;
 				this.fullName = apiProfileObject.profile.fullName || '';
@@ -23,6 +24,7 @@ PModels.factory('ProfileModel', function() {
 
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
+
 			}
 
 			return new Profile(apiProfileObject);

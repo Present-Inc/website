@@ -1,12 +1,75 @@
 <div id="register">
-    <h2>Create A New Account</h2>
-    <form id="registerForm" novalidate>
-        <div class="formComponent">
-        <input type="text" ng-model="input.username" placeholder="Username"/>
+    <form name="registerForm" ng-hide="accountSuccessfullyRegistered" novalidate>
 
+        <h2>Create A New Account</h2>
+
+        <div class="formComponent">
+            <input type="text"
+                   name="username"
+                   ng-model="input.username"
+                   ng-maxlength=20
+                   placeholder="Username"
+                   required/>
+            <div class="error" ng-show="registerForm.username.$dirty && registerForm.username.$invalid">
+              <small class="error"
+                     ng-show="registerForm.username.$error.required"
+                     ng-bind="feedback.error.missingUsername">
+              </small>
+              <small class="error"
+                     ng-show="registerForm.username.$error.minlength || registerForm.username.$error.maxlength"
+                     ng-bind="feedback.error.invalidUsername">
+              </small>
+            </div>
         </div>
-        <input type="password" ng-model="input.password" placeholder="Password"/>
-        <input type="password" ng-model="input.confirmPassword" placeholder="Confirm password"
-        <button class="mainBtn" ng-click="UserSession.login(username, password)">Login</button>
+
+        <div class="formComponent">
+            <input type="password"
+                   name="password"
+                   ng-model="input.password"
+                   placeholder="Password"
+                   required/>
+            <div class="error" ng-show="registerForm.password.$dirty && registerForm.password.$invalid">
+                <small class="error"
+                       ng-show="registerForm.password.$error"
+                       ng-bind="feedback.error.invalidPassword">
+                </small>
+            </div>
+        </div>
+
+
+        <div class="formComponent">
+
+        <input type="password"
+               name="confirmPassword"
+               ng-model="input.confirmPassword"
+               placeholder="Confirm password"
+               match-passwords
+               required/>
+            <div class="error" ng-show="registerForm.password.$dirty && registerForm.password.$invalid">
+                <small class="error"
+                       ng-show="registerForm.password.$error"
+                       ng-bind="feedback.error.invalidPassword">
+                </small>
+            </div>
+        </div>
+
+        <div class="formComponent">
+            <input type="email"
+                   name="email"
+                   ng-model="input.model"
+                   placeholder="Email Address"
+                   required/>
+            <div class="error" ng-show="registerForm.email.$dirty && registerForm.email.$invalid">
+                <small class="error"
+                       ng-show="registerForm.email.$error"
+                       ng-bind="feedback.error.invalidEmail">
+                </small>
+            </div>
+        </div>
+        <button class="mainBtn" ng-click="submit()">Create</button>
+
     </form>
+    <div class="downloadApp" ng-show="accountSuccessfullyRegistered">
+        <h2>Your account has been created!</h2>
+    </div>
 </div>

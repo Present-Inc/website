@@ -3,6 +3,8 @@
  * @namespace
  */
 
+
+
 	PModels.factory('CommentModel', function() {
 		return{
 
@@ -428,6 +430,7 @@ PModels.factory('ProfileModel', function() {
 		construct : function(apiProfileObject) {
 
 			function Profile(apiProfileObject) {
+
 				this._id = apiProfileObject._id;
 				this.username = apiProfileObject.username;
 				this.fullName = apiProfileObject.profile.fullName || '';
@@ -445,6 +448,7 @@ PModels.factory('ProfileModel', function() {
 
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
+
 			}
 
 			return new Profile(apiProfileObject);
@@ -460,15 +464,15 @@ PModels.factory('ProfileModel', function() {
 
 PModels.factory('ReplyModel', function() {
 	return {
-		construct: function(apiLikesObject) {
+		construct: function(apiReplyObject) {
 
-			function Reply(apiLikeObject) {
-				this._id = apiLikeObject._id;
-				this.sourceUser = apiLikeObject.sourceUser;
-				this.targetVideo = apiLikeObject.targetVideo;
+			function Reply(apiReplyObject) {
+				this._id = apiReplyObject._id;
+				this.sourceUser = apiReplyObject.sourceUser;
+				this.targetVideo = apiReplyObject.targetVideo;
 			}
 
-			return new Reply(apiLikeObject);
+			return new Reply(apiReplyObject);
 
 		}
 	}
@@ -532,16 +536,16 @@ PModels.factory('ReplyModel', function() {
  * @namespace
  */
 
-PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
+PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
 
-	function(logger, $state, ProfileModel, UserContextManager, ApiManager) {
+	function($q, logger, $state, ProfileModel, UserContextManager, ApiManager) {
 
 			return {
 
 			/**
 			 * Factory method that returns a new instance of the Profile Model
-			 * @param apiProfileObject
-			 * @param subjectiveObjectMeta
+			 * @param {Object} apiUserObject
+			 * @param {Object} subjectiveObjectMeta
 			 * @returns {Profile}
 			 */
 
@@ -556,17 +560,12 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					function User(apiProfileObject, subjectiveObjectMeta) {
 						this.profile = ProfileModel.construct(apiProfileObject, subjectiveObjectMeta);
 						this.subjectiveMeta = subjectiveObjectMeta;
-						this.input = {
-							fullName: this.fullName,
-							description: this.description,
-							gender: this.gender,
-							location: this.location,
-							website: this.website,
-							email: this.email,
-							phoneNumber: this.phoneNumber
-						};
 					}
 
+
+					/**
+					 * Follow / UnFollow a user
+					 */
 
 					User.prototype.follow = function() {
 
@@ -574,43 +573,126 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 
 						if(!userContext) {
 							$state.go('login');
-						} else if(this.subjectiveMeta.friendship.forward) {
-							this.subjectiveMeta.friendship.forward = false;
-							ApiManager.friendships('destroy', userContext, {});
+						} else if (this.subjectiveMeta.friendship.forward) {
+								this.subjectiveMeta.friendship.forward = false;
+								ApiManager.friendships('destroy', userContext, {});
 						} else {
-							this.subjectiveMeta.friendship.forward = true;
-							ApiManager.friendships('create', userContext, {});
+								this.subjectiveMeta.friendship.forward = true;
+								ApiManager.friendships('create', userContext, {});
 						}
 
 					};
+
+					/**
+					 * Demand a user
+					 */
 
 					User.prototype.demand = function() {
 
 						var userContext = UserContextManager.getActiveUserContext();
 
-						if(!userContext) {
+						if (!userContext) {
 							$state.go('login');
 						} else {
-							this.subjectiveMeta.demand.forward = true;
-							ApiManager.demands('create', userContext, {});
+								this.subjectiveMeta.demand.forward = true;
+								ApiManager.demands('create', userContext, {});
 						}
 
 					};
 
-					User.prototype.update = function() {
+					/**
+					 *
+					 * @param updatedProfile
+					 */
 
-						var userContext = UserContextManager.getActiveUserContext();
+					User.prototype.update = function(updatedProfile) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								updatingProfile = $q.defer();
+
 
 						if (userContext) {
-							ApiManager.users('update', userContext, this.input)
+							ApiManager.users('update', userContext, updatedProfile)
 								.then(function(apiResponse) {
-									return apiResponse.result;
-							});
+									defer.resolve(apiResponse.result);
+								})
+								.catch(function(apiResponse) {
+									defer.reject(apiResponse.result);
+								});
+						} else {
+							defer.reject('Please log in and try again');
 						}
+
+						return updatingProfile.promise;
+
+					};
+
+					User.prototype.resetPassword = function(password) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								resettingPassword = $q.defer();
+						ApiManager.users('resetPassword', userContext, password)
+							.then(function(apiResponse) {
+								resttingPassword.reject();
+							})
+							.reject(function(apiResponse) {
+								resettingPassword.reject();
+							});
+
+						return resettingPassword.promise;
 
 					};
 
 					return new User(apiUserObject, subjectiveObjectMeta);
+
+				},
+
+				/**
+				 * Class method for registering a new account with the API.
+				 * @returns {*}
+				 */
+
+				registerNewUserAccount : function(input) {
+
+					deletingAccount = $q.defer();
+
+					ApiManager.users('create', null, input)
+						.then(function(apiResponse) {
+							registeringAccount.resolve(apiResponse.result);
+						})
+						.catch(function() {
+							registeringAccount.resolve(apiResponse.result);
+						});
+
+					return registeringAccount.promise;
+
+				},
+
+				/**
+				 * Class method for deleting an account with the API
+				 * @returns {*}
+				 */
+
+				deleteUserAccount : function() {
+
+					var userContext = UserContextManager.getActiveUserContext(),
+							deletingAccount = $q.defer();
+
+					var params = {username: userContext.profile.username, user_id: userContext.userId};
+
+					if(userContext) {
+						ApiManager.users('destroy', userContext, params)
+							.then(function(apiResponse) {
+								deletingAccount.resolve(apiResponse.result);
+							})
+							.catch(function(apiResponse) {
+								deletingAccount.reject(apitResponse.result);
+							})
+					} else {
+						deletingAccount.reject('Please log in and try again');
+					}
+
+					return deletingAccount.promise;
 
 				}
 
@@ -744,10 +826,12 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					this.likes = [];
 					this.replies = [];
 
+				 //TODO: Extract this out of the videoCell Model
 					this.input = {
 						comment : ''
 					};
 
+				  //TODO: Move this subjective meta to the video model instead
 					this.subjectiveMeta = subjectiveMeta;
 
 					var embededResults = {
@@ -757,7 +841,8 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 					};
 
 				 /**
-					* Loop through comment results, create  a new comment and add it to the comments array on the video cell
+					* Loop through comments likes and replies, creating a new instance of each and then adding it to the VideoCell
+					*
 					*/
 
 					for(var i = 0;  i < embededResults.comments.length; i++) {
@@ -778,6 +863,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 
 			 /**
 				* Either adds or removes a like depending on the user's current relationship with the video
+				* NOTE: Like create and destroy methods are stubbed intentionally
 				*/
 
 			 VideoCell.prototype.toggleLike = function() {
@@ -813,6 +899,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 				* Adds a comment to the video cell, and informs the API
 				*/
 
+			 //TODO: pass in the new comment input, since it is no longer an instance property
 			 VideoCell.prototype.addComment = function() {
 
 					var userContext = UserContextManager.getActiveUserContext(),
@@ -856,7 +943,7 @@ PModels.factory('UserModel', ['logger', '$state', 'ProfileModel', 'UserContextMa
 								this.comments.splice(i, 1);
 							}
 						}
-					ApiManager.comments('destroy', userContext, {comment_id : comment._id});
+						ApiManager.comments('destroy', userContext, {comment_id : comment._id});
 				 }
 
 			 };
