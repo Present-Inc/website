@@ -1,0 +1,12 @@
+<div id="register">
+    <h2>Create A New Account</h2>
+    <form id="registerForm" novalidate>
+        <div class="formComponent">
+        <input type="text" ng-model="input.username" placeholder="Username"/>
+
+        </div>
+        <input type="password" ng-model="input.password" placeholder="Password"/>
+        <input type="password" ng-model="input.confirmPassword" placeholder="Confirm password"
+        <button class="mainBtn" ng-click="UserSession.login(username, password)">Login</button>
+    </form>
+</div>
