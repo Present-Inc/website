@@ -1,0 +1,52 @@
+.accountInput {
+  margin: 10px auto;
+}
+
+.accountButton {
+  width: 60%;
+  margin: 10px 0px 0px 0px;
+}
+
+
+/** LOGIN **/
+
+#login {
+  padding: 160px;
+  text-align: center;
+}
+
+#login {
+  input { @extend .accountInput;}
+  button { @extend .accountButton;}
+}
+
+
+/** REGISTER **/
+
+#register {
+  padding: 120px;
+  text-align: center;
+}
+
+#register {
+  input { @extend .accountInput;}
+  button { @extend .accountButton;}
+}
+
+#editProfile {
+  padding: 160px;
+}
+
+
+#editProfile {
+
+  input { @extend .accountInput;}
+  button { @extend .accountButton;}
+
+  .profilePicture {
+    display: block;
+    margin: 20px auto;
+    height: 100px;
+  }
+
+}

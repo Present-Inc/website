@@ -79,94 +79,147 @@
         .state('splash', {
           url: '/',
           templateUrl: 'views/splash',
-          controller: 'splashCtrl',
-          metaData: {
-            fullscreenEnabled: true,
-            navbarEnabled: false,
-            requireUserContext: false
-          }
+          controller: 'SplashController',
+          meta: {availability: 'public'}
         })
-
-        .state('login', {
-          url: '/login',
-          templateUrl: 'views/login',
-          controller: 'loginCtrl',
-          metaData: {
-            fullscreenEnabled: true,
-            navbarEnabled: false,
-            requireUserContext: false
-          }
-        })
-
-				.state('register', {
-					url: '/register',
-					templateUrl: 'views/register',
-					controller: 'registerCtrl',
-					metaData: {
-						fullscreenEnabled: true,
-						navbarEnabled: false,
-						requireUserContext: false
-					}
-				})
 
 				.state('discover', {
-					url: '/discover',
-					templateUrl: 'views/discover',
-					controller: 'discoverCtrl',
-					metaData: {
-						fullscreenEnabled: false,
-						navbarEnabled: true,
-						requireUserContext: false
-					},
-					resolve: {
-						Feed : function(FeedLoader) {
-							/** FeedLoader.preLoad(type, requiresUserContext) **/
-							return FeedLoader.preLoad('discover', false);
-						}
-					}
+					abstract: true,
+					templateUrl: 'views/discover'
 				})
 
-        .state('home', {
-          url: '/home',
-          templateUrl: 'views/home',
-          controller: 'homeCtrl',
-          metaData: {
-            fullscreenEnabled: false,
-            navbarEnabled: true,
-            requireUserContext: true
-          },
-          resolve: {
-            User: function(UserLoader) {
-							/** UserLoader.preLoad(type, requiresUserContext) **/
-							return UserLoader.preLoad('showMe', true);
-            },
-            Feed: function(FeedLoader) {
-							/** FeedLoader.preLoad(type, requiresUserContext) **/
-							return FeedLoader.preLoad('home', true);
-            }
-          }
-        })
-
-				.state('user', {
-					url: '/:user',
-					templateUrl: 'views/user',
-					controller: 'userCtrl',
-					metaData: {
-						fullscreenEnabled: true,
-						navbarEnabled: true,
-						requireUserContext: false
+				.state('discover.default', {
+					url: '/discover',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@discover': {templateUrl: 'views/partials/feed', controller: 'FeedController'}
 					},
 					resolve: {
-						User: function(UserLoader, $stateParams) {
-							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
-							return UserLoader.preLoad('show', false, $stateParams.user);
-						},
-						Feed: function(FeedLoader, $stateParams) {
-							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
-							return FeedLoader.preLoad('user', false, $stateParams.user);
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('discover', false);
 						}
-					}
-				});
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('present', {
+					url: '/p/:video',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('home', {
+					abstract: true,
+					templateUrl: 'views/home'
+				})
+
+				.state('home.default', {
+					url: '/home',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
+						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('home', true)
+						},
+						User: function(UserLoader) {
+							return UserLoader.preLoad('showMe', true)
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
+				.state('home.group', {
+					url: '/home/:group',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
+						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('home', true)
+						},
+						User: function(UserLoader) {
+							return UserLoader.preLoad('showMe', true)
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
+				.state('user', {
+					abstract: true,
+					templateUrl: 'views/user'
+				})
+
+				.state('user.profile', {
+					url: '/:user',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'profile@user': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'},
+						'feed@user': {templateUrl: 'views/partials/feed', controller: 'FeedController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader, $stateParams) {
+							return FeedLoader.preLoad('user', false, $stateParams.user)
+						},
+						User: function(UserLoader, $stateParams) {
+							return UserLoader.preLoad('show', false, $stateParams.user)
+						}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account', {
+					abstract: true,
+					templateUrl: 'views/account'
+				})
+
+				.state('account.login', {
+					url: '/account/login',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'login@account' : {templateUrl:  'views/partials/login', controller: 'LoginController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.register', {
+					url: '/account/register',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'register@account' : {templateUrl:  'views/partials/register', controller: 'RegisterController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.resetPassword', {
+					url: '/account/reset_password',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'register@account' : {templateUrl:  '<h1>Reset Password</h1>'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.edit', {
+					url: '/account/edit',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'edit@account': {templateUrl: 'views/partials/editProfile', controller: 'EditProfileController'}
+					},
+					resolve: {
+						User : function(UserLoader) {
+							return UserLoader.preLoad('showMe', false);
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
 
   }]);
 

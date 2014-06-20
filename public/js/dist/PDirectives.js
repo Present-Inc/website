@@ -25,18 +25,6 @@ PDirectives.directive('pEnter', function() {
 		});
 	};
 });
-/*
- * PDirectives.feedDirective
- * HTML Directive for the video feed
- */
-
-  PDirectives.directive('pFeed', [function() {
-    return {
-      restrict: 'EA',
-      templateUrl: 'views/partials/feed'
-    }
-  }]);
-
 /**
  * PDirectives.navbarDirective
  * HTML Directive for the main Navbar

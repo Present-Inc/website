@@ -6,7 +6,7 @@
 -->
 
 <!DOCTYPE html>
-<html ng-app="PresentWebApp" class="fullscreen">
+<html ng-app="PresentWebApp">
 
 <head>
     <meta charset="utf-8">
@@ -18,16 +18,12 @@
 
 <body ng-controller="mainCtrl" class="fullscreen">
 
-    <nav p-navbar></nav>
-
-    <div ui-view class="fullscreen">
-        <!--INJECTED TEMPLATES GO HERE -->
-    </div>
+    <div ui-view="navbar"></div>
+    <div ui-view></div>
 
     <!--Load Dependencies -->
     <script src="js/lib/angular/angular.js"></script>
     <script src="js/lib/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="js/lib/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="js/lib/angular-local-storage/angular-local-storage.js"></script>
 
     <!-- Load Application -->

@@ -4,7 +4,7 @@
  * 	@dependency $scope {Angular}
  */
 
-	PControllers.controller('registerCtrl', ['$scope', 'UserModel', function($scope, UserModel) {
+	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
 		$scope.input = {
 			username: '',

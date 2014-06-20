@@ -56,11 +56,6 @@
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'})
 			});
 
-			it('should enable the navigation when the toState has navigation enabled', function() {
-				Navbar.configure(toState);
-				expect(Navbar.isEnabled).toBe(true);
-			});
-
 			it('should set the mode.loggedIn to true when there is a valid user context', function() {
 				Navbar.configure(toState);
 				expect(Navbar.mode.loggedIn).toBe(true);

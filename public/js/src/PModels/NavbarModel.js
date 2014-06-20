@@ -43,8 +43,6 @@ PModels.factory('NavbarModel', ['$q',
 						loggedIn : false
 					};
 
-					this.isEnabled = false;
-
 					this.hub = {
 						username : '',
 						profilePicture : ''
@@ -69,9 +67,6 @@ PModels.factory('NavbarModel', ['$q',
 				Navbar.prototype.configure = function(toState) {
 
 					var userContext = UserContextManager.getActiveUserContext();
-
-					if (toState.metaData.navbarEnabled) this.isEnabled = true;
-					else this.isEnabled = false;
 
 					if (userContext) this.mode.loggedIn = true;
 					else this.mode.loggedIn = false;

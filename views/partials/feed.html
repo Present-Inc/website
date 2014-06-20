@@ -1,55 +1,58 @@
-<div ng-repeat="videoCell in Feed.videoCells">
+<div class="feed">
+    <div ng-repeat="videoCell in Feed.videoCells">
 
-  <!-- videoCell -->
-  <div p-video-cell class="videoCell">
-    <!-- videoPlayer -->
-    <div class="videoPlayer">
-      <span class="videoLocation"></span>
-      <img class="still" ng-src="{{videoCell.video.media.still}}" />
-      <div class="jwplayer"></div>
-    </div>
-    <!-- end videoPlayer -->
-
-    <!-- videoMetaData -->
-    <div class="videoMetaData">
-
-      <div class="timeAgo" ng-bind="videoCell.video.timeAgo"></div>
-
-      <!-- creator -->
-      <div class="creator">
-        <img class="profilePicture" ng-src="{{videoCell.video.creator.profilePicture}}" height="70px" width="70px"/>
-        <div class="displayName" ng-bind="videoCell.video.creator.displayName"></div>
-        <div class="altName" ng-bind="videoCell.video.creator.altName"></div>
-        <div class="title" ng-bind="videoCell.video.creator.title"></div>
-      </div>
-      <!-- end creator -->
-
-      <!-- counts -->
-      <div class="counts">
-        <label class="repliesLabel">Replies: </label>
-        <div class="replies" ng-bind="videoCell.video.counts.replies"></div>
-        <label class="likesLabel" register-element="likesElem" ng-click="videoCell.toggleLike()">Likes: </label>
-        <div class="likes" ng-bind="videoCell.video.counts.likes"></div>
-        <label class="commentsLabel">Comments: </label>
-        <div class="comments" ng-bind="videoCell.video.counts.comments"></div>
-      </div>
-      <!-- end counts -->
-
-      <!-- commentsPreview -->
-      <div class="commentsPreview">
-        <div ng-repeat="comment in videoCell.comments">
-          <img class="commentProfilePicture" ng-src="{{comment.sourceUser.profilePicture}}" />
-          <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
-          <div class="commentBody" ng-bind="comment.body" ng-click="videoCell.removeComment(comment)"></div>
+      <!-- videoCell -->
+      <div p-video-cell class="videoCell">
+        <!-- videoPlayer -->
+        <div class="videoPlayer">
+          <span class="videoLocation"></span>
+          <img class="still" ng-src="{{videoCell.video.media.still}}" />
+          <div class="jwplayer"></div>
         </div>
-        <input class="commentInput" type="text" ng-model="videoCell.input.comment" p-enter="videoCell.addComment()"/>
-        <button class="mainBtn" ng-click="videoCell.addComment()">Add Comment</button>
+        <!-- end videoPlayer -->
+
+        <!-- videoMetaData -->
+        <div class="videoMetaData">
+
+          <div class="timeAgo" ng-bind="videoCell.video.timeAgo"></div>
+
+          <!-- creator -->
+          <div class="creator">
+            <img class="profilePicture" ng-src="{{videoCell.video.creator.profilePicture}}" height="70px" width="70px"/>
+            <div class="displayName" ng-bind="videoCell.video.creator.displayName"></div>
+            <div class="altName" ng-bind="videoCell.video.creator.altName"></div>
+            <div class="title" ng-bind="videoCell.video.creator.title"></div>
+          </div>
+          <!-- end creator -->
+
+          <!-- counts -->
+          <div class="counts">
+            <label class="repliesLabel">Replies: </label>
+            <div class="replies" ng-bind="videoCell.video.counts.replies"></div>
+            <label class="likesLabel" register-element="likesElem" ng-click="videoCell.toggleLike()">Likes: </label>
+            <div class="likes" ng-bind="videoCell.video.counts.likes"></div>
+            <label class="commentsLabel">Comments: </label>
+            <div class="comments" ng-bind="videoCell.video.counts.comments"></div>
+          </div>
+          <!-- end counts -->
+
+          <!-- commentsPreview -->
+          <div class="commentsPreview">
+            <div ng-repeat="comment in videoCell.comments">
+              <img class="commentProfilePicture" ng-src="{{comment.sourceUser.profilePicture}}" />
+              <div class="sourceUser" ng-bind="comment.sourceUser.username"></div>
+              <div class="commentBody" ng-bind="comment.body" ng-click="videoCell.removeComment(comment)"></div>
+            </div>
+            <input class="commentInput" type="text" ng-model="videoCell.input.comment" p-enter="videoCell.addComment()"/>
+            <button class="mainBtn" ng-click="videoCell.addComment()">Add Comment</button>
+          </div>
+          <!-- end commentsPreview -->
+
+
+        </div>
+        <!-- end videoMetaData -->
       </div>
-      <!-- end commentsPreview -->
+      <!-- end videoCell -->
 
     </div>
-    <!-- end videoMetaData -->
-  </div>
-  <!-- end videoCell -->
-
 </div>

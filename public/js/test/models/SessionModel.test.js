@@ -22,8 +22,8 @@
 			inject(function($injector) {
 
 				//Service being tested
-				var UserSessionModel = $injector.get('UserSessionModel');
-				UserSession = UserSessionModel.create();
+				var SessionModel = $injector.get('SessionModel');
+				UserSession = SessionModel.create();
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
@@ -54,13 +54,13 @@
 				event = {
 					preventDefault: jasmine.createSpy('preventDefault')
 				};
-				toState = {metaData: {requireUserContext: true}};
+				toState = {meta: {availability: 'private'}};
 			});
 
 			it('should not authorize the user to access the private state if the user context is undefined', function() {
 				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(undefined);
 				UserSession.authorize(event, toState);
-				expect($state.go).toHaveBeenCalledWith('login');
+				expect($state.go).toHaveBeenCalledWith('account.login');
 			});
 
 			it('should authorize the user to access the private state if there is a valid user context', function() {
@@ -92,7 +92,7 @@
 					UserSession.login(username, password);
 				});
 				expect(UserSession.user.active.username).toEqual('ddluc32');
-				expect($state.go).toHaveBeenCalledWith('home');
+				expect($state.go).toHaveBeenCalledWith('home.default');
 			});
 
 		});

@@ -5,11 +5,9 @@
   *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger',
+  PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
       $scope.message = 'Present!';
 

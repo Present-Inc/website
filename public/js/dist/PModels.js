@@ -79,9 +79,9 @@
  * @param {PModels} VideoCellModel
  */
 
-  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel', 'ProfileModel',
 
-    function($q, UserContextManager, ApiManager, VideoCellModel) {
+    function($q, UserContextManager, ApiManager, VideoCellModel, ProfileModel) {
       return {
 
 				/**
@@ -139,7 +139,7 @@
 						return resourceMethod;
 					};
 
-					/**
+ 					/**
 					 * Loads a segment of a video feed
 					 * @returns {*}
 					 */
@@ -168,7 +168,8 @@
 																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
-									loadingFeed.resolve();
+									if(_this.type == 'user') _this.mapSourceUser().then(loadingFeed.resolve());
+									else loadingFeed.resolve();
 								})
 								.catch(function() {
 									loadingFeed.reject();
@@ -177,6 +178,22 @@
 
 						return loadingFeed.promise;
 
+					};
+
+					Feed.prototype.mapSourceUser = function() {
+						var mappingSourceUser = $q.defer(),
+								_this = this;
+						ApiManager.users('show', false, {username: this.username})
+							.then(function(apiResponse) {
+								_this.videoCells.map(function(videoCell) {
+									videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
+								});
+								mappingSourceUser.resolve();
+							})
+							.catch(function() {
+								mappingSourceUser.reject();
+							});
+						return mappingSourceUser.promise;
 					};
 
           return new Feed(type, requireUserContext, username);
@@ -305,8 +322,6 @@ PModels.factory('NavbarModel', ['$q',
 						loggedIn : false
 					};
 
-					this.isEnabled = false;
-
 					this.hub = {
 						username : '',
 						profilePicture : ''
@@ -331,9 +346,6 @@ PModels.factory('NavbarModel', ['$q',
 				Navbar.prototype.configure = function(toState) {
 
 					var userContext = UserContextManager.getActiveUserContext();
-
-					if (toState.metaData.navbarEnabled) this.isEnabled = true;
-					else this.isEnabled = false;
 
 					if (userContext) this.mode.loggedIn = true;
 					else this.mode.loggedIn = false;
@@ -449,6 +461,15 @@ PModels.factory('ProfileModel', function() {
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
 
+				/** Determine the display name(s) **/
+				if (apiProfileObject.profile.fullName) {
+					this.displayName = apiProfileObject.profile.fullName;
+					this.altName = apiProfileObject.username;
+				} else {
+					this.displayName = apiProfileObject.username;
+					this.altName = null;
+				}
+
 			}
 
 			return new Profile(apiProfileObject);
@@ -477,6 +498,88 @@ PModels.factory('ReplyModel', function() {
 		}
 	}
 });
+
+/**
+ * Provides properties and methods to manage the state of the UserSession
+ * @param {PUtilities} logger
+ * @param {UIRouter} $state
+ * @param {PManagaers} UserContextManager
+ */
+
+  PModels.factory('SessionModel', ['logger', '$state', '$stateParams', 'UserContextManager',
+
+		function(logger, $state, $stateParams, UserContextManager) {
+			return {
+				create : function() {
+
+					function Session() {
+
+						this.user = {
+							active : ''
+						};
+
+					}
+
+					/**
+					 * Checks to make sure the user has access to the requested state
+					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
+					 * @param {Object }toState -- the state the the UserSession is transitioning into
+					 */
+
+					Session.prototype.authorize = function(event, toState, toParams) {
+						var userContext = UserContextManager.getActiveUserContext();
+						if (toState.meta.availability == 'private' && !userContext) {
+							event.preventDefault();
+							$state.go('account.login');
+						}
+					};
+
+					/**
+					 * Handles user context creation, sets the activeUser property and changes the state to home
+					 * @param {String} username - The user provided username
+					 * @param {String} password - The user provided password
+					 */
+
+					Session.prototype.login = function(username, password) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								_this = this;
+
+						if (!userContext) {
+							UserContextManager.createNewUserContext(username, password)
+								.then(function (newUserContext) {
+									_this.user.active = newUserContext.profile;
+									$state.go('home.default');
+								})
+								.catch(function () {
+									//TODO: better error handling
+									alert('username and/or password is incorrect');
+								});
+
+						} else {
+							$state.go('home.default');
+						}
+
+					};
+
+					/**
+					 * Handles user context deletion and changes the state to splash
+					 */
+
+					Session.prototype.logout = function() {
+						UserContextManager.destroyActiveUserContext()
+							.then(function() {
+								$state.go('splash');
+							});
+					};
+
+					return new Session();
+
+				}
+			};
+  	}
+
+	]);
 
 /**
  * Constructs a new UserContext Model
@@ -701,88 +804,6 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 	]);
 
 /**
- * Provides properties and methods to manage the state of the UserSession
- * @param {PUtilities} logger
- * @param {UIRouter} $state
- * @param {PManagaers} UserContextManager
- */
-
-  PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
-
-		function(logger, $state, UserContextManager) {
-			return {
-				create : function() {
-
-					function UserSession() {
-
-						this.user = {
-							active : ''
-						};
-
-					}
-
-					/**
-					 * Checks to make sure the user has access to the requested state
-					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
-					 * @param {Object }toState -- the state the the UserSession is transitioning into
-					 */
-
-					UserSession.prototype.authorize = function(event, toState) {
-						var userContext = UserContextManager.getActiveUserContext();
-						if (toState.metaData.requireUserContext && !userContext) {
-							event.preventDefault();
-							$state.go('login');
-						}
-					};
-
-					/**
-					 * Handles user context creation, sets the activeUser property and changes the state to home
-					 * @param {String} username - The user provided username
-					 * @param {String} password - The user provided password
-					 */
-
-					UserSession.prototype.login = function(username, password) {
-
-						var userContext = UserContextManager.getActiveUserContext(),
-								_this = this;
-
-						if (!userContext) {
-							UserContextManager.createNewUserContext(username, password)
-								.then(function (newUserContext) {
-									_this.user.active = newUserContext.profile;
-									$state.go('home');
-								})
-								.catch(function () {
-									//TODO: better error handling
-									alert('username and/or password is incorrect');
-								});
-
-						} else {
-							$state.go('home');
-						}
-
-					};
-
-					/**
-					 * Handles user context deletion and changes the state to splash
-					 */
-
-					UserSession.prototype.logout = function() {
-						UserContextManager.destroyActiveUserContext()
-							.then(function() {
-								$state.go('splash');
-							});
-					};
-
-					return new UserSession();
-
-				}
-			};
-  	}
-
-	]);
-
-/**
  * @namespace
  * @param {UIRouter} $state
  * @param {PManagers} UserContextManager
@@ -960,7 +981,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
  * @namespace
  */
 
-	PModels.factory('VideoModel', [function() {
+	PModels.factory('VideoModel', ['ProfileModel', function(ProfileModel) {
 		return {
 
 			/**
@@ -1008,32 +1029,8 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						replies  : apiVideoObject.replies.count
 					};
 
-					/**
-					 * TODO: use the Profile model to create sourceUser objects
-					 */
-
-					if(apiVideoObject.creatorUser.object) {
-
-						this.creator = {
-							_id: apiVideoObject.creatorUser.object._id,
-							profilePicture: apiVideoObject.creatorUser.object.profile.picture.url,
-							username: apiVideoObject.creatorUser.object.username,
-							displayName: '',
-							altName: ''
-						};
-
-
-						/** Determine the display name(s) **/
-						if (apiVideoObject.creatorUser.object.profile.fullName) {
-							this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
-							this.creator.altName = apiVideoObject.creatorUser.object.username;
-						} else {
-							this.creator.displayName = apiVideoObject.creatorUser.object.username;
-							this.creator.altName = null;
-						}
-
-					}
-
+					if (apiVideoObject.creatorUser.object)
+					this.creator = ProfileModel.construct(apiVideoObject.creatorUser.object);
 
 				}
 

@@ -25,6 +25,15 @@ PModels.factory('ProfileModel', function() {
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
 
+				/** Determine the display name(s) **/
+				if (apiProfileObject.profile.fullName) {
+					this.displayName = apiProfileObject.profile.fullName;
+					this.altName = apiProfileObject.username;
+				} else {
+					this.displayName = apiProfileObject.username;
+					this.altName = null;
+				}
+
 			}
 
 			return new Profile(apiProfileObject);

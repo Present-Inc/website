@@ -5,13 +5,13 @@
  * @param {PManagaers} UserContextManager
  */
 
-  PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
+  PModels.factory('SessionModel', ['logger', '$state', '$stateParams', 'UserContextManager',
 
-		function(logger, $state, UserContextManager) {
+		function(logger, $state, $stateParams, UserContextManager) {
 			return {
 				create : function() {
 
-					function UserSession() {
+					function Session() {
 
 						this.user = {
 							active : ''
@@ -25,11 +25,11 @@
 					 * @param {Object }toState -- the state the the UserSession is transitioning into
 					 */
 
-					UserSession.prototype.authorize = function(event, toState) {
+					Session.prototype.authorize = function(event, toState, toParams) {
 						var userContext = UserContextManager.getActiveUserContext();
-						if (toState.metaData.requireUserContext && !userContext) {
+						if (toState.meta.availability == 'private' && !userContext) {
 							event.preventDefault();
-							$state.go('login');
+							$state.go('account.login');
 						}
 					};
 
@@ -39,7 +39,7 @@
 					 * @param {String} password - The user provided password
 					 */
 
-					UserSession.prototype.login = function(username, password) {
+					Session.prototype.login = function(username, password) {
 
 						var userContext = UserContextManager.getActiveUserContext(),
 								_this = this;
@@ -48,7 +48,7 @@
 							UserContextManager.createNewUserContext(username, password)
 								.then(function (newUserContext) {
 									_this.user.active = newUserContext.profile;
-									$state.go('home');
+									$state.go('home.default');
 								})
 								.catch(function () {
 									//TODO: better error handling
@@ -56,7 +56,7 @@
 								});
 
 						} else {
-							$state.go('home');
+							$state.go('home.default');
 						}
 
 					};
@@ -65,14 +65,14 @@
 					 * Handles user context deletion and changes the state to splash
 					 */
 
-					UserSession.prototype.logout = function() {
+					Session.prototype.logout = function() {
 						UserContextManager.destroyActiveUserContext()
 							.then(function() {
 								$state.go('splash');
 							});
 					};
 
-					return new UserSession();
+					return new Session();
 
 				}
 			};

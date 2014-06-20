@@ -1,28 +1,4 @@
-
 <div id="user">
-
-    <div class="profile">
-
-        <img class="profilePicture" ng-src="{{User.profile.profilePicture}}" height="70px" width="70px"/>
-
-        <div class="info">
-            <div class="fullName" ng-bind="User.profile.fullName"></div>
-            <div ng-bind="User.profile.username"></div>
-
-            <div class="counts">
-                <span ng-bind="User.profile.counts.videos"></span>
-                <span ng-bind="User.profile.counts.views"></span>
-                <span ng-bind="User.profile.counts.likes"></span>
-                <span ng-bind="User.profile.counts.followers"></span>
-                <span ng-bind="User.profile.counts.friends"></span>
-            </div>
-
-            <div class="description" ng-bind="User.profile.description"></div>
-
-        </div>
-
-    </div>
-
-    <div p-feed class="feed"></div>
-
+    <div ui-view="profile"></div>
+    <div ui-view="feed"></div>
 </div>

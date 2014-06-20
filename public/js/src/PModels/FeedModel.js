@@ -7,9 +7,9 @@
  * @param {PModels} VideoCellModel
  */
 
-  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel', 'ProfileModel',
 
-    function($q, UserContextManager, ApiManager, VideoCellModel) {
+    function($q, UserContextManager, ApiManager, VideoCellModel, ProfileModel) {
       return {
 
 				/**
@@ -67,7 +67,7 @@
 						return resourceMethod;
 					};
 
-					/**
+ 					/**
 					 * Loads a segment of a video feed
 					 * @returns {*}
 					 */
@@ -96,7 +96,8 @@
 																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
-									loadingFeed.resolve();
+									if(_this.type == 'user') _this.mapSourceUser().then(loadingFeed.resolve());
+									else loadingFeed.resolve();
 								})
 								.catch(function() {
 									loadingFeed.reject();
@@ -105,6 +106,22 @@
 
 						return loadingFeed.promise;
 
+					};
+
+					Feed.prototype.mapSourceUser = function() {
+						var mappingSourceUser = $q.defer(),
+								_this = this;
+						ApiManager.users('show', false, {username: this.username})
+							.then(function(apiResponse) {
+								_this.videoCells.map(function(videoCell) {
+									videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
+								});
+								mappingSourceUser.resolve();
+							})
+							.catch(function() {
+								mappingSourceUser.reject();
+							});
+						return mappingSourceUser.promise;
 					};
 
           return new Feed(type, requireUserContext, username);

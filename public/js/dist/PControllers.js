@@ -1,5 +1,19 @@
+
+
+PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
+
+	function($scope, logger, User) {
+
+		//Initialize Profile
+		$scope.User = User;
+		$scope.$watch(User);
+
+	}
+
+]);
+
 /**
- * PControllers.discoverCtrl
+ * PControllers.FeedController
  * View Controller for the discover state
  *   @dependency $scope {Angular}
  *   @dependency logger {PUtilities}
@@ -7,11 +21,9 @@
  *   @dependency {Present} Feed <Object>
  */
 
-  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'Feed',
+  PControllers.controller('FeedController', ['$scope', 'logger', 'Feed',
 
     function($scope, logger, Feed) {
-
-      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', Feed]);
 
 			$scope.Feed = Feed;
 			$scope.$watch(Feed);
@@ -52,7 +64,7 @@
  * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope',
+  PControllers.controller('LoginController', ['$scope',
 
 		function($scope) {
 
@@ -74,25 +86,57 @@
  *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'UserSessionModel',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'SessionModel',
 
-    function($scope, logger, UserSessionModel) {
+    function($scope, logger, SessionModel) {
 
-      $scope.UserSession = UserSessionModel.create();
+      $scope.Session = SessionModel.create();
 
-			$scope.$watch('UserSession');
+			$scope.$watch('Session');
 
-			$scope.$watch('UserSession.user.active', function(user) {
+			$scope.$watch('Session.user.active', function(user) {
 				$scope.$broadcast('_newUserLoggedIn', user);
 			});
 
-      $scope.$on('$stateChangeStart', function(event, toState) {
-				$scope.UserSession.authorize(event, toState);
+      $scope.$on('$stateChangeStart', function(event, toState, toParams) {
+				$scope.Session.authorize(event, toState, toParams);
       });
 
     }
 
   ]);
+
+
+
+PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'UserContextManager', 'NavbarModel',
+	function($scope, $state, logger, UserContextManager, NavbarModel) {
+
+		$scope.Navbar = NavbarModel.create();
+		$scope.Navbar.loadHub();
+
+		$scope.$watch('Navbar');
+
+		$scope.$watch('Navbar.search.query', function (query) {
+			if (query == 0) {
+				$scope.Navbar.hideDropdown();
+			} else if (query.length % 3 == 0) {
+				$scope.Navbar.showDropdown();
+				$scope.Navbar.sendSearchQuery(query);
+			}
+		});
+
+		$scope.$on('$stateChangeSuccess', function (event, toState, fromState) {
+			$scope.Navbar.configure(toState);
+		});
+
+		$scope.$on('_newUserLoggedIn', function (event, profile) {
+			$scope.Navbar.hub.username = profile.username;
+			$scope.Navbar.hub.profilePicture = profile.profilePicture;
+		});
+
+	}
+]);
+
 
 /*
  * PControllers.loginCtrl
@@ -100,7 +144,7 @@
  * 	@dependency $scope {Angular}
  */
 
-	PControllers.controller('registerCtrl', ['$scope', 'UserModel', function($scope, UserModel) {
+	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
 		$scope.input = {
 			username: '',
@@ -135,11 +179,9 @@
   *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger',
+  PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
       $scope.message = 'Present!';
 
@@ -164,12 +206,9 @@
  *   @dependency Profile <Object>
  */
 
-PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'User',
+PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
 
 	function($scope, logger, Feed, User) {
-
-		logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
-		logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
 		//Initialize Profile
 		$scope.User = User;

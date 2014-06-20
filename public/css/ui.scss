@@ -53,6 +53,23 @@ h1 {
 /* Forms
 =================================*/
 
+form {
+  width: 30%;
+  padding: 10px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: solid 1px #CCC;
+  @include _border-radius(5px);
+}
+
+legend {
+  margin: 5px auto;
+  padding: 0px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
 input {
   display: block;
   width: 80%;

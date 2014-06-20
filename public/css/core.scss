@@ -49,9 +49,7 @@ body {
   background-color: $light-grey;
 }
 
-
-.fullscreen {
-  height: 100%;
+div[ui-view] {
   overflow: auto;
 }
 

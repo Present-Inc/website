@@ -36,6 +36,7 @@
 		}
 
 	}]);
+
 /**
  * Loads a new Profile Model which will be resolved, and injected into a controller
  * @param {Angular} $q

@@ -79,94 +79,147 @@
         .state('splash', {
           url: '/',
           templateUrl: 'views/splash',
-          controller: 'splashCtrl',
-          metaData: {
-            fullscreenEnabled: true,
-            navbarEnabled: false,
-            requireUserContext: false
-          }
+          controller: 'SplashController',
+          meta: {availability: 'public'}
         })
-
-        .state('login', {
-          url: '/login',
-          templateUrl: 'views/login',
-          controller: 'loginCtrl',
-          metaData: {
-            fullscreenEnabled: true,
-            navbarEnabled: false,
-            requireUserContext: false
-          }
-        })
-
-				.state('register', {
-					url: '/register',
-					templateUrl: 'views/register',
-					controller: 'registerCtrl',
-					metaData: {
-						fullscreenEnabled: true,
-						navbarEnabled: false,
-						requireUserContext: false
-					}
-				})
 
 				.state('discover', {
-					url: '/discover',
-					templateUrl: 'views/discover',
-					controller: 'discoverCtrl',
-					metaData: {
-						fullscreenEnabled: false,
-						navbarEnabled: true,
-						requireUserContext: false
-					},
-					resolve: {
-						Feed : function(FeedLoader) {
-							/** FeedLoader.preLoad(type, requiresUserContext) **/
-							return FeedLoader.preLoad('discover', false);
-						}
-					}
+					abstract: true,
+					templateUrl: 'views/discover'
 				})
 
-        .state('home', {
-          url: '/home',
-          templateUrl: 'views/home',
-          controller: 'homeCtrl',
-          metaData: {
-            fullscreenEnabled: false,
-            navbarEnabled: true,
-            requireUserContext: true
-          },
-          resolve: {
-            User: function(UserLoader) {
-							/** UserLoader.preLoad(type, requiresUserContext) **/
-							return UserLoader.preLoad('showMe', true);
-            },
-            Feed: function(FeedLoader) {
-							/** FeedLoader.preLoad(type, requiresUserContext) **/
-							return FeedLoader.preLoad('home', true);
-            }
-          }
-        })
-
-				.state('user', {
-					url: '/:user',
-					templateUrl: 'views/user',
-					controller: 'userCtrl',
-					metaData: {
-						fullscreenEnabled: true,
-						navbarEnabled: true,
-						requireUserContext: false
+				.state('discover.default', {
+					url: '/discover',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@discover': {templateUrl: 'views/partials/feed', controller: 'FeedController'}
 					},
 					resolve: {
-						User: function(UserLoader, $stateParams) {
-							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
-							return UserLoader.preLoad('show', false, $stateParams.user);
-						},
-						Feed: function(FeedLoader, $stateParams) {
-							/** FeedLoader.preLoad(type, requiresUserContext, username) **/
-							return FeedLoader.preLoad('user', false, $stateParams.user);
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('discover', false);
 						}
-					}
-				});
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('present', {
+					url: '/p/:video',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('home', {
+					abstract: true,
+					templateUrl: 'views/home'
+				})
+
+				.state('home.default', {
+					url: '/home',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
+						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('home', true)
+						},
+						User: function(UserLoader) {
+							return UserLoader.preLoad('showMe', true)
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
+				.state('home.group', {
+					url: '/home/:group',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
+						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader) {
+							return FeedLoader.preLoad('home', true)
+						},
+						User: function(UserLoader) {
+							return UserLoader.preLoad('showMe', true)
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
+				.state('user', {
+					abstract: true,
+					templateUrl: 'views/user'
+				})
+
+				.state('user.profile', {
+					url: '/:user',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'profile@user': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'},
+						'feed@user': {templateUrl: 'views/partials/feed', controller: 'FeedController'}
+					},
+					resolve: {
+						Feed: function(FeedLoader, $stateParams) {
+							return FeedLoader.preLoad('user', false, $stateParams.user)
+						},
+						User: function(UserLoader, $stateParams) {
+							return UserLoader.preLoad('show', false, $stateParams.user)
+						}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account', {
+					abstract: true,
+					templateUrl: 'views/account'
+				})
+
+				.state('account.login', {
+					url: '/account/login',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'login@account' : {templateUrl:  'views/partials/login', controller: 'LoginController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.register', {
+					url: '/account/register',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'register@account' : {templateUrl:  'views/partials/register', controller: 'RegisterController'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.resetPassword', {
+					url: '/account/reset_password',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'register@account' : {templateUrl:  '<h1>Reset Password</h1>'}
+					},
+					meta: {availability: 'public'}
+				})
+
+				.state('account.edit', {
+					url: '/account/edit',
+					views: {
+						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'edit@account': {templateUrl: 'views/partials/editProfile', controller: 'EditProfileController'}
+					},
+					resolve: {
+						User : function(UserLoader) {
+							return UserLoader.preLoad('showMe', false);
+						}
+					},
+					meta: {availability: 'private'}
+				})
+
 
   }]);
 
@@ -464,9 +517,9 @@ PApiClient.factory('ApiClientConfig', function() {
  * @param {PModels} VideoCellModel
  */
 
-  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel',
+  PModels.factory('FeedModel', ['$q', 'UserContextManager', 'ApiManager', 'VideoCellModel', 'ProfileModel',
 
-    function($q, UserContextManager, ApiManager, VideoCellModel) {
+    function($q, UserContextManager, ApiManager, VideoCellModel, ProfileModel) {
       return {
 
 				/**
@@ -524,7 +577,7 @@ PApiClient.factory('ApiClientConfig', function() {
 						return resourceMethod;
 					};
 
-					/**
+ 					/**
 					 * Loads a segment of a video feed
 					 * @returns {*}
 					 */
@@ -553,7 +606,8 @@ PApiClient.factory('ApiClientConfig', function() {
 																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
-									loadingFeed.resolve();
+									if(_this.type == 'user') _this.mapSourceUser().then(loadingFeed.resolve());
+									else loadingFeed.resolve();
 								})
 								.catch(function() {
 									loadingFeed.reject();
@@ -562,6 +616,22 @@ PApiClient.factory('ApiClientConfig', function() {
 
 						return loadingFeed.promise;
 
+					};
+
+					Feed.prototype.mapSourceUser = function() {
+						var mappingSourceUser = $q.defer(),
+								_this = this;
+						ApiManager.users('show', false, {username: this.username})
+							.then(function(apiResponse) {
+								_this.videoCells.map(function(videoCell) {
+									videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
+								});
+								mappingSourceUser.resolve();
+							})
+							.catch(function() {
+								mappingSourceUser.reject();
+							});
+						return mappingSourceUser.promise;
 					};
 
           return new Feed(type, requireUserContext, username);
@@ -690,8 +760,6 @@ PModels.factory('NavbarModel', ['$q',
 						loggedIn : false
 					};
 
-					this.isEnabled = false;
-
 					this.hub = {
 						username : '',
 						profilePicture : ''
@@ -716,9 +784,6 @@ PModels.factory('NavbarModel', ['$q',
 				Navbar.prototype.configure = function(toState) {
 
 					var userContext = UserContextManager.getActiveUserContext();
-
-					if (toState.metaData.navbarEnabled) this.isEnabled = true;
-					else this.isEnabled = false;
 
 					if (userContext) this.mode.loggedIn = true;
 					else this.mode.loggedIn = false;
@@ -834,6 +899,15 @@ PModels.factory('ProfileModel', function() {
 				this.phoneNumber = apiProfileObject.phoneNumber ? apiProfileObject.phoneNumber : null;
 				this.email = apiProfileObject.email ? apiProfileObject.email : null;
 
+				/** Determine the display name(s) **/
+				if (apiProfileObject.profile.fullName) {
+					this.displayName = apiProfileObject.profile.fullName;
+					this.altName = apiProfileObject.username;
+				} else {
+					this.displayName = apiProfileObject.username;
+					this.altName = null;
+				}
+
 			}
 
 			return new Profile(apiProfileObject);
@@ -862,6 +936,88 @@ PModels.factory('ReplyModel', function() {
 		}
 	}
 });
+
+/**
+ * Provides properties and methods to manage the state of the UserSession
+ * @param {PUtilities} logger
+ * @param {UIRouter} $state
+ * @param {PManagaers} UserContextManager
+ */
+
+  PModels.factory('SessionModel', ['logger', '$state', '$stateParams', 'UserContextManager',
+
+		function(logger, $state, $stateParams, UserContextManager) {
+			return {
+				create : function() {
+
+					function Session() {
+
+						this.user = {
+							active : ''
+						};
+
+					}
+
+					/**
+					 * Checks to make sure the user has access to the requested state
+					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
+					 * @param {Object }toState -- the state the the UserSession is transitioning into
+					 */
+
+					Session.prototype.authorize = function(event, toState, toParams) {
+						var userContext = UserContextManager.getActiveUserContext();
+						if (toState.meta.availability == 'private' && !userContext) {
+							event.preventDefault();
+							$state.go('account.login');
+						}
+					};
+
+					/**
+					 * Handles user context creation, sets the activeUser property and changes the state to home
+					 * @param {String} username - The user provided username
+					 * @param {String} password - The user provided password
+					 */
+
+					Session.prototype.login = function(username, password) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								_this = this;
+
+						if (!userContext) {
+							UserContextManager.createNewUserContext(username, password)
+								.then(function (newUserContext) {
+									_this.user.active = newUserContext.profile;
+									$state.go('home.default');
+								})
+								.catch(function () {
+									//TODO: better error handling
+									alert('username and/or password is incorrect');
+								});
+
+						} else {
+							$state.go('home.default');
+						}
+
+					};
+
+					/**
+					 * Handles user context deletion and changes the state to splash
+					 */
+
+					Session.prototype.logout = function() {
+						UserContextManager.destroyActiveUserContext()
+							.then(function() {
+								$state.go('splash');
+							});
+					};
+
+					return new Session();
+
+				}
+			};
+  	}
+
+	]);
 
 /**
  * Constructs a new UserContext Model
@@ -1086,88 +1242,6 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 	]);
 
 /**
- * Provides properties and methods to manage the state of the UserSession
- * @param {PUtilities} logger
- * @param {UIRouter} $state
- * @param {PManagaers} UserContextManager
- */
-
-  PModels.factory('UserSessionModel', ['logger', '$state', 'UserContextManager',
-
-		function(logger, $state, UserContextManager) {
-			return {
-				create : function() {
-
-					function UserSession() {
-
-						this.user = {
-							active : ''
-						};
-
-					}
-
-					/**
-					 * Checks to make sure the user has access to the requested state
-					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
-					 * @param {Object }toState -- the state the the UserSession is transitioning into
-					 */
-
-					UserSession.prototype.authorize = function(event, toState) {
-						var userContext = UserContextManager.getActiveUserContext();
-						if (toState.metaData.requireUserContext && !userContext) {
-							event.preventDefault();
-							$state.go('login');
-						}
-					};
-
-					/**
-					 * Handles user context creation, sets the activeUser property and changes the state to home
-					 * @param {String} username - The user provided username
-					 * @param {String} password - The user provided password
-					 */
-
-					UserSession.prototype.login = function(username, password) {
-
-						var userContext = UserContextManager.getActiveUserContext(),
-								_this = this;
-
-						if (!userContext) {
-							UserContextManager.createNewUserContext(username, password)
-								.then(function (newUserContext) {
-									_this.user.active = newUserContext.profile;
-									$state.go('home');
-								})
-								.catch(function () {
-									//TODO: better error handling
-									alert('username and/or password is incorrect');
-								});
-
-						} else {
-							$state.go('home');
-						}
-
-					};
-
-					/**
-					 * Handles user context deletion and changes the state to splash
-					 */
-
-					UserSession.prototype.logout = function() {
-						UserContextManager.destroyActiveUserContext()
-							.then(function() {
-								$state.go('splash');
-							});
-					};
-
-					return new UserSession();
-
-				}
-			};
-  	}
-
-	]);
-
-/**
  * @namespace
  * @param {UIRouter} $state
  * @param {PManagers} UserContextManager
@@ -1345,7 +1419,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
  * @namespace
  */
 
-	PModels.factory('VideoModel', [function() {
+	PModels.factory('VideoModel', ['ProfileModel', function(ProfileModel) {
 		return {
 
 			/**
@@ -1393,32 +1467,8 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						replies  : apiVideoObject.replies.count
 					};
 
-					/**
-					 * TODO: use the Profile model to create sourceUser objects
-					 */
-
-					if(apiVideoObject.creatorUser.object) {
-
-						this.creator = {
-							_id: apiVideoObject.creatorUser.object._id,
-							profilePicture: apiVideoObject.creatorUser.object.profile.picture.url,
-							username: apiVideoObject.creatorUser.object.username,
-							displayName: '',
-							altName: ''
-						};
-
-
-						/** Determine the display name(s) **/
-						if (apiVideoObject.creatorUser.object.profile.fullName) {
-							this.creator.displayName = apiVideoObject.creatorUser.object.profile.fullName;
-							this.creator.altName = apiVideoObject.creatorUser.object.username;
-						} else {
-							this.creator.displayName = apiVideoObject.creatorUser.object.username;
-							this.creator.altName = null;
-						}
-
-					}
-
+					if (apiVideoObject.creatorUser.object)
+					this.creator = ProfileModel.construct(apiVideoObject.creatorUser.object);
 
 				}
 
@@ -1465,6 +1515,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 		}
 
 	}]);
+
 /**
  * Loads a new Profile Model which will be resolved, and injected into a controller
  * @param {Angular} $q
@@ -1693,8 +1744,22 @@ PUtilities.directive('registerElement', function() {
 		}
 	}
 });
+
+
+PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
+
+	function($scope, logger, User) {
+
+		//Initialize Profile
+		$scope.User = User;
+		$scope.$watch(User);
+
+	}
+
+]);
+
 /**
- * PControllers.discoverCtrl
+ * PControllers.FeedController
  * View Controller for the discover state
  *   @dependency $scope {Angular}
  *   @dependency logger {PUtilities}
@@ -1702,11 +1767,9 @@ PUtilities.directive('registerElement', function() {
  *   @dependency {Present} Feed <Object>
  */
 
-  PControllers.controller('discoverCtrl', ['$scope', 'logger', 'Feed',
+  PControllers.controller('FeedController', ['$scope', 'logger', 'Feed',
 
     function($scope, logger, Feed) {
-
-      logger.debug(['PControllers.discoverCtrl -- initializing the Feed Manager', Feed]);
 
 			$scope.Feed = Feed;
 			$scope.$watch(Feed);
@@ -1747,7 +1810,7 @@ PUtilities.directive('registerElement', function() {
  * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope',
+  PControllers.controller('LoginController', ['$scope',
 
 		function($scope) {
 
@@ -1769,25 +1832,57 @@ PUtilities.directive('registerElement', function() {
  *   @dependency ApplicationManager {PManagers}
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'UserSessionModel',
+  PControllers.controller('mainCtrl', ['$scope', 'logger', 'SessionModel',
 
-    function($scope, logger, UserSessionModel) {
+    function($scope, logger, SessionModel) {
 
-      $scope.UserSession = UserSessionModel.create();
+      $scope.Session = SessionModel.create();
 
-			$scope.$watch('UserSession');
+			$scope.$watch('Session');
 
-			$scope.$watch('UserSession.user.active', function(user) {
+			$scope.$watch('Session.user.active', function(user) {
 				$scope.$broadcast('_newUserLoggedIn', user);
 			});
 
-      $scope.$on('$stateChangeStart', function(event, toState) {
-				$scope.UserSession.authorize(event, toState);
+      $scope.$on('$stateChangeStart', function(event, toState, toParams) {
+				$scope.Session.authorize(event, toState, toParams);
       });
 
     }
 
   ]);
+
+
+
+PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'UserContextManager', 'NavbarModel',
+	function($scope, $state, logger, UserContextManager, NavbarModel) {
+
+		$scope.Navbar = NavbarModel.create();
+		$scope.Navbar.loadHub();
+
+		$scope.$watch('Navbar');
+
+		$scope.$watch('Navbar.search.query', function (query) {
+			if (query == 0) {
+				$scope.Navbar.hideDropdown();
+			} else if (query.length % 3 == 0) {
+				$scope.Navbar.showDropdown();
+				$scope.Navbar.sendSearchQuery(query);
+			}
+		});
+
+		$scope.$on('$stateChangeSuccess', function (event, toState, fromState) {
+			$scope.Navbar.configure(toState);
+		});
+
+		$scope.$on('_newUserLoggedIn', function (event, profile) {
+			$scope.Navbar.hub.username = profile.username;
+			$scope.Navbar.hub.profilePicture = profile.profilePicture;
+		});
+
+	}
+]);
+
 
 /*
  * PControllers.loginCtrl
@@ -1795,7 +1890,7 @@ PUtilities.directive('registerElement', function() {
  * 	@dependency $scope {Angular}
  */
 
-	PControllers.controller('registerCtrl', ['$scope', 'UserModel', function($scope, UserModel) {
+	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
 		$scope.input = {
 			username: '',
@@ -1830,11 +1925,9 @@ PUtilities.directive('registerElement', function() {
   *   @dependency  logger {PUtilites}
   */
 
-  PControllers.controller('splashCtrl', ['$scope', 'logger',
+  PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      logger.debug(['PControllers.splashCtrl -- splash controller initialized']);
 
       $scope.message = 'Present!';
 
@@ -1859,12 +1952,9 @@ PUtilities.directive('registerElement', function() {
  *   @dependency Profile <Object>
  */
 
-PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'User',
+PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
 
 	function($scope, logger, Feed, User) {
-
-		logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
-		logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
 		//Initialize Profile
 		$scope.User = User;
@@ -1903,18 +1993,6 @@ PDirectives.directive('pEnter', function() {
 		});
 	};
 });
-/*
- * PDirectives.feedDirective
- * HTML Directive for the video feed
- */
-
-  PDirectives.directive('pFeed', [function() {
-    return {
-      restrict: 'EA',
-      templateUrl: 'views/partials/feed'
-    }
-  }]);
-
 /**
  * PDirectives.navbarDirective
  * HTML Directive for the main Navbar

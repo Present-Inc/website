@@ -7,12 +7,9 @@
  *   @dependency Profile <Object>
  */
 
-PControllers.controller('userCtrl', ['$scope', 'logger', 'Feed', 'User',
+PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
 
 	function($scope, logger, Feed, User) {
-
-		logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
-		logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
 
 		//Initialize Profile
 		$scope.User = User;

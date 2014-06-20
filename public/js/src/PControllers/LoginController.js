@@ -3,7 +3,7 @@
  * 	@param {Angular} $scope
  */
 
-  PControllers.controller('loginCtrl', ['$scope',
+  PControllers.controller('LoginController', ['$scope',
 
 		function($scope) {
 
