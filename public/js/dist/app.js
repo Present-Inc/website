@@ -896,26 +896,6 @@ PModels.factory('ProfileModel', function() {
 
 });
 /**
- * Constructs a new Reply Model
- */
-
-PModels.factory('ReplyModel', function() {
-	return {
-		construct: function(apiReplyObject) {
-
-			function Reply(apiReplyObject) {
-				this._id = apiReplyObject._id;
-				this.sourceUser = apiReplyObject.sourceUser;
-				this.targetVideo = apiReplyObject.targetVideo;
-			}
-
-			return new Reply(apiReplyObject);
-
-		}
-	}
-});
-
-/**
  * Provides properties and methods to manage the state of the UserSession
  * @param {PUtilities} logger
  * @param {UIRouter} $state
@@ -1231,6 +1211,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 	]);
 
 /**
+ * VideoCellModel
  * @namespace
  * @param {UIRouter} $state
  * @param {PManagers} UserContextManager
@@ -1238,14 +1219,13 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
  * @param {PModels} VideoModel
  * @param {PModels} CommentModel
  * @param {PModels} LikeModel
- * @param {PModels} ReplyModel
  */
 
  PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager', 'VideoModel',
-	 																	'CommentModel', 'LikeModel', 'ReplyModel',
+	 																	'CommentModel', 'LikeModel',
 
 	 function($state, UserContextManager, ApiManager, VideoModel,
-						CommentModel, LikeModel, ReplyModel) {
+						CommentModel, LikeModel) {
 
    return {
 
@@ -1285,11 +1265,10 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					var embededResults = {
 						comments : apiVideoObject.comments.results,
 						likes : apiVideoObject.likes.results,
-						replies : apiVideoObject.replies.results
 					};
 
 				 /**
-					* Loop through comments likes and replies, creating a new instance of each and then adding it to the VideoCell
+					* Loop through comments and likes, creating a new instance of each and then adding it to the VideoCell
 					*
 					*/
 
@@ -1303,10 +1282,6 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						this.likes.push(Like);
 					}
 
-					for(var k = 0; k < embededResults.replies.length; k++) {
-						var Reply = ReplyModel.construct(embededResults.replies[k].object);
-						this.replies.push(Reply);
-					}
 				}
 
 			 /**
@@ -1844,11 +1819,9 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 		$scope.$watch('Navbar');
 
-
 		/**
 		 * Watch the user search query and send a request when the query length is divisible by 3
 		 */
-
 
 		$scope.$watch('Navbar.search.query', function (query) {
 			//TODO: Enable search for a single character
@@ -1867,13 +1840,17 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 
 /*
- * PControllers.loginCtrl
- * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * LoginController
+ * @namespace
  */
 
 	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
+		/** Initialize the UserModel on the Controller $scope **/
+		$scope.UserModel = UserModel;
+
+
+		/** User Input **/
 		$scope.input = {
 			username: '',
 			password: '',
@@ -1881,6 +1858,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 			email: ''
 		};
 
+		/** User Feedback **/
 		$scope.feedback = {
 			error : {
 				missingUsername: 'Your username is required',
@@ -1888,30 +1866,24 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 			}
 		};
 
+		/** Reveal the download link when true**/
 		$scope.accountSuccessfullyRegistered = false;
 
-		$scope.UserModel = UserModel;
-
 		$scope.submit = function(input) {
+			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
 			console.log($scope.registerForm.email.$valid);
 		};
-
-
 
 	}]);
 
  /*
-  * PControllers.splashController
-  * Controller for splash state
-  *   @dependency  $scope {Angular}
-  *   @dependency  logger {PUtilites}
+	* SplashController
+	* @namespace
   */
 
   PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      $scope.message = 'Present!';
 
       $scope.staticContent = {
         title: "Present",
@@ -1926,20 +1898,18 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
   ]);
 
 /*
- * View Controller for the home state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency FeedManager {PManagers}
- *   @dependency Feed <Object>
- *   @dependency Profile <Object>
+ * UserProfileController
+ * @namespace
  */
 
 PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
 
 	function($scope, logger, Feed, User) {
 
-		//Initialize Profile
+		/** Initialize a new User instance on the Controller scope **/
 		$scope.User = User;
+
+		/** Initialize a new Feed instance on the Controller $scope **/
 		$scope.Feed = Feed;
 
 		$scope.$watch(Feed);

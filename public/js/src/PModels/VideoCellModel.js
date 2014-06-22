@@ -1,4 +1,5 @@
 /**
+ * VideoCellModel
  * @namespace
  * @param {UIRouter} $state
  * @param {PManagers} UserContextManager
@@ -6,14 +7,13 @@
  * @param {PModels} VideoModel
  * @param {PModels} CommentModel
  * @param {PModels} LikeModel
- * @param {PModels} ReplyModel
  */
 
  PModels.factory('VideoCellModel', ['$state', 'UserContextManager', 'ApiManager', 'VideoModel',
-	 																	'CommentModel', 'LikeModel', 'ReplyModel',
+	 																	'CommentModel', 'LikeModel',
 
 	 function($state, UserContextManager, ApiManager, VideoModel,
-						CommentModel, LikeModel, ReplyModel) {
+						CommentModel, LikeModel) {
 
    return {
 
@@ -53,11 +53,10 @@
 					var embededResults = {
 						comments : apiVideoObject.comments.results,
 						likes : apiVideoObject.likes.results,
-						replies : apiVideoObject.replies.results
 					};
 
 				 /**
-					* Loop through comments likes and replies, creating a new instance of each and then adding it to the VideoCell
+					* Loop through comments and likes, creating a new instance of each and then adding it to the VideoCell
 					*
 					*/
 
@@ -71,10 +70,6 @@
 						this.likes.push(Like);
 					}
 
-					for(var k = 0; k < embededResults.replies.length; k++) {
-						var Reply = ReplyModel.construct(embededResults.replies[k].object);
-						this.replies.push(Reply);
-					}
 				}
 
 			 /**

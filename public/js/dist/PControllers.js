@@ -109,11 +109,9 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 		$scope.$watch('Navbar');
 
-
 		/**
 		 * Watch the user search query and send a request when the query length is divisible by 3
 		 */
-
 
 		$scope.$watch('Navbar.search.query', function (query) {
 			//TODO: Enable search for a single character
@@ -132,13 +130,17 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 
 /*
- * PControllers.loginCtrl
- * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * LoginController
+ * @namespace
  */
 
 	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
+		/** Initialize the UserModel on the Controller $scope **/
+		$scope.UserModel = UserModel;
+
+
+		/** User Input **/
 		$scope.input = {
 			username: '',
 			password: '',
@@ -146,6 +148,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 			email: ''
 		};
 
+		/** User Feedback **/
 		$scope.feedback = {
 			error : {
 				missingUsername: 'Your username is required',
@@ -153,30 +156,24 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 			}
 		};
 
+		/** Reveal the download link when true**/
 		$scope.accountSuccessfullyRegistered = false;
 
-		$scope.UserModel = UserModel;
-
 		$scope.submit = function(input) {
+			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
 			console.log($scope.registerForm.email.$valid);
 		};
-
-
 
 	}]);
 
  /*
-  * PControllers.splashController
-  * Controller for splash state
-  *   @dependency  $scope {Angular}
-  *   @dependency  logger {PUtilites}
+	* SplashController
+	* @namespace
   */
 
   PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      $scope.message = 'Present!';
 
       $scope.staticContent = {
         title: "Present",
@@ -191,20 +188,18 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
   ]);
 
 /*
- * View Controller for the home state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency FeedManager {PManagers}
- *   @dependency Feed <Object>
- *   @dependency Profile <Object>
+ * UserProfileController
+ * @namespace
  */
 
 PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
 
 	function($scope, logger, Feed, User) {
 
-		//Initialize Profile
+		/** Initialize a new User instance on the Controller scope **/
 		$scope.User = User;
+
+		/** Initialize a new Feed instance on the Controller $scope **/
 		$scope.Feed = Feed;
 
 		$scope.$watch(Feed);
