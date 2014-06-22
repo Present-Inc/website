@@ -67,6 +67,26 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
+					User.prototype.addToGroup = function() {
+
+						//TODO: Implement addToGroup method on the UserModel
+
+					};
+
+					User.prototype.removeFromGroup = function(group) {
+
+						//TODO: Implement removeFromGroup method on the UserModel
+
+					};
+
+
+					User.prototype.leaveGroup = function(group) {
+
+						//TODO: Implement leaveGroup method on the UserModel
+
+					};
+
+
 					/**
 					 *
 					 * @param updatedProfile
@@ -119,7 +139,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @returns {*}
 				 */
 
-				registerNewUserAccount : function(input) {
+				registerNewAccount : function(input) {
 
 					deletingAccount = $q.defer();
 
@@ -140,7 +160,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @returns {*}
 				 */
 
-				deleteUserAccount : function() {
+				deleteAccount : function() {
 
 					var userContext = UserContextManager.getActiveUserContext(),
 							deletingAccount = $q.defer();

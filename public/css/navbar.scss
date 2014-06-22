@@ -91,6 +91,11 @@ nav {
         display: block;
         margin: 0px 0px 0px 60px;
       }
+
+      a {
+        color: $main-grey;
+        text-decoration: none;
+      }
     }
 
     .videoResult {

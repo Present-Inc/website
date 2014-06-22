@@ -703,6 +703,19 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
+					User.prototype.addToGroup = function(group) {
+
+						var userContext = UserContextManager.getActiveUserContext();
+
+						if(!userContext) {
+							$state.go('login')
+						} else {
+
+						}
+
+
+					};
+
 					/**
 					 *
 					 * @param updatedProfile
@@ -904,7 +917,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 							if (this.likes[i].sourceUser._id == userContext.userId)
 							this.likes.splice(i, 1);
 						}
-						ApiManager.likes('destroy', userContext, {video_id : this.video_id});
+						ApiManager.likes('destroy', userContext, {video_id : this.video._id});
 					/** Add a like if there is no forward like relationship with the video **/
 					} else {
 							var newLike = LikeModel.create(this.video._id, userContext.profile);

@@ -61,6 +61,7 @@ nav .dropdown::before { content: ''; position: absolute; top: -12px; left: 10px;
 nav .dropdown .userResult { overflow: auto; padding: 5px 10px 5px 10px; }
 nav .dropdown .userResult img { height: 50px; float: left; display: inline-block; }
 nav .dropdown .userResult span { display: block; margin: 0px 0px 0px 60px; }
+nav .dropdown .userResult a { color: #47525d; text-decoration: none; }
 nav .dropdown .videoResult { padding: 5px 10px; font-weight: 100; }
 nav .dropdown .videoResult span { font-weight: 700; columns: #33aaff; }
 nav .dropdown .userResult:hover, nav .dropdown .videoResult:hover { background: #eff1f2; }
