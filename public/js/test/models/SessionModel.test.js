@@ -1,11 +1,11 @@
 /**
- * UserSession.test.js
- * Test Suite for the UserSession Model
+ * Session.test.js
+ * Test Suite for the Session Model
  */
 
-	describe('UserSession', function() {
+	describe('Session', function() {
 
-		var UserSession,
+		var SessionModel,
 			  UserContextManager,
 				$state,
 			  logger,
@@ -22,8 +22,10 @@
 			inject(function($injector) {
 
 				//Service being tested
-				var SessionModel = $injector.get('SessionModel');
-				UserSession = SessionModel.create();
+				SessionModel = $injector.get('SessionModel');
+
+
+
 
 				//Service Dependencies
 				UserContextManager = $injector.get('UserContextManager');
@@ -57,15 +59,15 @@
 				toState = {meta: {availability: 'private'}};
 			});
 
-			it('should not authorize the user to access the private state if the user context is undefined', function() {
-				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(undefined);
-				UserSession.authorize(event, toState);
+			it('should deny the user access of the state if the user context is undefined', function() {
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(null);
+				SessionModel.authorize(event, toState);
 				expect($state.go).toHaveBeenCalledWith('account.login');
 			});
 
 			it('should authorize the user to access the private state if there is a valid user context', function() {
-				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue({token: '456', userId: '123'});
-				UserSession.authorize(event, toState);
+				spyOn(UserContextManager, 'getActiveUserContext').and.returnValue(true);
+				SessionModel.authorize(event, toState);
 				expect($state.go).not.toHaveBeenCalled();
 			});
 
@@ -87,11 +89,10 @@
 				password = 'hello';
 			});
 
-			it('should log the user in if the username and password are correct', function() {
+			it('should log the user in when the provided a valid username and password', function() {
 				$rootScope.$apply(function() {
-					UserSession.login(username, password);
+					SessionModel.login(username, password);
 				});
-				expect(UserSession.user.active.username).toEqual('ddluc32');
 				expect($state.go).toHaveBeenCalledWith('home.default');
 			});
 
@@ -108,9 +109,9 @@
 				spyOn($state, 'go');
 			});
 
-			it('should the the user out', function() {
+			it('should the the user out and change the state to splash', function() {
 				$rootScope.$apply(function() {
-					UserSession.logout();
+					SessionModel.logout();
 				});
 				expect($state.go).toHaveBeenCalledWith('splash');
 			});

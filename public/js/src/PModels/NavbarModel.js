@@ -39,14 +39,21 @@ PModels.factory('NavbarModel', ['$q',
 
 				function Navbar(){
 
-					this.mode = {
-						loggedIn : false
-					};
+					var userContext = UserContextManager.getActiveUserContext();
+
+					this.mode = {loggedIn: false};
+
+					if (userContext) this.mode = {loggedIn : true};
 
 					this.hub = {
 						username : '',
 						profilePicture : ''
 					};
+
+					if (userContext) {
+						this.hub.username = userContext.profile.username;
+						this.hub.profilePicture = userContext.profile.profilePicture;
+					}
 
 					this.search = {
 						dropdownEnabled : false,
@@ -60,34 +67,6 @@ PModels.factory('NavbarModel', ['$q',
 				}
 
 				/**
-				 * Configuration method that is called on the ui router stateChangeStart event
-				 * @param {Object} toState Ui-Router object that defines the requested state
-				 */
-
-				Navbar.prototype.configure = function(toState) {
-
-					var userContext = UserContextManager.getActiveUserContext();
-
-					if (userContext) this.mode.loggedIn = true;
-					else this.mode.loggedIn = false;
-
-				};
-
-				/**
-				 * Load the hub data if the user is still logged in when they enter the site
-				 * Otherwise, the data is set on the _newUserLoggedIn event
-				 */
-
-				Navbar.prototype.loadHub = function() {
-					var userContext = UserContextManager.getActiveUserContext();
-					var hub = this.hub;
-					if (userContext) {
-						hub.username = userContext.profile.username;
-						hub.profilePicture = userContext.profile.profilePicture;
-					}
-				};
-
-				/**
 				 * Sends Users and Videos search API requests in parallel and then updates the search result properties
 				 * @param {String} query the search query string provided by the user
 				 * @returns {*}
@@ -99,8 +78,7 @@ PModels.factory('NavbarModel', ['$q',
 						 sendingUsersSearch = $q.defer(),
 						 videosSearchResults = this.search.results.videos,
 						 usersSearchResults = this.search.results.users,
-						 userContext = UserContextManager.getActiveUserContext(),
-						 limit = 5;
+						 userContext = UserContextManager.getActiveUserContext();
 
 					var promises  = [sendingVideosSearch, sendingUsersSearch];
 

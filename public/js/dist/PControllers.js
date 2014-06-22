@@ -1,10 +1,14 @@
 
+/**
+ * EditProfileController
+ * @namespace
+ */
 
-PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
+PControllers.controller('EditProfileController', ['$scope', 'User',
 
-	function($scope, logger, User) {
+	function($scope, User) {
 
-		//Initialize Profile
+		/** Initializes a new User instance on the Controller $scope **/
 		$scope.User = User;
 		$scope.$watch(User);
 
@@ -13,18 +17,15 @@ PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
 ]);
 
 /**
- * PControllers.FeedController
- * View Controller for the discover state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency {Present} FeedManager {PManagers}
- *   @dependency {Present} Feed <Object>
+ * FeedController
+ * @namespace
  */
 
-  PControllers.controller('FeedController', ['$scope', 'logger', 'Feed',
+  PControllers.controller('FeedController', ['$scope', 'Feed',
 
-    function($scope, logger, Feed) {
+		function($scope, Feed) {
 
+			/** Initializes a new Feed instance on the Controller $scope **/
 			$scope.Feed = Feed;
 			$scope.$watch(Feed);
 
@@ -33,26 +34,21 @@ PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
   ]);
 
 /*
- * PControllers.homeCtrl
- * View Controller for the home state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency FeedManager {PManagers}
- *   @dependency Feed <Object>
- *   @dependency Profile <Object>
+ * HomeController
+ * @namespace
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'User',
+  PControllers.controller('homeCtrl', ['$scope', 'Feed', 'User',
 
-    function($scope, logger, Feed, User) {
+    function($scope, Feed, User) {
 
-      logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
-      logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
+			/** Initializes a new User instance on the Controller $scope **/
+			$scope.User = User;
 
-      //Initialize Profile
-      $scope.User = User;
+			/** Initializes a new Feed instance on the Controller $scope **/
 			$scope.Feed = Feed;
 
+			//Potentially useless......
 			$scope.$watch(Feed);
 
     }
@@ -60,8 +56,8 @@ PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
   ]);
 
 /*
- * Application Manager handles all login functionality
- * 	@param {Angular} $scope
+ * LoginController
+ * @namespace
  */
 
   PControllers.controller('LoginController', ['$scope',
@@ -78,33 +74,62 @@ PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
 	]);
 
 /**
- * PControllers.mainCtrl
- * Highest level controller PresentWebApp
- * Acts as a buffer to the rootScope
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency ApplicationManager {PManagers}
+ * MainController
+ * @namespace
  */
 
-  PControllers.controller('mainCtrl', ['$scope', 'logger', 'SessionModel',
+  PControllers.controller('MainController', ['$scope', 'logger', 'SessionModel',
 
     function($scope, logger, SessionModel) {
 
-      $scope.Session = SessionModel.create();
+      /** Initializes the SessionModel on the Controller $scope **/
+			$scope.SessionModel = SessionModel;
 
-			$scope.$watch('Session');
 
-			$scope.$watch('Session.user.active', function(user) {
-				$scope.$broadcast('_newUserLoggedIn', user);
-			});
+			/** The active session needs to be authorized before each state change **/
 
-      $scope.$on('$stateChangeStart', function(event, toState, toParams) {
-				$scope.Session.authorize(event, toState, toParams);
+			$scope.$on('$stateChangeStart', function(event, toState, toParams) {
+				$scope.SessionModel.authorize(event, toState, toParams);
       });
 
     }
 
   ]);
+
+/**
+ * NavbarController
+ * @namespace
+ */
+
+PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'UserContextManager', 'NavbarModel',
+	function($scope, $state, logger, UserContextManager, NavbarModel) {
+
+		/** Initialize a new Navbar instance on the Controller $scope **/
+		$scope.Navbar = NavbarModel.create();
+
+		$scope.$watch('Navbar');
+
+
+		/**
+		 * Watch the user search query and send a request when the query length is divisible by 3
+		 */
+
+
+		$scope.$watch('Navbar.search.query', function (query) {
+			//TODO: Enable search for a single character
+			//TODO: Fix bug where search results are sometimes duplicated
+			if (query == 0) {
+				$scope.Navbar.hideDropdown();
+			} else if (query.length % 3 == 0) {
+				$scope.Navbar.showDropdown();
+				$scope.Navbar.sendSearchQuery(query);
+			}
+		});
+
+
+	}
+]);
+
 
 /*
  * PControllers.loginCtrl
@@ -187,35 +212,3 @@ PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'U
 	}
 
 ]);
-
-
-
-PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'UserContextManager', 'NavbarModel',
-	function($scope, $state, logger, UserContextManager, NavbarModel) {
-
-		$scope.Navbar = NavbarModel.create();
-		$scope.Navbar.loadHub();
-
-		$scope.$watch('Navbar');
-
-		$scope.$watch('Navbar.search.query', function (query) {
-			if (query == 0) {
-				$scope.Navbar.hideDropdown();
-			} else if (query.length % 3 == 0) {
-				$scope.Navbar.showDropdown();
-				$scope.Navbar.sendSearchQuery(query);
-			}
-		});
-
-		$scope.$on('$stateChangeSuccess', function (event, toState, fromState) {
-			$scope.Navbar.configure(toState);
-		});
-
-		$scope.$on('_newUserLoggedIn', function (event, profile) {
-			$scope.Navbar.hub.username = profile.username;
-			$scope.Navbar.hub.profilePicture = profile.profilePicture;
-		});
-
-	}
-]);
-

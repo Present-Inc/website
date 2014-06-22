@@ -5,77 +5,68 @@
  * @param {PManagaers} UserContextManager
  */
 
-  PModels.factory('SessionModel', ['logger', '$state', '$stateParams', 'UserContextManager',
+  PModels.factory('SessionModel', ['$rootScope', '$state', 'logger', 'UserContextManager',
 
-		function(logger, $state, $stateParams, UserContextManager) {
+		function($rootScope, $state, logger, UserContextManager) {
 			return {
-				create : function() {
 
-					function Session() {
+				/**
+				 * Ensure the user has access to the requested state
+				 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
+				 * @param {Object }toState -- the state the the UserSession is transitioning into
+				 */
 
-						this.user = {
-							active : ''
-						};
+				authorize : function(event, toState) {
 
+					var userContext = UserContextManager.getActiveUserContext();
+					if (toState.meta.availability == 'private' && !userContext) {
+						event.preventDefault();
+						$state.go('account.login');
 					}
 
-					/**
-					 * Checks to make sure the user has access to the requested state
-					 * @param {Event} event -- stateChangeStart event object which contains the preventDefault method
-					 * @param {Object }toState -- the state the the UserSession is transitioning into
-					 */
+				},
 
-					Session.prototype.authorize = function(event, toState, toParams) {
-						var userContext = UserContextManager.getActiveUserContext();
-						if (toState.meta.availability == 'private' && !userContext) {
-							event.preventDefault();
-							$state.go('account.login');
-						}
-					};
 
-					/**
-					 * Handles user context creation, sets the activeUser property and changes the state to home
-					 * @param {String} username - The user provided username
-					 * @param {String} password - The user provided password
-					 */
+				/**
+				 * Handles user context creation, sets the activeUser property and changes the state to home.default
+				 * @param {String} username - The user provided username
+				 * @param {String} password - The user provided password
+				 */
 
-					Session.prototype.login = function(username, password) {
+				login: function(username, password) {
 
-						var userContext = UserContextManager.getActiveUserContext(),
-								_this = this;
+					var userContext = UserContextManager.getActiveUserContext();
 
-						if (!userContext) {
-							UserContextManager.createNewUserContext(username, password)
-								.then(function (newUserContext) {
-									_this.user.active = newUserContext.profile;
-									$state.go('home.default');
-								})
-								.catch(function () {
-									//TODO: better error handling
-									alert('username and/or password is incorrect');
-								});
-
-						} else {
-							$state.go('home.default');
-						}
-
-					};
-
-					/**
-					 * Handles user context deletion and changes the state to splash
-					 */
-
-					Session.prototype.logout = function() {
-						UserContextManager.destroyActiveUserContext()
-							.then(function() {
-								$state.go('splash');
+					if (!userContext) {
+						UserContextManager.createNewUserContext(username, password)
+							.then(function () {
+								$rootScope.$broadcast('_newUserLoggedIn');
+								$state.go('home.default');
+							})
+							.catch(function () {
+								//TODO: Implement better user feedback for failed login
+								alert('username and/or password is incorrect');
 							});
-					};
 
-					return new Session();
+					} else {
+						$state.go('home.default');
+					}
 
+				},
+
+				/**
+				 * Handles user context deletion and changes the state to splash
+				 */
+
+				logout: function() {
+					UserContextManager.destroyActiveUserContext()
+						.then(function () {
+							$state.go('splash');
+						});
 				}
+
 			};
+
   	}
 
 	]);

@@ -34,7 +34,7 @@
 
         <div class="hub">
             <span ui-sref="account.login" ng-hide="Navbar.mode.loggedIn">Log In</span>
-            <span ng-bind="Navbar.hub.username" ng-show="Navbar.mode.loggedIn" ng-click="Session.logout()"></span>
+            <span ng-bind="Navbar.hub.username" ng-show="Navbar.mode.loggedIn" ng-click="SessionModel.logout()"></span>
             <img ng-src="{{Navbar.hub.profilePicture}}" ng-show="Navbar.mode.loggedIn"/>
         </div>
 

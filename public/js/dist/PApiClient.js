@@ -64,7 +64,6 @@ PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', fun
 						this.headers = {};
 						this.validUserContextHeaders = false;
 						this.requiresUserContext = config.resources[resource][method].requiresUserContext;
-
 				}
 			}
 
@@ -74,6 +73,7 @@ PApiClient.factory('ApiClient', ['$http', '$q', 'logger', 'ApiClientConfig', fun
 			 */
 
 			Request.prototype.exec = function () {
+
 				var sendingRequest = $q.defer();
 
 				if (this.requiresUserContext && !this.validUserContextHeaders) {
