@@ -989,8 +989,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					this.counts = {
 						comments : apiVideoObject.comments.count,
-						likes    : apiVideoObject.likes.count,
-						replies  : apiVideoObject.replies.count
+						likes    : apiVideoObject.likes.count
 					};
 
 					if (apiVideoObject.creatorUser.object)

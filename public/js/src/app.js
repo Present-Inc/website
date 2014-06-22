@@ -120,7 +120,7 @@
 					views: {
 						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
 						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
-						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+						'profile@home': {templateUrl: 'views/partials/home_profile', controller: 'UserProfileController'}
 					},
 					resolve: {
 						Feed: function(FeedLoader) {
@@ -138,7 +138,7 @@
 					views: {
 						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
 						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
-						'profile@home': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'}
+						'profile@home': {templateUrl: 'views/partials/home_profile', controller: 'UserProfileController'}
 					},
 					resolve: {
 						Feed: function(FeedLoader) {
@@ -160,7 +160,7 @@
 					url: '/:user',
 					views: {
 						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
-						'profile@user': {templateUrl: 'views/partials/profile', controller: 'UserProfileController'},
+						'profile@user': {templateUrl: 'views/partials/user_profile', controller: 'UserProfileController'},
 						'feed@user': {templateUrl: 'views/partials/feed', controller: 'FeedController'}
 					},
 					resolve: {
@@ -210,7 +210,7 @@
 					url: '/account/edit',
 					views: {
 						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
-						'edit@account': {templateUrl: 'views/partials/editProfile', controller: 'EditProfileController'}
+						'edit@account': {templateUrl: 'views/partials/edit_profile', controller: 'EditProfileController'}
 					},
 					resolve: {
 						User : function(UserLoader) {

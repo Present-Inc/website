@@ -1,0 +1,45 @@
+
+<div class="profile">
+
+    <img class="profilePicture" ng-src="{{User.profile.profilePicture}}" height="70px" width="70px"/>
+
+    <div class="info">
+        <div class="fullName" ng-bind="User.profile.fullName"></div>
+        <div ng-bind="User.profile.username"></div>
+
+        <div class="actions">
+            <button class="mainBtn">Follow</button>
+            <button class="mainBtn">Demand</button>
+            <button class="mainBtn">Invite</button>
+        </div>
+
+        <div class="counts">
+            <div class="count">
+                <label>Videos</label>
+                <span ng-bind="User.profile.counts.videos"></span>
+            </div>
+            <div class="count">
+                <label>Views</label>
+                <span ng-bind="User.profile.counts.views"></span>
+            </div>
+            <div class="count">
+                <label>Likes</label>
+                <span ng-bind="User.profile.counts.likes"></span>
+            </div>
+            <div class="count">
+                <label>Followers</label>
+                <span ng-bind="User.profile.counts.followers"></span>
+            </div>
+            <div class="count">
+                <label>Friends</label>
+                <span ng-bind="User.profile.counts.friends"></span>
+            </div>
+        </div>
+
+        <div class="description" ng-bind="User.profile.description"></div>
+
+    </div>
+
+</div>
+
+

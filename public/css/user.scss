@@ -38,15 +38,30 @@
       font-weight: bold;
     }
 
+
+    .actions button {
+      margin: 20px 5px;
+    }
+
     .counts {
       margin: 10px auto 5px auto;
     }
 
-    .counts span {
-      margin: 0px 5px;
+    .count {
+      margin: 5px;
     }
 
+    .count label {
+      font-weight: bold;
+    }
+
+    .description {
+      margin: 10px 0px;
+    }
+
+
   }
+
 
   .loadMoreVideos {
     display: block;

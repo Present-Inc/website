@@ -141,6 +141,9 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 #user .profile { width: 280px; margin: 0px auto 25px auto; padding: 20px; overflow: auto; font-size: 16px; }
 #user .profile .profilePicture { margin: 0px auto 10px auto; background-color: #FFF; border: solid 1px #CCC; padding: 1px; }
 #user .profile .fullName { font-size: 22px; font-weight: bold; }
+#user .profile .actions button { margin: 20px 5px; }
 #user .profile .counts { margin: 10px auto 5px auto; }
-#user .profile .counts span { margin: 0px 5px; }
+#user .profile .count { margin: 5px; }
+#user .profile .count label { font-weight: bold; }
+#user .profile .description { margin: 10px 0px; }
 #user .loadMoreVideos { display: block; margin: 0 auto; }
