@@ -1,6 +1,6 @@
 /*
- * Application Manager handles all login functionality
- * 	@param {Angular} $scope
+ * LoginController
+ * @namespace
  */
 
   PControllers.controller('LoginController', ['$scope',

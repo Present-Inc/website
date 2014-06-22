@@ -1,16 +1,13 @@
 /**
- * PControllers.FeedController
- * View Controller for the discover state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency {Present} FeedManager {PManagers}
- *   @dependency {Present} Feed <Object>
+ * FeedController
+ * @namespace
  */
 
-  PControllers.controller('FeedController', ['$scope', 'logger', 'Feed',
+  PControllers.controller('FeedController', ['$scope', 'Feed',
 
-    function($scope, logger, Feed) {
+		function($scope, Feed) {
 
+			/** Initializes a new Feed instance on the Controller $scope **/
 			$scope.Feed = Feed;
 			$scope.$watch(Feed);
 

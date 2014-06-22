@@ -1,10 +1,14 @@
 
+/**
+ * EditProfileController
+ * @namespace
+ */
 
-PControllers.controller('EditProfileController', ['$scope', 'logger', 'User',
+PControllers.controller('EditProfileController', ['$scope', 'User',
 
-	function($scope, logger, User) {
+	function($scope, User) {
 
-		//Initialize Profile
+		/** Initializes a new User instance on the Controller $scope **/
 		$scope.User = User;
 		$scope.$watch(User);
 

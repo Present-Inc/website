@@ -1,11 +1,15 @@
 /*
- * PControllers.loginCtrl
- * Application Manager handles all login functionality
- * 	@dependency $scope {Angular}
+ * LoginController
+ * @namespace
  */
 
 	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
 
+		/** Initialize the UserModel on the Controller $scope **/
+		$scope.UserModel = UserModel;
+
+
+		/** User Input **/
 		$scope.input = {
 			username: '',
 			password: '',
@@ -13,6 +17,7 @@
 			email: ''
 		};
 
+		/** User Feedback **/
 		$scope.feedback = {
 			error : {
 				missingUsername: 'Your username is required',
@@ -20,14 +25,12 @@
 			}
 		};
 
+		/** Reveal the download link when true**/
 		$scope.accountSuccessfullyRegistered = false;
 
-		$scope.UserModel = UserModel;
-
 		$scope.submit = function(input) {
+			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
 			console.log($scope.registerForm.email.$valid);
 		};
-
-
 
 	}]);

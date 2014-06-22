@@ -1,24 +1,19 @@
 /*
- * PControllers.homeCtrl
- * View Controller for the home state
- *   @dependency $scope {Angular}
- *   @dependency logger {PUtilities}
- *   @dependency FeedManager {PManagers}
- *   @dependency Feed <Object>
- *   @dependency Profile <Object>
+ * HomeController
+ * @namespace
  */
 
-  PControllers.controller('homeCtrl', ['$scope', 'logger', 'Feed', 'User',
+  PControllers.controller('homeCtrl', ['$scope', 'Feed', 'User',
 
-    function($scope, logger, Feed, User) {
+    function($scope, Feed, User) {
 
-      logger.debug('PControllers.homeCtrl -- initializing User Profile', User);
-      logger.debug('PControllers.homeCtrl -- initializing the Feed Manager', Feed);
+			/** Initializes a new User instance on the Controller $scope **/
+			$scope.User = User;
 
-      //Initialize Profile
-      $scope.User = User;
+			/** Initializes a new Feed instance on the Controller $scope **/
 			$scope.Feed = Feed;
 
+			//Potentially useless......
 			$scope.$watch(Feed);
 
     }

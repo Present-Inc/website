@@ -1,15 +1,11 @@
  /*
-  * PControllers.splashController
-  * Controller for splash state
-  *   @dependency  $scope {Angular}
-  *   @dependency  logger {PUtilites}
+	* SplashController
+	* @namespace
   */
 
   PControllers.controller('SplashController', ['$scope', 'logger',
 
     function($scope, logger) {
-
-      $scope.message = 'Present!';
 
       $scope.staticContent = {
         title: "Present",
