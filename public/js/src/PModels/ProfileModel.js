@@ -12,6 +12,9 @@ PModels.factory('ProfileModel', function() {
 				this.fullName = apiProfileObject.profile.fullName || '';
 				this.profilePicture = apiProfileObject.profile.picture.url;
 				this.description = apiProfileObject.profile.description;
+				this.gender = apiProfileObject.profile.gender;
+				this.location = apiProfileObject.profile.location;
+				this.website = apiProfileObject.profile.website;
 
 
 				this.counts = {
@@ -28,7 +31,7 @@ PModels.factory('ProfileModel', function() {
 				/** Determine the display name(s) **/
 				if (apiProfileObject.profile.fullName) {
 					this.displayName = apiProfileObject.profile.fullName;
-					this.altName = apiProfileObject.username;
+					this.altName = '@' + apiProfileObject.username;
 				} else {
 					this.displayName = apiProfileObject.username;
 					this.altName = null;

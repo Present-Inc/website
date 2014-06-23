@@ -172,6 +172,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod : 'GET',
 					url : 'users/search',
 					requiresUserContext : false
+				},
+				update : {
+					httpMethod: 'POST',
+					url: 'users/update',
+					requiresUserContext: true
 				}
 			},
 

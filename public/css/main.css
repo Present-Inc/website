@@ -111,6 +111,10 @@ nav .hub span:hover { cursor: pointer; color: #33aaff; }
 
 #editProfile { padding: 160px; }
 
+#editProfile select { margin: 10px 0px 20px 8%; }
+#editProfile label { margin: 0px 0px 0px 8%; font-weight: bold; }
+#editProfile h3 { text-align: center; }
+#editProfile button { display: block; margin: 0px auto; }
 #editProfile .profilePicture { display: block; margin: 20px auto; height: 100px; }
 
 /* splash.scss Styles for splash view */

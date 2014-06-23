@@ -398,6 +398,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod : 'GET',
 					url : 'users/search',
 					requiresUserContext : false
+				},
+				update : {
+					httpMethod: 'POST',
+					url: 'users/update',
+					requiresUserContext: true
 				}
 			},
 
@@ -890,6 +895,9 @@ PModels.factory('ProfileModel', function() {
 				this.fullName = apiProfileObject.profile.fullName || '';
 				this.profilePicture = apiProfileObject.profile.picture.url;
 				this.description = apiProfileObject.profile.description;
+				this.gender = apiProfileObject.profile.gender;
+				this.location = apiProfileObject.profile.location;
+				this.website = apiProfileObject.profile.website;
 
 
 				this.counts = {
@@ -906,7 +914,7 @@ PModels.factory('ProfileModel', function() {
 				/** Determine the display name(s) **/
 				if (apiProfileObject.profile.fullName) {
 					this.displayName = apiProfileObject.profile.fullName;
-					this.altName = apiProfileObject.username;
+					this.altName = '@' + apiProfileObject.username;
 				} else {
 					this.displayName = apiProfileObject.username;
 					this.altName = null;
@@ -1158,13 +1166,13 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						if (userContext) {
 							ApiManager.users('update', userContext, updatedProfile)
 								.then(function(apiResponse) {
-									defer.resolve(apiResponse.result);
+									updatingProfile.resolve(apiResponse.result);
 								})
 								.catch(function(apiResponse) {
-									defer.reject(apiResponse.result);
+									updatingProfile.reject(apiResponse.result);
 								});
 						} else {
-							defer.reject('Please log in and try again');
+							updatedProfile.reject('Please log in and try again');
 						}
 
 						return updatingProfile.promise;
@@ -1175,6 +1183,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 						var userContext = UserContextManager.getActiveUserContext(),
 								resettingPassword = $q.defer();
+
 						ApiManager.users('resetPassword', userContext, password)
 							.then(function(apiResponse) {
 								resttingPassword.reject();
@@ -1298,7 +1307,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					var embededResults = {
 						comments : apiVideoObject.comments.results,
-						likes : apiVideoObject.likes.results,
+						likes : apiVideoObject.likes.results
 					};
 
 				 /**
@@ -1330,7 +1339,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				  /** Redirect the user to log in if there is no active user context **/
 					if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 					/** Remove the like if the user already has a forward like relationship with the video **/
 					else if (this.subjectiveMeta.like.forward) {
@@ -1364,7 +1373,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				 /** Redirect the user to log in if there is no active user context **/
 				 if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 				 /** Add the comment to the video cell **/
 				 else if (this.input.comment.length >= 1) {
@@ -1391,7 +1400,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				 /** Redirect the user if there is no active user context **/
 				 if(!userContext) {
-				 	$state.go('login');
+				 	$state.go('account.login');
 				 /** Remove the comment if the active user is the source user of the comment **/
 				 } else if(comment.sourceUser._id == userContext.userId) {
 						this.video.counts.comments--;
@@ -1753,7 +1762,28 @@ PControllers.controller('EditProfileController', ['$scope', 'User',
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.User = User;
+
+		$scope.input = {
+			full_name: User.profile.fullName,
+			description: User.profile.description,
+			gender: User.profile.gender,
+			location: User.profile.location,
+			website: User.profile.website,
+			email: User.profile.email,
+			phone_number: User.profile.phoneNumber
+		};
+
+		$scope.genders = ['Male', 'Female'];
+
 		$scope.$watch(User);
+
+		$scope.submit = function(input) {
+			User.update(input)
+				.then(function(msg) {
+					console.log(msg);
+				});
+		};
+
 
 	}
 
@@ -1887,9 +1917,12 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 		$scope.input = {
 			username: '',
 			password: '',
+			gender: '',
 			verifyPassword: '',
 			email: ''
 		};
+
+
 
 		/** User Feedback **/
 		$scope.feedback = {
@@ -1904,7 +1937,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 		$scope.submit = function(input) {
 			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
-			console.log($scope.registerForm.email.$valid);
+			console.log(input);
 		};
 
 	}]);

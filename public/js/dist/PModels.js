@@ -426,6 +426,9 @@ PModels.factory('ProfileModel', function() {
 				this.fullName = apiProfileObject.profile.fullName || '';
 				this.profilePicture = apiProfileObject.profile.picture.url;
 				this.description = apiProfileObject.profile.description;
+				this.gender = apiProfileObject.profile.gender;
+				this.location = apiProfileObject.profile.location;
+				this.website = apiProfileObject.profile.website;
 
 
 				this.counts = {
@@ -442,7 +445,7 @@ PModels.factory('ProfileModel', function() {
 				/** Determine the display name(s) **/
 				if (apiProfileObject.profile.fullName) {
 					this.displayName = apiProfileObject.profile.fullName;
-					this.altName = apiProfileObject.username;
+					this.altName = '@' + apiProfileObject.username;
 				} else {
 					this.displayName = apiProfileObject.username;
 					this.altName = null;
@@ -694,13 +697,13 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						if (userContext) {
 							ApiManager.users('update', userContext, updatedProfile)
 								.then(function(apiResponse) {
-									defer.resolve(apiResponse.result);
+									updatingProfile.resolve(apiResponse.result);
 								})
 								.catch(function(apiResponse) {
-									defer.reject(apiResponse.result);
+									updatingProfile.reject(apiResponse.result);
 								});
 						} else {
-							defer.reject('Please log in and try again');
+							updatedProfile.reject('Please log in and try again');
 						}
 
 						return updatingProfile.promise;
@@ -711,6 +714,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 						var userContext = UserContextManager.getActiveUserContext(),
 								resettingPassword = $q.defer();
+
 						ApiManager.users('resetPassword', userContext, password)
 							.then(function(apiResponse) {
 								resttingPassword.reject();
@@ -834,7 +838,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					var embededResults = {
 						comments : apiVideoObject.comments.results,
-						likes : apiVideoObject.likes.results,
+						likes : apiVideoObject.likes.results
 					};
 
 				 /**
@@ -866,7 +870,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				  /** Redirect the user to log in if there is no active user context **/
 					if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 					/** Remove the like if the user already has a forward like relationship with the video **/
 					else if (this.subjectiveMeta.like.forward) {
@@ -900,7 +904,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				 /** Redirect the user to log in if there is no active user context **/
 				 if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 				 /** Add the comment to the video cell **/
 				 else if (this.input.comment.length >= 1) {
@@ -927,7 +931,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 				 /** Redirect the user if there is no active user context **/
 				 if(!userContext) {
-				 	$state.go('login');
+				 	$state.go('account.login');
 				 /** Remove the comment if the active user is the source user of the comment **/
 				 } else if(comment.sourceUser._id == userContext.userId) {
 						this.video.counts.comments--;

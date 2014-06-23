@@ -52,7 +52,7 @@
 
 					var embededResults = {
 						comments : apiVideoObject.comments.results,
-						likes : apiVideoObject.likes.results,
+						likes : apiVideoObject.likes.results
 					};
 
 				 /**
@@ -84,7 +84,7 @@
 
 				  /** Redirect the user to log in if there is no active user context **/
 					if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 					/** Remove the like if the user already has a forward like relationship with the video **/
 					else if (this.subjectiveMeta.like.forward) {
@@ -118,7 +118,7 @@
 
 				 /** Redirect the user to log in if there is no active user context **/
 				 if(!userContext) {
-						$state.go('login');
+						$state.go('account.login');
 					}
 				 /** Add the comment to the video cell **/
 				 else if (this.input.comment.length >= 1) {
@@ -145,7 +145,7 @@
 
 				 /** Redirect the user if there is no active user context **/
 				 if(!userContext) {
-				 	$state.go('login');
+				 	$state.go('account.login');
 				 /** Remove the comment if the active user is the source user of the comment **/
 				 } else if(comment.sourceUser._id == userContext.userId) {
 						this.video.counts.comments--;

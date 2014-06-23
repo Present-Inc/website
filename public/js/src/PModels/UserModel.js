@@ -109,13 +109,13 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						if (userContext) {
 							ApiManager.users('update', userContext, updatedProfile)
 								.then(function(apiResponse) {
-									defer.resolve(apiResponse.result);
+									updatingProfile.resolve(apiResponse.result);
 								})
 								.catch(function(apiResponse) {
-									defer.reject(apiResponse.result);
+									updatingProfile.reject(apiResponse.result);
 								});
 						} else {
-							defer.reject('Please log in and try again');
+							updatedProfile.reject('Please log in and try again');
 						}
 
 						return updatingProfile.promise;
@@ -126,6 +126,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 						var userContext = UserContextManager.getActiveUserContext(),
 								resettingPassword = $q.defer();
+
 						ApiManager.users('resetPassword', userContext, password)
 							.then(function(apiResponse) {
 								resttingPassword.reject();

@@ -13,9 +13,12 @@
 		$scope.input = {
 			username: '',
 			password: '',
+			gender: '',
 			verifyPassword: '',
 			email: ''
 		};
+
+
 
 		/** User Feedback **/
 		$scope.feedback = {
@@ -30,7 +33,7 @@
 
 		$scope.submit = function(input) {
 			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
-			console.log($scope.registerForm.email.$valid);
+			console.log(input);
 		};
 
 	}]);

@@ -1,40 +1,66 @@
 
 <div id="editProfile">
-     <form>
+     <form name="editProfileForm" novalidate>
          <legend>Edit Profile</legend>
-         <img class="profilePicture" ng-src="{{User.profile.profilePicture}}" />
+         <img class="profilePicture" ng-src="{{User.profile.profilePicture}}"/>
+         <h3 ng-bind="User.profile.username"></h3>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Full Name</label>
+             <input type="text"
+                    name="name"
+                    ng-model="input.full_name"
+                    required/>
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Description</label>
+             <input type="text"
+                    name="description"
+                    ng-model="input.description"
+                    required/>
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <select ng-model="input.gender" ng-options="gender as gender for gender in genders">
+                 <option value="">-- Gender --</option>
+             </select>
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Location</label>
+             <input type="text"
+                    name="location"
+                    ng-model="input.location"
+                    />
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Website</label>
+             <input type="text"
+                    name=""
+                    ng-model="input.website"
+                    />
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Email</label>
+             <input type="email"
+                    name=""
+                    ng-model="input.email"
+                    required/>
          </div>
 
          <div class="formComponent">
-             <input type="text" name="" ng-model="" />
+             <label>Phone Number</label>
+             <input type="text"
+                    name="phoneNumber"
+                    ng-model="input.phone_number"
+                    required
+                    />
          </div>
 
-         <div class="formComponent">
-             <input type="text" name="" ng-model="" />
-         </div>
+         <button class="mainBtn" ng-click="submit(input)">Update</button>
      </form>
 </div>
 
