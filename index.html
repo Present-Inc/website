@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html class="fullscreen">
+<html ng-app="PresentWebApp" ng-controller="mainCtrl"  class="fullscreen" >
 <head>
     <base href="/">
     <meta charset="utf-8">
-    <meta name="description" content="Present is an app that lets you share the present with anyone, anywhere.">
+    <meta name="description" content="{{header.description}}"/>
+    <meta property="og:title" content="{{header.openGraph.title}}"/>
+    <meta property="og:image" content="{{header.openGraph.image}}"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <title>Present - Share the Present</title>
+    <title ng-bind="header.title"></title>
     <link href="../css/main.css" type="text/css" rel="stylesheet" media="screen"/>
 </head>
-<body ng-controller="mainCtrl" class="fullscreen">
+<body  class="fullscreen">
 
     <!-- [if lte IE 9] >
     <style>
@@ -97,6 +99,5 @@
 
     <script src="/js/core/dist/present-web-app.min.js"></script>
 
-    <script>angular.bootstrap(document, ["PresentWebApp"]);</script>
 </body>
 </html>

@@ -186,7 +186,14 @@ pControllers.controller('mainCtrl', [
   '$window',
   '$location',
   function ($scope, $window, $location) {
-    $scope.message = 'Welcome to Present';
+    $scope.header = {
+      title: 'Present - Share the Present',
+      description: 'An app that lets you share what you\'re seeing with anyone right now',
+      openGraph: {
+        title: 'Present',
+        image: 'http://www.present.tv/assets/img/app-icon.png'
+      }
+    };
     $scope.app = {
       isReady: false,
       viewAnimation: 'a-fade',
@@ -196,6 +203,14 @@ pControllers.controller('mainCtrl', [
       downloadModal: false
     };
     $scope.$on('$stateChangeStart', function () {
+      $scope.header = {
+        title: 'Present - Share the Present',
+        description: 'An app that lets you share what you\'re seeing with anyone right now',
+        openGraph: {
+          title: 'Present',
+          image: 'http://www.present.tv/assets/img/app-icon.png'
+        }
+      };
       $scope.app.isReady = false;
     });
     $scope.$on('$stateChangeSuccess', function () {
@@ -357,6 +372,11 @@ pControllers.controller('individualPresentCtrl', [
   'Profile',
   'ProfileService',
   function ($scope, Feed, Profile, ProfileService) {
+    $scope.header.title = Feed.videos[0].title || '@' + Feed.videos[0].creator.username + '\'s video on Present';
+    $scope.header.openGraph = {
+      title: $scope.header.title,
+      image: Feed.videos[0].mediaUrl.still
+    };
     $scope.app.fullscreen = true;
     $scope.user = Profile;
     $scope.feedManager = {

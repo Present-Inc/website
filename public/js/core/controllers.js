@@ -3,7 +3,16 @@
 var pControllers = angular.module('p.controllers', ['ngAnimate']);
 
 pControllers.controller('mainCtrl', ['$scope', '$window', '$location', function($scope, $window, $location) {
-    $scope.message = 'Welcome to Present';
+
+		$scope.header = {
+			title: 'Present - Share the Present',
+			description: 'An app that lets you share what you\'re seeing with anyone right now',
+			openGraph: {
+				title : 'Present',
+				image : 'http://www.present.tv/assets/img/app-icon.png'
+			}
+		};
+
     $scope.app = {
         isReady : false,
         viewAnimation: 'a-fade',
@@ -16,6 +25,14 @@ pControllers.controller('mainCtrl', ['$scope', '$window', '$location', function(
     };
 
     $scope.$on('$stateChangeStart', function() {
+				$scope.header = {
+					title: 'Present - Share the Present',
+					description: 'An app that lets you share what you\'re seeing with anyone right now',
+					openGraph: {
+						title : 'Present',
+						image : 'http://www.present.tv/assets/img/app-icon.png'
+					}
+				};
         $scope.app.isReady = false;
     });
 
@@ -124,7 +141,8 @@ pControllers.controller('discoverCtrl', ['$scope', '$timeout', 'Feed', 'Discover
 
 pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile', 'ProfileService',
     function($scope, $timeout, Feed, Profile, ProfileService) {
-        $scope.app.fullscreen = false;
+
+				$scope.app.fullscreen = false;
 
         $scope.user = Profile;
         $scope.alternateLayout = {};
@@ -184,7 +202,14 @@ pControllers.controller('profileCtrl', ['$scope', '$timeout', 'Feed', 'Profile',
 
 pControllers.controller('individualPresentCtrl', ['$scope', 'Feed', 'Profile', 'ProfileService',
     function($scope, Feed, Profile, ProfileService) {
-    $scope.app.fullscreen = true;
+
+		$scope.header.title = Feed.videos[0].title || '@' + Feed.videos[0].creator.username + '\'s video on Present';
+		$scope.header.openGraph = {
+			title : $scope.header.title,
+			image : Feed.videos[0].mediaUrl.still
+		};
+
+		$scope.app.fullscreen = true;
 
     $scope.user = Profile;
     $scope.feedManager = {
