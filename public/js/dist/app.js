@@ -427,9 +427,35 @@ PApiClient.factory('ApiClientConfig', function() {
 				}
 			},
 
-			views : {},
-			demands : {},
-			friendships : {},
+			views : {
+				create: {
+					httpMethod: 'POST',
+					url: 'views/create',
+					requiresUserContext: true
+				}
+			},
+
+			demands : {
+				create: {
+					httpMethod: 'POST',
+					url: 'demands/create',
+					requireUserContext : true
+				}
+			},
+
+			friendships : {
+				create : {
+					httpMethod: 'POST',
+					url: 'friendships/create',
+					requiresUserContext : true
+				},
+				destroy : {
+					httpMethod : 'POST',
+					url : 'friendships/destroy',
+					requiresUserContext : true
+				}
+			},
+
 			activities : {}
 
 		}
@@ -1060,15 +1086,19 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					User.prototype.follow = function() {
 
 						var userContext = UserContextManager.getActiveUserContext();
+								params = {
+									user_id : this.profile._id,
+									username : this.profile.username
+								};
 
 						if(!userContext) {
 							$state.go('login');
 						} else if (this.subjectiveMeta.friendship.forward) {
 								this.subjectiveMeta.friendship.forward = false;
-								ApiManager.friendships('destroy', userContext, {});
+								ApiManager.friendships('destroy', userContext, params);
 						} else {
 								this.subjectiveMeta.friendship.forward = true;
-								ApiManager.friendships('create', userContext, {});
+								ApiManager.friendships('create', userContext, params);
 						}
 
 					};
@@ -1079,13 +1109,17 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					User.prototype.demand = function() {
 
-						var userContext = UserContextManager.getActiveUserContext();
+						var userContext = UserContextManager.getActiveUserContext(),
+								params = {
+									user_id : this.profile._id,
+									username : this.profile.username
+								};
 
 						if (!userContext) {
 							$state.go('login');
-						} else {
+						} else if (!subjectiveObjectMeta.demand.forward) {
 								this.subjectiveMeta.demand.forward = true;
-								ApiManager.demands('create', userContext, {});
+								ApiManager.demands('create', userContext, params);
 						}
 
 					};
@@ -1503,7 +1537,7 @@ PLoaders.factory('UserLoader', ['$q', 'logger', 'ApiManager', 'UserModel', 'User
 				} else {
 					ApiManager.users(method, userContext, {username: username})
 						.then(function(apiResponse) {
-							var User = UserModel.construct(apiResponse.result.object);
+							var User = UserModel.construct(apiResponse.result.object, apiResponse.result.subjectiveObjectMeta);
 							loadingUser.resolve(User);
 						})
 						.catch(function() {
@@ -1908,6 +1942,12 @@ PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'U
 		/** Initialize a new User instance on the Controller scope **/
 		$scope.User = User;
 
+		$scope.actions = {
+			friendship : '',
+			demand : '',
+			group : 'Invite'
+		};
+
 		/** Initialize a new Feed instance on the Controller $scope **/
 		$scope.Feed = Feed;
 
@@ -1944,6 +1984,43 @@ PDirectives.directive('pEnter', function() {
 		});
 	};
 });
+/**
+ * pUser
+ * @namespace
+ */
+
+
+	PDirectives.directive('pUser', function() {
+		return {
+			restrict: 'EA',
+			link: function(scope, element, attr) {
+
+				console.log('hi');
+
+				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
+					if (newValue) {
+						scope.followBtn.css({'background-color': '#33AAFF', 'color': '#FFF'});
+						scope.actions.friendship = 'Following';
+					} else {
+						scope.followBtn.css({'background-color': 'transparent', 'color': '#33AAFF'});
+						scope.actions.friendship = 'Follow';
+					}
+				});
+
+				scope.$watch('User.subjectiveMeta.demand.forward', function(newValue) {
+					if (newValue) {
+						scope.demandBtn.css({'background-color': '#33AAFF', 'color': '#FFF'});
+						scope.actions.demand = 'Demanded';
+					} else {
+						scope.demandBtn.css({'background-color': 'transparent', 'color': '#33AAFF'});
+						scope.actions.demand = 'Demand';
+					}
+				});
+
+			}
+		}
+
+	});
 /**
  * HTML directive for a video cell element
  */

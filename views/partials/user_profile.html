@@ -1,5 +1,5 @@
 
-<div class="profile">
+<div p-user class="profile">
 
     <img class="profilePicture" ng-src="{{User.profile.profilePicture}}" height="70px" width="70px"/>
 
@@ -8,9 +8,9 @@
         <div ng-bind="User.profile.username"></div>
 
         <div class="actions">
-            <button class="mainBtn">Follow</button>
-            <button class="mainBtn">Demand</button>
-            <button class="mainBtn">Invite</button>
+            <button class="mainBtn" register-element="followBtn" ng-bind="actions.friendship" ng-click="User.follow()"></button>
+            <button class="mainBtn" register-element="demandBtn" ng-bind="actions.demand" ng-click="User.demand()"></button>
+            <button class="mainBtn" register-element="inviteBtn" ng-bind="actions.group"></button>
         </div>
 
         <div class="counts">

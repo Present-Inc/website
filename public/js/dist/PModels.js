@@ -622,15 +622,19 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					User.prototype.follow = function() {
 
 						var userContext = UserContextManager.getActiveUserContext();
+								params = {
+									user_id : this.profile._id,
+									username : this.profile.username
+								};
 
 						if(!userContext) {
 							$state.go('login');
 						} else if (this.subjectiveMeta.friendship.forward) {
 								this.subjectiveMeta.friendship.forward = false;
-								ApiManager.friendships('destroy', userContext, {});
+								ApiManager.friendships('destroy', userContext, params);
 						} else {
 								this.subjectiveMeta.friendship.forward = true;
-								ApiManager.friendships('create', userContext, {});
+								ApiManager.friendships('create', userContext, params);
 						}
 
 					};
@@ -641,13 +645,17 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					User.prototype.demand = function() {
 
-						var userContext = UserContextManager.getActiveUserContext();
+						var userContext = UserContextManager.getActiveUserContext(),
+								params = {
+									user_id : this.profile._id,
+									username : this.profile.username
+								};
 
 						if (!userContext) {
 							$state.go('login');
-						} else {
+						} else if (!subjectiveObjectMeta.demand.forward) {
 								this.subjectiveMeta.demand.forward = true;
-								ApiManager.demands('create', userContext, {});
+								ApiManager.demands('create', userContext, params);
 						}
 
 					};

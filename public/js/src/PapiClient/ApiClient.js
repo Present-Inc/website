@@ -201,9 +201,35 @@ PApiClient.factory('ApiClientConfig', function() {
 				}
 			},
 
-			views : {},
-			demands : {},
-			friendships : {},
+			views : {
+				create: {
+					httpMethod: 'POST',
+					url: 'views/create',
+					requiresUserContext: true
+				}
+			},
+
+			demands : {
+				create: {
+					httpMethod: 'POST',
+					url: 'demands/create',
+					requireUserContext : true
+				}
+			},
+
+			friendships : {
+				create : {
+					httpMethod: 'POST',
+					url: 'friendships/create',
+					requiresUserContext : true
+				},
+				destroy : {
+					httpMethod : 'POST',
+					url : 'friendships/destroy',
+					requiresUserContext : true
+				}
+			},
+
 			activities : {}
 
 		}

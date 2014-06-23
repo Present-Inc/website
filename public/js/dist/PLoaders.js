@@ -61,7 +61,7 @@ PLoaders.factory('UserLoader', ['$q', 'logger', 'ApiManager', 'UserModel', 'User
 				} else {
 					ApiManager.users(method, userContext, {username: username})
 						.then(function(apiResponse) {
-							var User = UserModel.construct(apiResponse.result.object);
+							var User = UserModel.construct(apiResponse.result.object, apiResponse.result.subjectiveObjectMeta);
 							loadingUser.resolve(User);
 						})
 						.catch(function() {
