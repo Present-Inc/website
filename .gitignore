@@ -4,3 +4,4 @@ Dockerfile
 tests/
 docs/
 .DS_Store
+.idea/

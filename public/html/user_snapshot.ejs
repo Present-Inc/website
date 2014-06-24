@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+
+
+    <title>Present</title>
+    <meta property="description" content="An app that allows you to share live video -- anytime, anywhere" />
+    <meta charset="UTF-8">
+
+    <!-- Facebook Open Graph -->
+
+    <meta property="og:title" content="An app that allows you to share live video -- anytime, anywhere"/>
+    <meta property="og:site_name" content="Present">
+    <meta property="og:url" content="www.present.tv" />
+    <meta property="og:image" content="http://www.present.tv/assets/img/app-icon.png"/>
+    <meta property="fb:app_id" content="" />
+    <meta property="og:type" content="video" />
+
+</head>
+<body>
+<div>
+    <div id="profile">
+        <h1>Present -- An app that allows you to share live video -- anytime, anywhere</h1>
+        <img class="picture" src="<%=user.profile.picture.url%>" />
+        <div class="username"><%=user.username%></div>
+        <div class="fullName"><%=user.profile.fullName%></div>
+        <div class="description"><%=user.profile.description%></div>
+    </div>
+</div>
+</body>
+</html>
+

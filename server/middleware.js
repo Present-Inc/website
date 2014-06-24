@@ -3,7 +3,7 @@ exports.detectUserDeviceType = function(req, res, next) {
     var userAgent = req.get('user-agent') || '';
     // Set req.userDevice <String>, and proceed
     req.userDevice = getUserDeviceType(userAgent);
-    next();
+		next();
 };
 
 var getUserDeviceType = function (userAgent) {

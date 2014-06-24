@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+
+    <title>Present</title>
+    <meta property="description" content="An app that allows you to share live video -- anytime, anywhere" />
+    <meta charset="UTF-8">
+
+    <!-- Facebook Open Graph -->
+
+    <meta property="og:title" content="<%=openGraph.title%>"/>
+    <meta property="og:site_name" content="Present">
+    <meta property="og:url" content="<%=openGraph.url%>" />
+    <meta property="og:image" content="<%=openGraph.image%>"/>
+    <meta property="fb:app_id" content="" />
+    <meta property="og:type" content="video" />
+
+</head>
+<body>
+<div>
+    <div id="profile">
+        <h1>Present -- An app that allows you to share live video -- anytime, anywhere</h1>
+        <img class="picture" src="<%=video.creatorUser.object.profile.picture.url%>" />
+        <div class="username"><%=video.creatorUser.object.username%></div>
+        <div class="fullName"><%=video.creatorUser.object.profile.fullName%></div>
+        <div class="description"><%=video.creatorUser.object.profile.description%></div>
+    </div>
+    <div id="video">
+        <h1><%=video.title%></h1>
+        <img src="<%=video.mediaUrls.images['480px']%>" />
+    </div>
+
+</div>
+</body>
+</html>
+
