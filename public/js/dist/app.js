@@ -189,7 +189,7 @@
 				})
 
 				.state('account.register', {
-					url: '/account/register',
+					url: '/account/register?invite_id&invite_user_id',
 					views: {
 						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
 						'register@account' : {templateUrl:  'views/partials/register', controller: 'RegisterController'}
@@ -198,10 +198,10 @@
 				})
 
 				.state('account.resetPassword', {
-					url: '/account/reset_password',
+					url: '/account/reset_password?user_id&password_reset_token',
 					views: {
 						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
-						'register@account' : {templateUrl:  '<h1>Reset Password</h1>'}
+						'resetPassword@account' : {templateUrl:  'views/partials/reset_password', controller: 'ResetPasswordController'}
 					},
 					meta: {availability: 'public'}
 				})
@@ -403,6 +403,16 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod: 'POST',
 					url: 'users/update',
 					requiresUserContext: true
+				},
+				create : {
+					httpMethod : 'POST',
+					url : 'users/create',
+					requiresUserContext : false
+				},
+				destroy : {
+					httpMethod : 'POST',
+					url : 'users/destro',
+					requiresUserContext : true
 				}
 			},
 
@@ -747,6 +757,54 @@ PApiClient.factory('ApiClientConfig', function() {
 	});
 
 /**
+ * FeedbackModel
+ * @class
+ */
+
+PModels.factory('MessageModel', function() {
+	return {
+		create : function(style, content, visible) {
+
+			/**
+			 * @constructor
+			 * @param {String} style - Sets the css class for the Feedback
+			 * @param {Boolean} visible - Sets the visibility of the Feedback
+			 * @param {Object} content - The feedback content
+			 */
+
+			function Message(style, content, visible) {
+				this.style = style || 'modal';
+				this.visible = visible;
+				this.title = content ? content.title : '';
+				this.body = content ? content.body : '';
+				this.options = content ? content.options : [];
+			}
+
+			Message.prototype.show = function(style, content) {
+
+				if(style && content.body) {
+					this.style = style;
+					this.body = content.body;
+					this.title = content.title;
+					this.options = content.options;
+					this.visible = true;
+				}
+
+			};
+
+			Message.prototype.clear = function() {
+				this.visible = false;
+				this.body = '';
+				this.title = '';
+				this.options = []
+			};
+
+			return new Message(style, content, visible);
+
+		}
+	}
+});
+/**
  * Properties and methods to handle the state of the Navbar
  * 	@param $q {Angular}
  * 	@param $state {Ui-Router}
@@ -785,7 +843,7 @@ PModels.factory('NavbarModel', ['$q',
 				 * @property {Object search - Contains the properties and results of the search bar
 				 */
 
-				function Navbar(){
+				function Navbar() {
 
 					var userContext = UserContextManager.getActiveUserContext();
 
@@ -1057,7 +1115,7 @@ PModels.factory('ProfileModel', function() {
 	}]);
 /**
  * Constructs a new Profile Model
- * @namespace
+ * @class UserModel
  */
 
 PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
@@ -1088,7 +1146,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 
 					/**
-					 * Follow / UnFollow a user
+					 * Either follows or un-follows the user based on the current relationship
 					 */
 
 					User.prototype.follow = function() {
@@ -1112,7 +1170,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					};
 
 					/**
-					 * Demand a user
+					 * Demand the user
 					 */
 
 					User.prototype.demand = function() {
@@ -1132,41 +1190,21 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-					User.prototype.addToGroup = function() {
-
-						//TODO: Implement addToGroup method on the UserModel
-
-					};
-
-					User.prototype.removeFromGroup = function(group) {
-
-						//TODO: Implement removeFromGroup method on the UserModel
-
-					};
-
-
-					User.prototype.leaveGroup = function(group) {
-
-						//TODO: Implement leaveGroup method on the UserModel
-
-					};
-
-
 					/**
-					 *
-					 * @param updatedProfile
+					 * Updates the user's profile
+					 * @param {Object} updatedProfile
 					 */
 
-					User.prototype.update = function(updatedProfile) {
+					User.prototype.update = function(input, feedback) {
 
 						var userContext = UserContextManager.getActiveUserContext(),
-								updatingProfile = $q.defer();
+								params = input;
 
 
 						if (userContext) {
-							ApiManager.users('update', userContext, updatedProfile)
+							ApiManager.users('update', userContext, params)
 								.then(function(apiResponse) {
-									updatingProfile.resolve(apiResponse.result);
+
 								})
 								.catch(function(apiResponse) {
 									updatingProfile.reject(apiResponse.result);
@@ -1179,20 +1217,26 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-					User.prototype.resetPassword = function(password) {
+					User.prototype.deleteSelf = function() {
 
 						var userContext = UserContextManager.getActiveUserContext(),
-								resettingPassword = $q.defer();
+							deletingAccount = $q.defer();
 
-						ApiManager.users('resetPassword', userContext, password)
-							.then(function(apiResponse) {
-								resttingPassword.reject();
-							})
-							.reject(function(apiResponse) {
-								resettingPassword.reject();
-							});
+						var params = {username: userContext.profile.username, user_id: userContext.userId};
 
-						return resettingPassword.promise;
+						if(userContext) {
+							ApiManager.users('destroy', userContext, params)
+								.then(function(apiResponse) {
+									deletingAccount.resolve(apiResponse.result);
+								})
+								.catch(function(apiResponse) {
+									deletingAccount.reject(apitResponse.result);
+								})
+						} else {
+							deletingAccount.reject();
+						}
+
+						return deletingAccount.promise;
 
 					};
 
@@ -1201,19 +1245,27 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				},
 
 				/**
-				 * Class method for registering a new account with the API.
+				 * Registers a new user account with the API.
 				 * @returns {*}
 				 */
 
-				registerNewAccount : function(input) {
+				registerNewAccount : function(input, invite) {
 
-					deletingAccount = $q.defer();
+					var registeringAccount = $q.defer();
 
-					ApiManager.users('create', null, input)
+					var params = {
+						username: input.username,
+						email: input.email,
+						password: input.password,
+						invite_id : invite ? invite._id : null,
+						invite_user_id: invite ? invite._user_id : null
+					};
+
+					ApiManager.users('create', null, params)
 						.then(function(apiResponse) {
 							registeringAccount.resolve(apiResponse.result);
 						})
-						.catch(function() {
+						.catch(function(apiResposne) {
 							registeringAccount.resolve(apiResponse.result);
 						});
 
@@ -1222,30 +1274,46 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				},
 
 				/**
-				 * Class method for deleting an account with the API
+				 * Sends an email to the provided user email
+				 */
+
+				requestPasswordReset : function(email){
+
+					var sendingResetRequest = $q.defer();
+
+					ApiManager.users('requestPasswordReset', null, {email: email})
+						.then(function(apiResponse) {
+							sendingResetRequest().resolve();
+						})
+						.catch(function(apiResposne) {
+							sendingResetRequest.reject();
+						});
+
+				},
+
+				/**
+				 * Resets the account password
 				 * @returns {*}
 				 */
 
-				deleteAccount : function() {
+				resetAccountPassword : function(input, user, token ) {
 
-					var userContext = UserContextManager.getActiveUserContext(),
-							deletingAccount = $q.defer();
+					var resettingPassword = $q.defer(),
+							params = {
+								user_id : user.id,
+								password_reset_token: token,
+								password: input.password
+							};
 
-					var params = {username: userContext.profile.username, user_id: userContext.userId};
+					ApiManager.users('resetPassword', userContext, params)
+						.then(function(apiResponse) {
+							resettingPassword.resolve();
+						})
+						.reject(function(apiResponse) {
+							resettingPassword.reject(apiResponse.result);
+						});
 
-					if(userContext) {
-						ApiManager.users('destroy', userContext, params)
-							.then(function(apiResponse) {
-								deletingAccount.resolve(apiResponse.result);
-							})
-							.catch(function(apiResponse) {
-								deletingAccount.reject(apitResponse.result);
-							})
-					} else {
-						deletingAccount.reject('Please log in and try again');
-					}
-
-					return deletingAccount.promise;
+					return resettingPassword.promise;
 
 				}
 
@@ -1738,32 +1806,21 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
   }]);
 
 
-
-PUtilities.directive('registerElement', function() {
-	return {
-		compile: function compile(tElement, tAttrs, transclude) {
-			return {
-				pre: function preLink(scope, iElement, iAttrs, controller) {
-					scope[iAttrs.registerElement] = iElement;
-				}
-			}
-		}
-	}
-});
-
 /**
  * EditProfileController
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'User',
+PControllers.controller('EditProfileController', ['$scope', 'FeedbackModel', 'User',
 
-	function($scope, User) {
+	function($scope, FeedbackModel, User) {
+
+		//TODO: finish this.....
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.User = User;
 
-		$scope.input = {
+		$scope.Input = {
 			full_name: User.profile.fullName,
 			description: User.profile.description,
 			gender: User.profile.gender,
@@ -1773,16 +1830,12 @@ PControllers.controller('EditProfileController', ['$scope', 'User',
 			phone_number: User.profile.phoneNumber
 		};
 
+		$scope.Feedback = FeedbackModel.create();
+
 		$scope.genders = ['Male', 'Female'];
 
-		$scope.$watch(User);
 
-		$scope.submit = function(input) {
-			User.update(input)
-				.then(function(msg) {
-					console.log(msg);
-				});
-		};
+		/** Validation **/
 
 
 	}
@@ -1858,7 +1911,6 @@ PControllers.controller('EditProfileController', ['$scope', 'User',
       /** Initializes the SessionModel on the Controller $scope **/
 			$scope.SessionModel = SessionModel;
 
-
 			/** The active session needs to be authorized before each state change **/
 
 			$scope.$on('$stateChangeStart', function(event, toState, toParams) {
@@ -1903,44 +1955,95 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 
 /*
+ * RegisterController
+ * @namespace
+ */
+
+	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel',
+
+			function($scope, $stateParams, MessageModel, UserModel) {
+
+				/** Initialize the UserModel on the Controller $scope **/
+				$scope.UserModel = UserModel;
+
+
+				/** User Input **/
+				$scope.input = {
+					username: '',
+					password: '',
+					confirmPassword: '',
+					email: '',
+					invite_id: $stateParams.invite_id,
+					user_id: $stateParams.invite_user_id
+				};
+
+
+				$scope.messages = {};
+
+
+				function validateInput(input, error, msg) {
+					if(input.$dirty && input.$error[error]) {
+						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', {body: msg}, true);
+					} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
+						$scope.messages[input.$name + '_' + error].clear();
+					}
+				}
+
+
+				$scope.$watchCollection('form.username', function(username) {
+					validateInput(username, 'required', 'Username can not be blank');
+					validateInput(username, 'maxlength', 'Username must be between 1 - 20 characters');
+				});
+
+				$scope.$watchCollection('form.password', function(password) {
+					validateInput(password, 'required', 'Password can not be blank');
+				});
+
+				$scope.$watchCollection('form.confirmPassword', function(confirmPassword) {
+					validateInput(confirmPassword, 'matchPasswords', 'Passwords do not match');
+				});
+
+				$scope.$watchCollection('form.email', function(email) {
+					validateInput(email, 'required', 'Email can not be blank');
+					validateInput(email, 'email', 'Email is invalid');
+				});
+
+
+
+
+		}
+
+	]);
+
+/*
  * LoginController
  * @namespace
  */
 
-	PControllers.controller('RegisterController', ['$scope', 'UserModel', function($scope, UserModel) {
+PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel',
 
-		/** Initialize the UserModel on the Controller $scope **/
+	function($scope, $stateParams, UserModel) {
+
+
 		$scope.UserModel = UserModel;
 
+		$scope.user = {_id: $stateParams.user_id};
+		$scope.token = $stateParams.password_reset_token;
 
 		/** User Input **/
+
 		$scope.input = {
-			username: '',
 			password: '',
-			gender: '',
-			verifyPassword: '',
-			email: ''
+			confirmPassword: ''
 		};
-
-
 
 		/** User Feedback **/
 		$scope.feedback = {
-			error : {
-				missingUsername: 'Your username is required',
-				invalidUsername: 'Username must be between 1 and 20 characters'
-			}
+			error : 'Something went wrong....'
 		};
 
-		/** Reveal the download link when true**/
-		$scope.accountSuccessfullyRegistered = false;
-
-		$scope.submit = function(input) {
-			//TODO: Map controller submit function to the User registerNewAccount method to complete account creation
-			console.log(input);
-		};
-
-	}]);
+	}
+]);
 
  /*
 	* SplashController
@@ -2017,6 +2120,20 @@ PDirectives.directive('pEnter', function() {
 		});
 	};
 });
+
+
+PDirectives.directive('pMessage', function() {
+	return {
+		restrict: 'EA',
+		templateUrl: 'views/partials/message',
+		scope : {
+			pMessage : '='
+		},
+		link: function(scope, element, attrs) {
+			console.log(scope.pMessage);
+		}
+	}
+});
 /**
  * pUser
  * @namespace
@@ -2027,8 +2144,6 @@ PDirectives.directive('pEnter', function() {
 		return {
 			restrict: 'EA',
 			link: function(scope, element, attr) {
-
-				console.log('hi');
 
 				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
 					if (newValue) {
@@ -2081,3 +2196,17 @@ PDirectives.directive('pVideoCell', function() {
  */
 
   PDirectives.directive('pViewContainer', function() {});
+
+
+
+PDirectives.directive('registerElement', function() {
+	return {
+		compile: function compile(tElement, tAttrs, transclude) {
+			return {
+				pre: function preLink(scope, iElement, iAttrs, controller) {
+					scope[iAttrs.registerElement] = iElement;
+				}
+			}
+		}
+	}
+});

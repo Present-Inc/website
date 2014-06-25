@@ -37,7 +37,7 @@ PModels.factory('NavbarModel', ['$q',
 				 * @property {Object search - Contains the properties and results of the search bar
 				 */
 
-				function Navbar(){
+				function Navbar() {
 
 					var userContext = UserContextManager.getActiveUserContext();
 

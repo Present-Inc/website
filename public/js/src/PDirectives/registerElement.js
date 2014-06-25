@@ -1,6 +1,6 @@
 
 
-PUtilities.directive('registerElement', function() {
+PDirectives.directive('registerElement', function() {
 	return {
 		compile: function compile(tElement, tAttrs, transclude) {
 			return {

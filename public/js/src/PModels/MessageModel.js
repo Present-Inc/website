@@ -3,45 +3,45 @@
  * @class
  */
 
-PModels.factory('FeedbackModel', function() {
+PModels.factory('MessageModel', function() {
 	return {
-		create : function(style, message, visible) {
+		create : function(style, content, visible) {
 
 			/**
 			 * @constructor
 			 * @param {String} style - Sets the css class for the Feedback
 			 * @param {Boolean} visible - Sets the visibility of the Feedback
-			 * @param {Object} message - The feedback content
+			 * @param {Object} content - The feedback content
 			 */
 
-			function Feedback(style, visible, message) {
+			function Message(style, content, visible) {
 				this.style = style || 'modal';
 				this.visible = visible;
-				this.title = message ? message.title : '';
-				this.body = message ? message.body : '';
-				this.options = message ? message.options : [];
+				this.title = content ? content.title : '';
+				this.body = content ? content.body : '';
+				this.options = content ? content.options : [];
 			}
 
-			Feedback.prototype.show = function(style, message) {
+			Message.prototype.show = function(style, content) {
 
-				if(style && message.body) {
+				if(style && content.body) {
 					this.style = style;
-					this.body = message.body;
-					this.title = message.title;
-					this.options = message.options;
+					this.body = content.body;
+					this.title = content.title;
+					this.options = content.options;
 					this.visible = true;
 				}
 
 			};
 
-			Feedback.prototype.clear = function() {
+			Message.prototype.clear = function() {
 				this.visible = false;
 				this.body = '';
 				this.title = '';
 				this.options = []
 			};
 
-			return new Feedback(style, message, visible);
+			return new Message(style, content, visible);
 
 		}
 	}

@@ -33,10 +33,25 @@
   button { @extend .accountButton;}
 }
 
+
+/** RESET PASSWORD **/
+
+#resetPassword {
+  padding: 120px;
+  text-align: center;
+}
+
+#resetPassword {
+  input { @extend .accountInput;}
+  button { @extend .accountButton;}
+}
+
+
+/** EDIT PROFILE **/
+
 #editProfile {
   padding: 160px;
 }
-
 
 #editProfile {
 

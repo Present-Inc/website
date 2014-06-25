@@ -189,7 +189,7 @@
 				})
 
 				.state('account.register', {
-					url: '/account/register',
+					url: '/account/register?invite_id&invite_user_id',
 					views: {
 						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
 						'register@account' : {templateUrl:  'views/partials/register', controller: 'RegisterController'}
@@ -198,10 +198,10 @@
 				})
 
 				.state('account.resetPassword', {
-					url: '/account/reset_password',
+					url: '/account/reset_password?user_id&password_reset_token',
 					views: {
 						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
-						'register@account' : {templateUrl:  '<h1>Reset Password</h1>'}
+						'resetPassword@account' : {templateUrl:  'views/partials/reset_password', controller: 'ResetPasswordController'}
 					},
 					meta: {availability: 'public'}
 				})

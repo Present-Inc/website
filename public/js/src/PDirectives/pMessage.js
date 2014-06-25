@@ -5,10 +5,10 @@ PDirectives.directive('pMessage', function() {
 		restrict: 'EA',
 		templateUrl: 'views/partials/message',
 		scope : {
-			pFeedback : '='
+			pMessage : '='
 		},
 		link: function(scope, element, attrs) {
-			console.log(scope.pFeedback);
+			console.log(scope.pMessage);
 		}
 	}
 });

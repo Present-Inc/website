@@ -4,14 +4,16 @@
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'User',
+PControllers.controller('EditProfileController', ['$scope', 'FeedbackModel', 'User',
 
-	function($scope, User) {
+	function($scope, FeedbackModel, User) {
+
+		//TODO: finish this.....
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.User = User;
 
-		$scope.input = {
+		$scope.Input = {
 			full_name: User.profile.fullName,
 			description: User.profile.description,
 			gender: User.profile.gender,
@@ -21,16 +23,12 @@ PControllers.controller('EditProfileController', ['$scope', 'User',
 			phone_number: User.profile.phoneNumber
 		};
 
+		$scope.Feedback = FeedbackModel.create();
+
 		$scope.genders = ['Male', 'Female'];
 
-		$scope.$watch(User);
 
-		$scope.submit = function(input) {
-			User.update(input)
-				.then(function(msg) {
-					console.log(msg);
-				});
-		};
+		/** Validation **/
 
 
 	}

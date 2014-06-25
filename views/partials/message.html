@@ -1,7 +1,7 @@
-<div ng-show="pFeedback.visible" ng-class="pFeedback.style">
-    <div ng-bind="pFeedback.title"></div>
-    <div ng-bind="pFeedback.body"></div>
-    <button class="option" ng-repeat="option in pFeedback.options"
+<div ng-show="pMessage.visible" ng-class="pMessage.style">
+    <div ng-bind="pMessage.title"></div>
+    <div ng-bind="pMessage.body"></div>
+    <button class="option" ng-repeat="option in pMessage.options"
             ng-bind="option.label"
             ng-click="option.action()"
             >

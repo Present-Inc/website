@@ -25,6 +25,20 @@ PDirectives.directive('pEnter', function() {
 		});
 	};
 });
+
+
+PDirectives.directive('pMessage', function() {
+	return {
+		restrict: 'EA',
+		templateUrl: 'views/partials/message',
+		scope : {
+			pMessage : '='
+		},
+		link: function(scope, element, attrs) {
+			console.log(scope.pMessage);
+		}
+	}
+});
 /**
  * pUser
  * @namespace
@@ -35,8 +49,6 @@ PDirectives.directive('pEnter', function() {
 		return {
 			restrict: 'EA',
 			link: function(scope, element, attr) {
-
-				console.log('hi');
 
 				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
 					if (newValue) {
@@ -89,3 +101,17 @@ PDirectives.directive('pVideoCell', function() {
  */
 
   PDirectives.directive('pViewContainer', function() {});
+
+
+
+PDirectives.directive('registerElement', function() {
+	return {
+		compile: function compile(tElement, tAttrs, transclude) {
+			return {
+				pre: function preLink(scope, iElement, iAttrs, controller) {
+					scope[iAttrs.registerElement] = iElement;
+				}
+			}
+		}
+	}
+});

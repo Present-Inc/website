@@ -9,20 +9,20 @@
              <label>Full Name</label>
              <input type="text"
                     name="name"
-                    ng-model="input.full_name"
-                    required/>
+                    ng-model="Input.full_name"
+                    />
          </div>
 
          <div class="formComponent">
              <label>Description</label>
              <input type="text"
                     name="description"
-                    ng-model="input.description"
-                    required/>
+                    ng-model="Input.description"
+                    />
          </div>
 
          <div class="formComponent">
-             <select ng-model="input.gender" ng-options="gender as gender for gender in genders">
+             <select ng-model="Input.gender" ng-options="gender as gender for gender in genders">
                  <option value="">-- Gender --</option>
              </select>
          </div>
@@ -31,7 +31,7 @@
              <label>Location</label>
              <input type="text"
                     name="location"
-                    ng-model="input.location"
+                    ng-model="Input.location"
                     />
          </div>
 
@@ -39,15 +39,15 @@
              <label>Website</label>
              <input type="text"
                     name=""
-                    ng-model="input.website"
+                    ng-model="Input.website"
                     />
          </div>
 
          <div class="formComponent">
              <label>Email</label>
              <input type="email"
-                    name=""
-                    ng-model="input.email"
+                    name="email"
+                    ng-model="Input.email"
                     required/>
          </div>
 
@@ -55,13 +55,20 @@
              <label>Phone Number</label>
              <input type="text"
                     name="phoneNumber"
-                    ng-model="input.phone_number"
-                    required
+                    ng-model="Input.phone_number"
                     />
          </div>
 
+         <!-- TODO: Fix this shit.... -->
+         <br />
          <button class="mainBtn" ng-click="submit(input)">Update</button>
+         <br />
+         <button class="mainBtn" ng-click="UserModel.requestPasswordReset(User.profile.email)">Reset Password</button>
+
      </form>
+
+
+
 </div>
 
 

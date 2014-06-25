@@ -177,6 +177,16 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod: 'POST',
 					url: 'users/update',
 					requiresUserContext: true
+				},
+				create : {
+					httpMethod : 'POST',
+					url : 'users/create',
+					requiresUserContext : false
+				},
+				destroy : {
+					httpMethod : 'POST',
+					url : 'users/destro',
+					requiresUserContext : true
 				}
 			},
 

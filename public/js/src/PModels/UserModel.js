@@ -1,6 +1,6 @@
 /**
  * Constructs a new Profile Model
- * @namespace
+ * @class UserModel
  */
 
 PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserContextManager', 'ApiManager',
@@ -31,7 +31,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 
 					/**
-					 * Follow / UnFollow a user
+					 * Either follows or un-follows the user based on the current relationship
 					 */
 
 					User.prototype.follow = function() {
@@ -55,7 +55,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					};
 
 					/**
-					 * Demand a user
+					 * Demand the user
 					 */
 
 					User.prototype.demand = function() {
@@ -75,41 +75,21 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-					User.prototype.addToGroup = function() {
-
-						//TODO: Implement addToGroup method on the UserModel
-
-					};
-
-					User.prototype.removeFromGroup = function(group) {
-
-						//TODO: Implement removeFromGroup method on the UserModel
-
-					};
-
-
-					User.prototype.leaveGroup = function(group) {
-
-						//TODO: Implement leaveGroup method on the UserModel
-
-					};
-
-
 					/**
-					 *
-					 * @param updatedProfile
+					 * Updates the user's profile
+					 * @param {Object} updatedProfile
 					 */
 
-					User.prototype.update = function(updatedProfile) {
+					User.prototype.update = function(input, feedback) {
 
 						var userContext = UserContextManager.getActiveUserContext(),
-								updatingProfile = $q.defer();
+								params = input;
 
 
 						if (userContext) {
-							ApiManager.users('update', userContext, updatedProfile)
+							ApiManager.users('update', userContext, params)
 								.then(function(apiResponse) {
-									updatingProfile.resolve(apiResponse.result);
+
 								})
 								.catch(function(apiResponse) {
 									updatingProfile.reject(apiResponse.result);
@@ -122,20 +102,26 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-					User.prototype.resetPassword = function(password) {
+					User.prototype.deleteSelf = function() {
 
 						var userContext = UserContextManager.getActiveUserContext(),
-								resettingPassword = $q.defer();
+							deletingAccount = $q.defer();
 
-						ApiManager.users('resetPassword', userContext, password)
-							.then(function(apiResponse) {
-								resttingPassword.reject();
-							})
-							.reject(function(apiResponse) {
-								resettingPassword.reject();
-							});
+						var params = {username: userContext.profile.username, user_id: userContext.userId};
 
-						return resettingPassword.promise;
+						if(userContext) {
+							ApiManager.users('destroy', userContext, params)
+								.then(function(apiResponse) {
+									deletingAccount.resolve(apiResponse.result);
+								})
+								.catch(function(apiResponse) {
+									deletingAccount.reject(apitResponse.result);
+								})
+						} else {
+							deletingAccount.reject();
+						}
+
+						return deletingAccount.promise;
 
 					};
 
@@ -144,19 +130,27 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				},
 
 				/**
-				 * Class method for registering a new account with the API.
+				 * Registers a new user account with the API.
 				 * @returns {*}
 				 */
 
-				registerNewAccount : function(input) {
+				registerNewAccount : function(input, invite) {
 
-					deletingAccount = $q.defer();
+					var registeringAccount = $q.defer();
 
-					ApiManager.users('create', null, input)
+					var params = {
+						username: input.username,
+						email: input.email,
+						password: input.password,
+						invite_id : invite ? invite._id : null,
+						invite_user_id: invite ? invite._user_id : null
+					};
+
+					ApiManager.users('create', null, params)
 						.then(function(apiResponse) {
 							registeringAccount.resolve(apiResponse.result);
 						})
-						.catch(function() {
+						.catch(function(apiResposne) {
 							registeringAccount.resolve(apiResponse.result);
 						});
 
@@ -165,30 +159,46 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				},
 
 				/**
-				 * Class method for deleting an account with the API
+				 * Sends an email to the provided user email
+				 */
+
+				requestPasswordReset : function(email){
+
+					var sendingResetRequest = $q.defer();
+
+					ApiManager.users('requestPasswordReset', null, {email: email})
+						.then(function(apiResponse) {
+							sendingResetRequest().resolve();
+						})
+						.catch(function(apiResposne) {
+							sendingResetRequest.reject();
+						});
+
+				},
+
+				/**
+				 * Resets the account password
 				 * @returns {*}
 				 */
 
-				deleteAccount : function() {
+				resetAccountPassword : function(input, user, token ) {
 
-					var userContext = UserContextManager.getActiveUserContext(),
-							deletingAccount = $q.defer();
+					var resettingPassword = $q.defer(),
+							params = {
+								user_id : user.id,
+								password_reset_token: token,
+								password: input.password
+							};
 
-					var params = {username: userContext.profile.username, user_id: userContext.userId};
+					ApiManager.users('resetPassword', userContext, params)
+						.then(function(apiResponse) {
+							resettingPassword.resolve();
+						})
+						.reject(function(apiResponse) {
+							resettingPassword.reject(apiResponse.result);
+						});
 
-					if(userContext) {
-						ApiManager.users('destroy', userContext, params)
-							.then(function(apiResponse) {
-								deletingAccount.resolve(apiResponse.result);
-							})
-							.catch(function(apiResponse) {
-								deletingAccount.reject(apitResponse.result);
-							})
-					} else {
-						deletingAccount.reject('Please log in and try again');
-					}
-
-					return deletingAccount.promise;
+					return resettingPassword.promise;
 
 				}
 

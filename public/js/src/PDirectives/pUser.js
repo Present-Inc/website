@@ -9,8 +9,6 @@
 			restrict: 'EA',
 			link: function(scope, element, attr) {
 
-				console.log('hi');
-
 				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
 					if (newValue) {
 						scope.followBtn.css({'background-color': '#33AAFF', 'color': '#FFF'});
