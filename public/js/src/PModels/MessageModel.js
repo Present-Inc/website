@@ -5,32 +5,35 @@
 
 PModels.factory('MessageModel', function() {
 	return {
-		create : function(style, content, visible) {
+		create : function(type, style, content, visible) {
 
 			/**
 			 * @constructor
-			 * @param {String} style - Sets the css class for the Feedback
-			 * @param {Boolean} visible - Sets the visibility of the Feedback
-			 * @param {Object} content - The feedback content
+			 * @oaram {String} type - determines the Message type e.g. modal
+			 * @param {String} style - Sets the css class for the Message
+			 * @param {Boolean} visible - Sets the visibility of the Message
+			 * @param {Object} content - The Message content
 			 */
 
-			function Message(style, content, visible) {
-				this.style = style || 'modal';
-				this.visible = visible;
+			function Message(type, style, content, visible) {
+				if (!style) style = 'primary';
+				this.style = [type, style];
+				this.visible = visible || false;
 				this.title = content ? content.title : '';
 				this.body = content ? content.body : '';
 				this.options = content ? content.options : [];
 			}
 
-			Message.prototype.show = function(style, content) {
+			Message.prototype.show = function(content, style) {
 
-				if(style && content.body) {
-					this.style = style;
+				if(content.body) {
+					this.style = style || this.style;
 					this.body = content.body;
 					this.title = content.title;
 					this.options = content.options;
-					this.visible = true;
 				}
+
+				this.visible = true;
 
 			};
 
@@ -41,7 +44,7 @@ PModels.factory('MessageModel', function() {
 				this.options = []
 			};
 
-			return new Message(style, content, visible);
+			return new Message(type, style, content, visible);
 
 		}
 	}

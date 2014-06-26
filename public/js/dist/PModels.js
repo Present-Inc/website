@@ -284,32 +284,35 @@
 
 PModels.factory('MessageModel', function() {
 	return {
-		create : function(style, content, visible) {
+		create : function(type, style, content, visible) {
 
 			/**
 			 * @constructor
-			 * @param {String} style - Sets the css class for the Feedback
-			 * @param {Boolean} visible - Sets the visibility of the Feedback
-			 * @param {Object} content - The feedback content
+			 * @oaram {String} type - determines the Message type e.g. modal
+			 * @param {String} style - Sets the css class for the Message
+			 * @param {Boolean} visible - Sets the visibility of the Message
+			 * @param {Object} content - The Message content
 			 */
 
-			function Message(style, content, visible) {
-				this.style = style || 'modal';
-				this.visible = visible;
+			function Message(type, style, content, visible) {
+				if (!style) style = 'primary';
+				this.style = [type, style];
+				this.visible = visible || false;
 				this.title = content ? content.title : '';
 				this.body = content ? content.body : '';
 				this.options = content ? content.options : [];
 			}
 
-			Message.prototype.show = function(style, content) {
+			Message.prototype.show = function(content, style) {
 
-				if(style && content.body) {
-					this.style = style;
+				if(content.body) {
+					this.style = style || this.style;
 					this.body = content.body;
 					this.title = content.title;
 					this.options = content.options;
-					this.visible = true;
 				}
+
+				this.visible = true;
 
 			};
 
@@ -320,7 +323,7 @@ PModels.factory('MessageModel', function() {
 				this.options = []
 			};
 
-			return new Message(style, content, visible);
+			return new Message(type, style, content, visible);
 
 		}
 	}
@@ -713,51 +716,28 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					/**
 					 * Updates the user's profile
-					 * @param {Object} updatedProfile
+					 * @param {Object} input
+					 * @param {Object} messages
 					 */
 
-					User.prototype.update = function(input, feedback) {
+					User.prototype.update = function(input, messages) {
 
-						var userContext = UserContextManager.getActiveUserContext(),
-								params = input;
-
+						var userContext = UserContextManager.getActiveUserContext();
 
 						if (userContext) {
-							ApiManager.users('update', userContext, params)
+							ApiManager.users('update', userContext, input)
 								.then(function(apiResponse) {
-
+									messages.error.clear();
+									messages.success.show({body: 'Profile successfully updated!'});
 								})
 								.catch(function(apiResponse) {
-									updatingProfile.reject(apiResponse.result);
+									messages.error.show({body: apiResponse.result});
 								});
 						} else {
-							updatedProfile.reject('Please log in and try again');
+
 						}
 
 						return updatingProfile.promise;
-
-					};
-
-					User.prototype.deleteSelf = function() {
-
-						var userContext = UserContextManager.getActiveUserContext(),
-							deletingAccount = $q.defer();
-
-						var params = {username: userContext.profile.username, user_id: userContext.userId};
-
-						if(userContext) {
-							ApiManager.users('destroy', userContext, params)
-								.then(function(apiResponse) {
-									deletingAccount.resolve(apiResponse.result);
-								})
-								.catch(function(apiResponse) {
-									deletingAccount.reject(apitResponse.result);
-								})
-						} else {
-							deletingAccount.reject();
-						}
-
-						return deletingAccount.promise;
 
 					};
 
@@ -770,27 +750,25 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @returns {*}
 				 */
 
-				registerNewAccount : function(input, invite) {
-
-					var registeringAccount = $q.defer();
+				registerNewAccount : function(input, messages, success) {
 
 					var params = {
 						username: input.username,
 						email: input.email,
 						password: input.password,
-						invite_id : invite ? invite._id : null,
-						invite_user_id: invite ? invite._user_id : null
+						invite_id : input.invite_id,
+						invite_user_id: input.invite_id
 					};
 
 					ApiManager.users('create', null, params)
-						.then(function(apiResponse) {
-							registeringAccount.resolve(apiResponse.result);
+						.then(function() {
+							success = true;
+							messages.error.clear();
+							messages.success.show({body: 'Account successfully created.'});
 						})
-						.catch(function(apiResposne) {
-							registeringAccount.resolve(apiResponse.result);
+						.catch(function(apiResponse) {
+							messages.error.show({body: apiResponse.result});
 						});
-
-					return registeringAccount.promise;
 
 				},
 
@@ -798,44 +776,30 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * Sends an email to the provided user email
 				 */
 
-				requestPasswordReset : function(email){
-
-					var sendingResetRequest = $q.defer();
-
-					ApiManager.users('requestPasswordReset', null, {email: email})
+				requestPasswordReset : function(input, messages) {
+					ApiManager.users('requestPasswordReset', null, input)
 						.then(function(apiResponse) {
-							sendingResetRequest().resolve();
+							messages.error.clear();
+							messages.success.show({body: 'Account successfully created.'});
 						})
 						.catch(function(apiResposne) {
-							sendingResetRequest.reject();
+							messages.error.show({body: 'Account successfully created.'});
 						});
-
 				},
 
 				/**
 				 * Resets the account password
-				 * @returns {*}
 				 */
 
-				resetAccountPassword : function(input, user, token ) {
-
-					var resettingPassword = $q.defer(),
-							params = {
-								user_id : user.id,
-								password_reset_token: token,
-								password: input.password
-							};
-
-					ApiManager.users('resetPassword', userContext, params)
-						.then(function(apiResponse) {
-							resettingPassword.resolve();
+				resetAccountPassword : function(input, messages) {
+					ApiManager.users('resetPassword', userContext, input)
+						.then(function() {
+							messages.error.clear();
+							messages.success.show({body: 'Password successfully reset.'});
 						})
-						.reject(function(apiResponse) {
-							resettingPassword.reject(apiResponse.result);
+						.catch(function(apiResponse) {
+							messages.error.show({body: apiResponse.result});
 						});
-
-					return resettingPassword.promise;
-
 				}
 
 			}

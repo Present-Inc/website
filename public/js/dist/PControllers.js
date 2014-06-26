@@ -161,6 +161,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 
 				/** User Input **/
+
 				$scope.input = {
 					username: '',
 					password: '',
@@ -171,17 +172,38 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 				};
 
 
-				$scope.messages = {};
+				$scope.messages = {
+
+					success: MessageModel.create('alert', 'primary', {
+						title: 'Your account has been successfully created',
+						options : [
+							{
+							 label: 'Download',
+							 style: 'primary',
+							 link: 'https://itunes.apple.com/us/app/present-share-the-present/id813743986?mt=8'
+							}
+						]
+					}, true),
+
+					error: MessageModel.create('panel', 'error')
+
+				};
+
+				$scope.accountRegistered = false;
 
 
 				function validateInput(input, error, msg) {
 					if(input.$dirty && input.$error[error]) {
-						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', {body: msg}, true);
+						$scope.messages.success.clear();
+						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
 					} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 						$scope.messages[input.$name + '_' + error].clear();
 					}
 				}
 
+
+
+				/** Watch form fields, passing each through validation when they are modified **/
 
 				$scope.$watchCollection('form.username', function(username) {
 					validateInput(username, 'required', 'Username can not be blank');
@@ -213,27 +235,28 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
  * @namespace
  */
 
-PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel',
+PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel', 'MessageModel',
 
-	function($scope, $stateParams, UserModel) {
+	function($scope, $stateParams, UserModel, MessageModel) {
 
 
 		$scope.UserModel = UserModel;
 
-		$scope.user = {_id: $stateParams.user_id};
-		$scope.token = $stateParams.password_reset_token;
+		$scope.messages = {
+			success: MessageModel.create('panel'),
+			error: MessageModel.create('panel')
+		};
 
 		/** User Input **/
 
 		$scope.input = {
 			password: '',
-			confirmPassword: ''
+			confirmPassword: '',
+			user_id: $stateParams.user_id,
+			password_reset_token: $stateParams.password_reset_token
 		};
 
-		/** User Feedback **/
-		$scope.feedback = {
-			error : 'Something went wrong....'
-		};
+
 
 	}
 ]);

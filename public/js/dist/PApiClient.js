@@ -185,8 +185,13 @@ PApiClient.factory('ApiClientConfig', function() {
 				},
 				destroy : {
 					httpMethod : 'POST',
-					url : 'users/destro',
+					url : 'users/destroy',
 					requiresUserContext : true
+				},
+				resetPassword : {
+					httpMethod: 'POST',
+					url : 'users/reset_password',
+					requiresUserContext: false
 				}
 			},
 

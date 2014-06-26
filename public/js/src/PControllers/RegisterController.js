@@ -12,6 +12,7 @@
 
 
 				/** User Input **/
+
 				$scope.input = {
 					username: '',
 					password: '',
@@ -22,17 +23,38 @@
 				};
 
 
-				$scope.messages = {};
+				$scope.messages = {
+
+					success: MessageModel.create('alert', 'primary', {
+						title: 'Your account has been successfully created',
+						options : [
+							{
+							 label: 'Download',
+							 style: 'primary',
+							 link: 'https://itunes.apple.com/us/app/present-share-the-present/id813743986?mt=8'
+							}
+						]
+					}, true),
+
+					error: MessageModel.create('panel', 'error')
+
+				};
+
+				$scope.accountRegistered = false;
 
 
 				function validateInput(input, error, msg) {
 					if(input.$dirty && input.$error[error]) {
-						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', {body: msg}, true);
+						$scope.messages.success.clear();
+						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
 					} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 						$scope.messages[input.$name + '_' + error].clear();
 					}
 				}
 
+
+
+				/** Watch form fields, passing each through validation when they are modified **/
 
 				$scope.$watchCollection('form.username', function(username) {
 					validateInput(username, 'required', 'Username can not be blank');
