@@ -24,13 +24,18 @@
 /** REGISTER **/
 
 #register {
-  padding: 120px;
+  padding: 100px;
   text-align: center;
 }
 
 #register {
   input { @extend .accountInput;}
   button { @extend .accountButton;}
+  .messages {
+    width: 400px;
+    min-height: 100px;
+    margin: 20px auto;
+  }
 }
 
 

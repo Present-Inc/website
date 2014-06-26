@@ -6,49 +6,45 @@ h1 {
   color: $main-grey;
 }
 
-/* UI
+/* Buttons
 =================================== */
 
-.mainBtn {
+
+button {
   outline: none;
   padding: 6px 10px 8px 10px;
-  background-color: transparent;
-  font-weight: 300;
-  color: $main-blue;
+  font-weight: 400;
+  @include _border-radius(4px);
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button.primary {
+  color: #FFF;
+  background-color: $main-blue;
   border: solid 1px $main-blue;
-  @include _border-radius(4px);
 }
 
-.secondaryBtn {
-  outline: none;
-  padding: 6px 10px 8px 10px;
-  background-color: transparent;
-  font-weight: 300;
-  color: $main-purple;
+button.secondary {
+  color: #FFF;
+  background-color: $main-purple;
   border: solid 1px $main-purple;
-  @include _border-radius(4px);
 }
 
-.mainBtn:hover {
-  background-color: transparentize($main-blue, 0.9);
+button.success {
+  color: #FFF;
+  background-color: $green;
+  border: solid 1px $green;
 }
 
-.secondaryBtn:hover {
-  background-color: transparentize($main-purple, 0.9);
+button.error {
+  color: #FFF;
+  background-color: $red;
+  border: solid 1px $red;
 }
 
-.defaultFeed {
-  width: 480px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #FFF;
-  border: solid 1px #CCC;
-
-  @media (max-width: 520px) {
-    width: 100%;
-    padding: 0%;
-  }
-}
 
 /* Forms
 =================================*/
@@ -81,11 +77,11 @@ input {
 
 
 input.ng-invalid {
-  border: 1px solid red;
+  border: 1px solid $red;
 }
 
 input.ng-valid {
-  border: 1px solid green;
+  border: 1px solid $green;
 }
 
 input.ng-pristine {
@@ -101,7 +97,7 @@ input:-webkit-autofill {
 }
 
 
-/* Feedback
+/* Messages
 ======================================== */
 
 .modal {
@@ -111,16 +107,40 @@ input:-webkit-autofill {
   left: 50%;
   width: 300px;
   height: 150px;
-  background-color: #FFF;
 }
+
+.alert {
+  padding: 10px;
+
+}
+
+.alert.primary {
+  background-color: lighten($main-blue, 40);
+  border-left: solid 3px $main-blue;
+}
+.alert.secondary {background-color: lighten($main-purple, 40);}
+.alert.success {background-color: lighten($green, 40);}
+.alert.error {background-color: lighten($red, 40);}
 
 .panel {
+  color: #FFF;
   width: 90%;
-  margin: 0px auto;
+  margin: 5px auto;
   padding: 5px 0px;
-  background-color: $light-grey;
-
+  @include _border-radius(4px);
 }
+
+.panel.primary {background-color: $main-blue;}
+.panel.secondary {background-color: $main-purple;}
+.panel.success {background-color: $green;}
+.panel.error {background-color: $red;}
+
+
+
+
+
+
+
 
 
 
