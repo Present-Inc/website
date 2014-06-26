@@ -9,7 +9,7 @@
              <label>Full Name</label>
              <input type="text"
                     name="name"
-                    ng-model="Input.full_name"
+                    ng-model="input.full_name"
                     />
          </div>
 
@@ -17,12 +17,12 @@
              <label>Description</label>
              <input type="text"
                     name="description"
-                    ng-model="Input.description"
+                    ng-model="input.description"
                     />
          </div>
 
          <div class="formComponent">
-             <select ng-model="Input.gender" ng-options="gender as gender for gender in genders">
+             <select ng-model="input.gender" ng-options="gender as gender for gender in genders">
                  <option value="">-- Gender --</option>
              </select>
          </div>
@@ -38,8 +38,8 @@
          <div class="formComponent">
              <label>Website</label>
              <input type="text"
-                    name=""
-                    ng-model="Input.website"
+                    name="website"
+                    ng-model="input.website"
                     />
          </div>
 
@@ -47,7 +47,7 @@
              <label>Email</label>
              <input type="email"
                     name="email"
-                    ng-model="Input.email"
+                    ng-model="input.email"
                     required/>
          </div>
 
@@ -55,15 +55,18 @@
              <label>Phone Number</label>
              <input type="text"
                     name="phoneNumber"
-                    ng-model="Input.phone_number"
+                    ng-model="input.phone_number"
                     />
          </div>
 
          <!-- TODO: Fix this shit.... -->
+
+         <div ng-repeat="(id, message) in messages" p-message="message"></div>
+
          <br />
-         <button class="mainBtn" ng-click="submit(input)">Update</button>
+         <button class="primary" ng-click="submit(input)">Update</button>
          <br />
-         <button class="mainBtn" ng-click="UserModel.requestPasswordReset(User.profile.email)">Reset Password</button>
+         <button class="primary" ng-click="UserModel.requestPasswordReset(User.profile.email)">Reset Password</button>
 
      </form>
 

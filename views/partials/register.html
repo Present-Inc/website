@@ -1,11 +1,19 @@
 
 <div id="register">
 
-    <form name="form" ng-hide="accountSuccessfullyRegistered" novalidate>
+    <form name="form" ng-hide="accountRegistered" novalidate>
 
         <h2>Create A New Account</h2>
 
         <div class="formComponent">
+
+            <input type="text"
+                   name="fullName"
+                   ng-model="input.full_name"
+                   ng-maxlength=40
+                   placeholder="Full Name"
+                   />
+
             <input type="text"
                    name="username"
                    ng-model="input.username"
@@ -41,10 +49,12 @@
                    required/>
         </div>
 
-        <div ng-repeat="(id, message) in messages" p-message="message"></div>
-
-        <button class="mainBtn" ng-click="UserModel.registerNewAccount(input, feedback)">Create</button>
+        <button class="primary" ng-click="UserModel.registerNewAccount(input, messages, accountRegistered)">Create</button>
 
     </form>
+
+    <div class="messages">
+        <div ng-repeat="(id, message) in messages" p-message="message"></div>
+    </div>
 
 </div>

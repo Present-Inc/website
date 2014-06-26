@@ -1,9 +1,10 @@
 <div ng-show="pMessage.visible" ng-class="pMessage.style">
-    <div ng-bind="pMessage.title"></div>
-    <div ng-bind="pMessage.body"></div>
-    <button class="option" ng-repeat="option in pMessage.options"
-            ng-bind="option.label"
-            ng-click="option.action()"
-            >
-    </button>
+    <div class="title" ng-bind="pMessage.title"></div>
+    <div class="body" ng-bind="pMessage.body"></div>
+    <div class="option" ng-repeat="option in pMessage.options">
+       <a ng-href="{{option.link}}">
+        <button ng-bind="option.label" ng-click="option.action()" ng-class="option.style">
+        </button>
+       </a>
+    </div>
 </div>
