@@ -2,6 +2,8 @@ nav {
   width: 100%;
   position: fixed;
   height: auto;
+
+  box-shadow: 0px 1px 3px #CCC;
 }
 
 nav {
@@ -21,7 +23,7 @@ nav {
     width: 56px;
     height: 100%;
     margin: 0px 0px 0px 20px;
-    background-color: $main-purple;
+    background-color: $main-blue;
   }
 
   .logo img {
@@ -42,23 +44,21 @@ nav {
       margin: 8px 12px;
       width: 90%;
       color: #7A7A7A;
-      background-color: $light-grey;
-      border: solid 1px #ccc;
+      background-color: lighten($light-grey, 1);
+      border: solid 1px $light-grey;
       @include _border-radius(6px);
     }
   }
 
   .dropdown {
     position: absolute;
-    left: 78px;
-    top: 62px;
+    margin: 10px 0px 0px 10px;
     width: 24%;
     min-height: 20px;
     padding: 15px 0px;
-    background-color: #fff;
-    @include _border-radius(2px);
-    border: solid 1px #E1E8ED;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    background-color: #FFF;
+    border: solid 1px darken($light-grey, 10);
+    @include _border-radius(4px)
   }
 
   .dropdown::before {
@@ -72,8 +72,8 @@ nav {
     -webkit-transform: rotate(45deg);
     background-color: #FFF;
     @include _border-radius(2px);
-    border-left: 2px solid #E1E8ED;
-    border-top: 2px solid #E1E8ED;
+    border-left: solid 1px darken($light-grey, 10);
+    border-top: solid 1px darken($light-grey, 10);
   }
 
   .dropdown {
@@ -83,13 +83,14 @@ nav {
       padding: 5px 10px 5px 10px;
 
       img {
-        height: 50px;
+        height: 40px;
         float: left;
         display: inline-block;
+        @include _border-radius(4px);
       }
       span {
         display: block;
-        margin: 0px 0px 0px 60px;
+        margin: 0px 0px 0px 45px;
       }
 
       a {
@@ -153,8 +154,6 @@ nav {
     }
   }
 
-
-
   .hub {
     display: inline-block;
     float: right;
@@ -170,7 +169,8 @@ nav {
       float: right;
       height: 30px;
       width: 30px;
-      margin: 0px 10px 0px 0px;
+      margin: 0px 5px 0px 0px;
+      @include _border-radius(4px);
     }
 
     span {

@@ -2,11 +2,6 @@
   margin: 10px auto;
 }
 
-.accountButton {
-  width: 60%;
-  margin: 10px 0px 0px 0px;
-}
-
 
 /** LOGIN **/
 
@@ -17,7 +12,6 @@
 
 #login {
   input { @extend .accountInput;}
-  button { @extend .accountButton;}
 }
 
 
@@ -30,7 +24,6 @@
 
 #register {
   input { @extend .accountInput;}
-  button { @extend .accountButton;}
   .messages {
     width: 400px;
     min-height: 100px;
@@ -48,29 +41,68 @@
 
 #resetPassword {
   input { @extend .accountInput;}
-  button { @extend .accountButton;}
 }
 
 
 /** EDIT PROFILE **/
 
 #editProfile {
-  padding: 160px;
+  padding: 100px 0px 0px 0px;
 }
+
 
 #editProfile {
 
-  input { @extend .accountInput;}
-  button { @extend .accountButton;}
-  select {margin: 10px 0px 20px 8%}
-  label {margin: 0px 0px 0px 8%; font-weight: bold}
-  h3 {text-align: center;}
-  button{display: block; margin: 0px auto;}
-
-  .profilePicture {
-    display: block;
-    margin: 20px auto;
-    height: 100px;
+  legend {margin: 10px 0px;}
+  form {
+    display: inline-block;
+    width: 40%;
+    margin: 0px 0px 0px 400px;
   }
+
+  .sidebar {
+    position: fixed;
+    display: inline-block;
+    float: left;
+    margin: 0px 0px 0px 50px;
+  }
+
+  .reset {
+    margin: 10px 0px;
+    width: 100%;
+  }
+
+  .profile {
+    width: 300px;
+    height: 150px;
+    padding: 10px;
+    overflow: auto;
+    background: #FFF;
+    border: solid 1px #CCC;
+    @include _border-radius(4px);
+  }
+
+  .profile {
+    img {
+      float: left;
+      height: 120px;
+      margin: 0px 10px 10px 0px;
+      @include _border-radius(4px);
+    }
+    label {
+      display: block;
+      margin: 0px 0px 0px 15px;
+      clear: both;
+    }
+    h2, h3 {
+      margin: 2px 0px;
+    }
+    .altName {
+      color: $main-blue;
+    }
+
+  }
+
+
 
 }

@@ -3,9 +3,9 @@
  * @namespace
  */
 
-	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel',
+	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel', 'UserContextManager',
 
-			function($scope, $stateParams, MessageModel, UserModel) {
+			function($scope, $stateParams, MessageModel, UserModel, UserContextManager) {
 
 				/** Initialize the UserModel on the Controller $scope **/
 				$scope.UserModel = UserModel;
@@ -34,9 +34,9 @@
 							 link: 'https://itunes.apple.com/us/app/present-share-the-present/id813743986?mt=8'
 							}
 						]
-					}, true),
+					}, false),
 
-					error: MessageModel.create('panel', 'error')
+					error: MessageModel.create('alert', 'error')
 
 				};
 
@@ -45,8 +45,7 @@
 
 				function validateInput(input, error, msg) {
 					if(input.$dirty && input.$error[error]) {
-						$scope.messages.success.clear();
-						$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
+						$scope.messages[input.$name + '_' + error] = MessageModel.create('alert', 'error', {body: msg}, true);
 					} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 						$scope.messages[input.$name + '_' + error].clear();
 					}

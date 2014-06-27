@@ -11,13 +11,13 @@
                 <div class="userResult" ng-repeat="user in Navbar.search.results.users">
                     <a href="{{'/' + user.username}}">
                         <img ng-src="{{user.profilePicture}}"/>
-                        <span class="displayName" ng-bind="user.fullName"></span>
-                        <span class="altName" ng-bind="user.username"></span>
+                        <span class="displayName" ng-bind="user.displayName"></span>
+                        <span class="altName" ng-bind="user.altName"></span>
                     </a>
                 </div>
                 <div class="divider"></div>
                 <div class="videoResult" ng-repeat="video in Navbar.search.results.videos">
-                    <span class="altName" ng-bind="video.creator.username"></span>
+                    <span class="altName" ng-bind="video.creator.altName"></span>
                     <span ng-bind="video.title">@justin check this out.</span>
                 </div>
             </div>

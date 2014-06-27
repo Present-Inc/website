@@ -11,9 +11,10 @@ h1 {
 
 
 button {
-  outline: none;
+  min-width: 100px;
   padding: 6px 10px 8px 10px;
   font-weight: 400;
+  outline: none;
   @include _border-radius(4px);
 }
 
@@ -65,23 +66,31 @@ legend {
   font-weight: bold;
 }
 
+label {
+  font-weight: bold
+}
 
 input {
   display: block;
   width: 80%;
   padding: 10px;
   margin: 10px 0px;
-  border: solid 1px $light-grey;
   font-weight: 400;
+  border: solid 1px $light-grey;
+  @include _border-radius(4px);
+}
+
+select {
+  display: block;
+  height: 30px;
+  margin: 10px 0px;
+  background-color: #FFF;
+  border: solid 1px $light-grey;;
 }
 
 
 input.ng-invalid {
   border: 1px solid $red;
-}
-
-input.ng-valid {
-  border: 1px solid $green;
 }
 
 input.ng-pristine {
@@ -97,6 +106,10 @@ input:-webkit-autofill {
 }
 
 
+.formComponent {
+  margin: 10px 0px;
+}
+
 /* Messages
 ======================================== */
 
@@ -107,33 +120,39 @@ input:-webkit-autofill {
   left: 50%;
   width: 300px;
   height: 150px;
+  background-color: #FFF;
+  border-left: solid 3px $main-grey;
 }
 
 .alert {
   padding: 10px;
-
+  margin: 5px 0px;
+  button {
+    margin: 10px 0px 0px 0px;
+  }
 }
 
 .alert.primary {
   background-color: lighten($main-blue, 40);
   border-left: solid 3px $main-blue;
 }
-.alert.secondary {background-color: lighten($main-purple, 40);}
-.alert.success {background-color: lighten($green, 40);}
-.alert.error {background-color: lighten($red, 40);}
 
-.panel {
-  color: #FFF;
-  width: 90%;
-  margin: 5px auto;
-  padding: 5px 0px;
-  @include _border-radius(4px);
+.alert.secondary {
+  background-color: lighten($main-purple, 40);
+  border-left: solid 3px $main-purple;
 }
 
-.panel.primary {background-color: $main-blue;}
-.panel.secondary {background-color: $main-purple;}
-.panel.success {background-color: $green;}
-.panel.error {background-color: $red;}
+.alert.success {
+  background-color: lighten($green, 40);
+  border-left: solid 3px $green;
+}
+
+.alert.error {
+  background-color: lighten($red, 40);
+  border-left: solid 3px $red;
+}
+
+
 
 
 

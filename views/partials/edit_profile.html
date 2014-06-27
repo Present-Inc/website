@@ -1,9 +1,20 @@
 
 <div id="editProfile">
-     <form name="editProfileForm" novalidate>
+
+    <div class="sidebar">
+        <div class="profile">
+        <img class="profilePicture" ng-src="{{user.profile.profilePicture}}"/>
+        <h2 class="displayName" ng-bind="user.profile.displayName"></h2>
+        <h3 class="altName" ng-bind="user.profile.altName"></h3>
+        <label>Profile Picture</label>
+        </div>
+        <button class="reset primary" ng-click="UserModel.requestPasswordReset(User.profile.email)">Reset Password</button>
+        <div ng-repeat="(id, message) in messages" p-message="message"></div>
+    </div>
+
+     <form name="form" novalidate>
+
          <legend>Edit Profile</legend>
-         <img class="profilePicture" ng-src="{{User.profile.profilePicture}}"/>
-         <h3 ng-bind="User.profile.username"></h3>
 
          <div class="formComponent">
              <label>Full Name</label>
@@ -22,8 +33,9 @@
          </div>
 
          <div class="formComponent">
+             <label>Gender</label>
              <select ng-model="input.gender" ng-options="gender as gender for gender in genders">
-                 <option value="">-- Gender --</option>
+                 <option value=""> -- Gender -- </option>
              </select>
          </div>
 
@@ -31,7 +43,7 @@
              <label>Location</label>
              <input type="text"
                     name="location"
-                    ng-model="Input.location"
+                    ng-model="input.location"
                     />
          </div>
 
@@ -59,18 +71,12 @@
                     />
          </div>
 
-         <!-- TODO: Fix this shit.... -->
-
-         <div ng-repeat="(id, message) in messages" p-message="message"></div>
-
-         <br />
-         <button class="primary" ng-click="submit(input)">Update</button>
-         <br />
-         <button class="primary" ng-click="UserModel.requestPasswordReset(User.profile.email)">Reset Password</button>
+         <button class="primary"
+                 ng-click="invoke(user, 'update' , {input: input, messages: messages}, true)">
+                 Update
+         </button>
 
      </form>
-
-
 
 </div>
 

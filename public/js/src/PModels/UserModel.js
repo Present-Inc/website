@@ -54,9 +54,12 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
+				//TODO : Add `exec` method to Profile Controllers and remove User Context Manager from Models
+
 					/**
 					 * Demand the user
 					 */
+
 
 					User.prototype.demand = function() {
 
@@ -77,29 +80,23 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					/**
 					 * Updates the user's profile
-					 * @param {Object} input
-					 * @param {Object} messages
+					 * @param {Object} options
 					 */
 
-					User.prototype.update = function(input, messages) {
+					User.prototype.update = function(options) {
 
-						var userContext = UserContextManager.getActiveUserContext();
+							if (options.input.email == this.profile.email) {
+								delete options.input.email;
+							}
 
-						if (userContext) {
-							ApiManager.users('update', userContext, input)
-								.then(function(apiResponse) {
-									messages.error.clear();
-									messages.success.show({body: 'Profile successfully updated!'});
+							ApiManager.users('update', userContext, options.input)
+								.then(function() {
+									options.messages.error.clear();
+									options.messages.success.show({body: 'Profile successfully updated!'});
 								})
 								.catch(function(apiResponse) {
-									messages.error.show({body: apiResponse.result});
+									options.messages.error.show({body: apiResponse.result});
 								});
-						} else {
-
-						}
-
-						return updatingProfile.promise;
-
 					};
 
 					return new User(apiUserObject, subjectiveObjectMeta);
@@ -125,7 +122,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						.then(function() {
 							success = true;
 							messages.error.clear();
-							messages.success.show({body: 'Account successfully created.'});
+							messages.success.show();
 						})
 						.catch(function(apiResponse) {
 							messages.error.show({body: apiResponse.result});
@@ -141,10 +138,10 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					ApiManager.users('requestPasswordReset', null, input)
 						.then(function(apiResponse) {
 							messages.error.clear();
-							messages.success.show({body: 'Account successfully created.'});
+							messages.success.show({body: 'Please check your email for reset link.'});
 						})
 						.catch(function(apiResposne) {
-							messages.error.show({body: 'Account successfully created.'});
+							messages.error.show({body: apiResposne.result});
 						});
 				},
 

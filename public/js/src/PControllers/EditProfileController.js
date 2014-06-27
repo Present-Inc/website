@@ -4,16 +4,14 @@
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'FeedbackModel', 'User',
+PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'User', 'UserContextManager',
 
-	function($scope, FeedbackModel, User) {
-
-		//TODO: finish this.....
+	function($scope, invoke, MessageModel, User, UserContextManager) {
 
 		/** Initializes a new User instance on the Controller $scope **/
-		$scope.User = User;
+		$scope.user = User;
 
-		$scope.Input = {
+		$scope.input = {
 			full_name: User.profile.fullName,
 			description: User.profile.description,
 			gender: User.profile.gender,
@@ -23,13 +21,28 @@ PControllers.controller('EditProfileController', ['$scope', 'FeedbackModel', 'Us
 			phone_number: User.profile.phoneNumber
 		};
 
-		$scope.Feedback = FeedbackModel.create();
+		$scope.messages = {
+			success: MessageModel.create('panel', 'success', {body: 'Saved!'})    ,
+			error: MessageModel.create('panel', 'error')
+		};
 
 		$scope.genders = ['Male', 'Female'];
 
+		$scope.invoke = invoke;
 
-		/** Validation **/
+		function validateInput(input, error, msg) {
+			if(input.$dirty && input.$error[error]) {
+				$scope.messages.success.clear();
+				$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
+			} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
+				$scope.messages[input.$name + '_' + error].clear();
+			}
+		}
 
+		$scope.$watchCollection('form.email', function(email) {
+			validateInput(email, 'required', 'Email can not be blank');
+			validateInput(email, 'email', 'Email is invalid');
+		});
 
 	}
 

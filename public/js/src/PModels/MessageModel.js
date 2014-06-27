@@ -26,7 +26,7 @@ PModels.factory('MessageModel', function() {
 
 			Message.prototype.show = function(content, style) {
 
-				if(content.body) {
+				if(content) {
 					this.style = style || this.style;
 					this.body = content.body;
 					this.title = content.title;
