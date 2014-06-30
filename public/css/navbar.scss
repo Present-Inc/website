@@ -1,5 +1,7 @@
+
 nav {
   width: 100%;
+  z-index: 999;
   position: fixed;
   height: auto;
 
@@ -51,6 +53,7 @@ nav {
   }
 
   .dropdown {
+    z-index: 1000;
     position: absolute;
     margin: 10px 0px 0px 10px;
     width: 24%;

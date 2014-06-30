@@ -3,9 +3,9 @@
  * @namespace
  */
 
-	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel', 'UserContextManager',
+	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'invoke', 'MessageModel', 'UserModel', 'UserContextManager',
 
-			function($scope, $stateParams, MessageModel, UserModel, UserContextManager) {
+			function($scope, $stateParams, invoke, MessageModel, UserModel, UserContextManager) {
 
 				/** Initialize the UserModel on the Controller $scope **/
 				$scope.UserModel = UserModel;
@@ -40,7 +40,7 @@
 
 				};
 
-				$scope.accountRegistered = false;
+				$scope.invoke = invoke;
 
 
 				function validateInput(input, error, msg) {

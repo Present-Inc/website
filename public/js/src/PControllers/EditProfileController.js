@@ -4,9 +4,9 @@
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'User', 'UserContextManager',
+PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'UserContextManager', 'User',
 
-	function($scope, invoke, MessageModel, User, UserContextManager) {
+	function($scope, invoke, MessageModel, UserContextManager, User) {
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.user = User;
@@ -22,8 +22,8 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		};
 
 		$scope.messages = {
-			success: MessageModel.create('panel', 'success', {body: 'Saved!'})    ,
-			error: MessageModel.create('panel', 'error')
+			success: MessageModel.create('alert', 'success', {body: 'Saved!'})    ,
+			error: MessageModel.create('alert', 'error')
 		};
 
 		$scope.genders = ['Male', 'Female'];
@@ -33,7 +33,7 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		function validateInput(input, error, msg) {
 			if(input.$dirty && input.$error[error]) {
 				$scope.messages.success.clear();
-				$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
+				$scope.messages[input.$name + '_' + error] = MessageModel.create('alert', 'error', {body: msg}, true);
 			} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 				$scope.messages[input.$name + '_' + error].clear();
 			}

@@ -76,14 +76,14 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px white inset; }
 
 .alert.error { background-color: white; border-left: solid 3px #d95c5c; }
 
-nav { width: 100%; position: fixed; height: auto; box-shadow: 0px 1px 3px #CCC; }
+nav { width: 100%; z-index: 999; position: fixed; height: auto; box-shadow: 0px 1px 3px #CCC; }
 
 nav .navbarWrapper { width: 100%; height: 56px; overflow: auto; font-size: 14px; background-color: #FFFFFF; border-bottom: solid 1px #ccc; }
 nav .logo { display: inline-block; float: left; width: 56px; height: 100%; margin: 0px 0px 0px 20px; background-color: #7bd4eb; }
 nav .logo img { display: block; width: 60%; margin: 10px auto; }
 nav .search { display: inline-block; float: left; width: 25%; height: 100%; }
 nav .search input { margin: 8px 12px; width: 90%; color: #7A7A7A; background-color: #f2f3f4; border: solid 1px #eff1f2; -webkit-border-radius: 6px; -moz-border-radius: 6px; -ms-border-radius: 6px; border-radius: 6px; }
-nav .dropdown { position: absolute; margin: 10px 0px 0px 10px; width: 24%; min-height: 20px; padding: 15px 0px; background-color: #FFF; border: solid 1px #d3d8db; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
+nav .dropdown { z-index: 1000; position: absolute; margin: 10px 0px 0px 10px; width: 24%; min-height: 20px; padding: 15px 0px; background-color: #FFF; border: solid 1px #d3d8db; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 nav .dropdown::before { content: ''; position: absolute; top: -12px; left: 10px; height: 20px; width: 20px; transform: rotate(45deg); -webkit-transform: rotate(45deg); background-color: #FFF; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px; border-left: solid 1px #d3d8db; border-top: solid 1px #d3d8db; }
 nav .dropdown .userResult { overflow: auto; padding: 5px 10px 5px 10px; }
 nav .dropdown .userResult img { height: 40px; float: left; display: inline-block; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
@@ -122,7 +122,9 @@ nav .hub span:hover { cursor: pointer; color: #7bd4eb; }
 .videoCell .commentsPreview .commentBody { display: block; clear: both; margin: 10px 0px 20px 0px; }
 .videoCell .commentsPreview .addComment { margin: 20px 0px 0px 0px; }
 
-.accountInput, #login input, #register input, #resetPassword input { margin: 10px auto; }
+#account { z-index: -1; }
+
+.accountInput, #login input, #register input, #requestPasswordReset input, #resetPassword input { margin: 10px auto; }
 
 /** LOGIN **/
 #login { padding: 160px; text-align: center; }
@@ -130,17 +132,24 @@ nav .hub span:hover { cursor: pointer; color: #7bd4eb; }
 /** REGISTER **/
 #register { padding: 100px; text-align: center; }
 
-#register .messages { width: 400px; min-height: 100px; margin: 20px auto; }
+#register .messages { width: 400px; margin: 20px auto; }
+
+/** REQUEST PASSWORD RESET */
+#requestPasswordReset { padding: 120px; text-align: center; }
+
+#requestPasswordReset .messages { width: 400px; margin: 20px auto; }
 
 /** RESET PASSWORD **/
 #resetPassword { padding: 120px; text-align: center; }
+
+#resetPassword .messages { width: 400px; margin: 20px auto; }
 
 /** EDIT PROFILE **/
 #editProfile { padding: 100px 0px 0px 0px; }
 
 #editProfile legend { margin: 10px 0px; }
 #editProfile form { display: inline-block; width: 40%; margin: 0px 0px 0px 400px; }
-#editProfile .sidebar { position: fixed; display: inline-block; float: left; margin: 0px 0px 0px 50px; }
+#editProfile .sidebar { position: fixed; display: inline-block; float: left; width: 320px; margin: 0px 0px 0px 50px; }
 #editProfile .reset { margin: 10px 0px; width: 100%; }
 #editProfile .profile { width: 300px; height: 150px; padding: 10px; overflow: auto; background: #FFF; border: solid 1px #CCC; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }
 #editProfile .profile img { float: left; height: 120px; margin: 0px 10px 10px 0px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; border-radius: 4px; }

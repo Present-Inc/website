@@ -197,6 +197,18 @@
 					meta: {availability: 'public'}
 				})
 
+				.state('account.requestPasswordReset', {
+					url: '/account/request_password_reset',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'requestPasswordReset@account' : {
+							templateUrl: 'views/partials/request_password_reset',
+							controller: 'RequestPasswordResetController'
+							}
+					},
+					meta: {availability: 'public'}
+				})
+
 				.state('account.resetPassword', {
 					url: '/account/reset_password?user_id&password_reset_token',
 					views: {

@@ -1,3 +1,8 @@
+
+#account {
+  z-index: -1;
+}
+
 .accountInput {
   margin: 10px auto;
 }
@@ -26,7 +31,21 @@
   input { @extend .accountInput;}
   .messages {
     width: 400px;
-    min-height: 100px;
+    margin: 20px auto;
+  }
+}
+
+/** REQUEST PASSWORD RESET */
+
+#requestPasswordReset {
+  padding: 120px;
+  text-align: center;
+}
+
+#requestPasswordReset {
+  input {@extend .accountInput}
+  .messages {
+    width: 400px;
     margin: 20px auto;
   }
 }
@@ -41,6 +60,10 @@
 
 #resetPassword {
   input { @extend .accountInput;}
+  .messages {
+    width: 400px;
+    margin: 20px auto;
+  }
 }
 
 
@@ -64,6 +87,7 @@
     position: fixed;
     display: inline-block;
     float: left;
+    width: 320px;
     margin: 0px 0px 0px 50px;
   }
 
@@ -102,7 +126,5 @@
     }
 
   }
-
-
 
 }

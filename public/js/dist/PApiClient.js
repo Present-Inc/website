@@ -192,6 +192,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod: 'POST',
 					url : 'users/reset_password',
 					requiresUserContext: false
+				},
+				requestPasswordReset : {
+					httpMethod: 'POST',
+					url: 'users/request_password_reset',
+					requiresUserContest: false
 				}
 			},
 

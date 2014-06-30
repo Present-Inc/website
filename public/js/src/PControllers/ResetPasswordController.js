@@ -3,19 +3,20 @@
  * @namespace
  */
 
-PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel', 'MessageModel',
+PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'invoke', 'UserModel', 'MessageModel',
 
-	function($scope, $stateParams, UserModel, MessageModel) {
+	function($scope, $stateParams, invoke, UserModel, MessageModel) {
 
 
 		$scope.UserModel = UserModel;
 
 		$scope.messages = {
-			success: MessageModel.create('panel'),
-			error: MessageModel.create('panel')
+			success: MessageModel.create('alert', 'success', {body: 'Password successfully reset.'}),
+			error: MessageModel.create('alert', 'error')
 		};
 
-		/** User Input **/
+		$scope.invoke = invoke;
+
 
 		$scope.input = {
 			password: '',

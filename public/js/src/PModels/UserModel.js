@@ -84,19 +84,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					 */
 
 					User.prototype.update = function(options) {
-
-							if (options.input.email == this.profile.email) {
-								delete options.input.email;
-							}
-
-							ApiManager.users('update', userContext, options.input)
-								.then(function() {
-									options.messages.error.clear();
-									options.messages.success.show({body: 'Profile successfully updated!'});
-								})
-								.catch(function(apiResponse) {
-									options.messages.error.show({body: apiResponse.result});
-								});
+						ApiManager.users('update', userContext, options.input)
+							.then(function() {
+								options.messages.error.clear();
+								options.messages.success.show({body: 'Profile successfully updated!'});
+							})
+							.catch(function(apiResponse) {
+								options.messages.error.show({body: apiResponse.result});
+							});
 					};
 
 					return new User(apiUserObject, subjectiveObjectMeta);
@@ -108,24 +103,23 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @returns {*}
 				 */
 
-				registerNewAccount : function(input, messages, success) {
+				registerNewAccount : function(options) {
 
 					var params = {
-						username: input.username,
-						email: input.email,
-						password: input.password,
-						invite_id : input.invite_id,
-						invite_user_id: input.invite_id
+						username: options.input.username,
+						email: options.input.email,
+						password: options.input.password,
+						invite_id : options.input.invite_id,
+						invite_user_id: options.input.invite_id
 					};
 
 					ApiManager.users('create', null, params)
 						.then(function() {
-							success = true;
-							messages.error.clear();
-							messages.success.show();
+							options.messages.error.clear();
+							options.messages.success.show();
 						})
 						.catch(function(apiResponse) {
-							messages.error.show({body: apiResponse.result});
+							options.messages.error.show({body: apiResponse.result});
 						});
 
 				},
@@ -134,14 +128,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * Sends an email to the provided user email
 				 */
 
-				requestPasswordReset : function(input, messages) {
-					ApiManager.users('requestPasswordReset', null, input)
+				requestPasswordReset : function(options) {
+					ApiManager.users('requestPasswordReset', null, options.input)
 						.then(function(apiResponse) {
-							messages.error.clear();
-							messages.success.show({body: 'Please check your email for reset link.'});
+							options.messages.error.clear();
+							options.messages.success.show({body: 'Please check your email for reset link.'});
 						})
 						.catch(function(apiResposne) {
-							messages.error.show({body: apiResposne.result});
+							options.messages.error.show({body: apiResposne.result});
 						});
 				},
 
@@ -149,14 +143,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * Resets the account password
 				 */
 
-				resetAccountPassword : function(input, messages) {
-					ApiManager.users('resetPassword', userContext, input)
+				resetAccountPassword : function(options) {
+					ApiManager.users('resetPassword', userContext, options.input)
 						.then(function() {
-							messages.error.clear();
-							messages.success.show({body: 'Password successfully reset.'});
+							options.messages.error.clear();
+							options.messages.success.show({body: 'Password successfully reset.'});
 						})
 						.catch(function(apiResponse) {
-							messages.error.show({body: apiResponse.result});
+							options.messages.error.show({body: apiResponse.result});
 						});
 				}
 

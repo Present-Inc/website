@@ -4,9 +4,9 @@
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'User', 'UserContextManager',
+PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'UserContextManager', 'User',
 
-	function($scope, invoke, MessageModel, User, UserContextManager) {
+	function($scope, invoke, MessageModel, UserContextManager, User) {
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.user = User;
@@ -22,8 +22,8 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		};
 
 		$scope.messages = {
-			success: MessageModel.create('panel', 'success', {body: 'Saved!'})    ,
-			error: MessageModel.create('panel', 'error')
+			success: MessageModel.create('alert', 'success', {body: 'Saved!'})    ,
+			error: MessageModel.create('alert', 'error')
 		};
 
 		$scope.genders = ['Male', 'Female'];
@@ -33,7 +33,7 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		function validateInput(input, error, msg) {
 			if(input.$dirty && input.$error[error]) {
 				$scope.messages.success.clear();
-				$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
+				$scope.messages[input.$name + '_' + error] = MessageModel.create('alert', 'error', {body: msg}, true);
 			} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 				$scope.messages[input.$name + '_' + error].clear();
 			}
@@ -92,14 +92,17 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
  * @namespace
  */
 
-  PControllers.controller('LoginController', ['$scope',
+  PControllers.controller('LoginController', ['$scope', 'invoke', 'SessionModel',
 
-		function($scope) {
+		function($scope, invoke, SessionModel) {
 
 			$scope.input = {
 				username : '',
 				password : ''
 			};
+
+			$scope.invoke = invoke;
+			$scope.SessionModel = SessionModel;
 
   	}
 
@@ -165,9 +168,9 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
  * @namespace
  */
 
-	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel', 'UserContextManager',
+	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'invoke', 'MessageModel', 'UserModel', 'UserContextManager',
 
-			function($scope, $stateParams, MessageModel, UserModel, UserContextManager) {
+			function($scope, $stateParams, invoke, MessageModel, UserModel, UserContextManager) {
 
 				/** Initialize the UserModel on the Controller $scope **/
 				$scope.UserModel = UserModel;
@@ -202,7 +205,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 				};
 
-				$scope.accountRegistered = false;
+				$scope.invoke = invoke;
 
 
 				function validateInput(input, error, msg) {
@@ -242,24 +245,45 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 	]);
 
+/**
+ * RequestPasswordResetController
+ * @class
+ */
+
+PControllers.controller('RequestPasswordResetController', [ '$scope', 'invoke', 'UserModel', 'MessageModel',
+	function($scope, invoke, UserModel, MessageModel) {
+
+		$scope.UserModel = UserModel;
+		$scope.input = {
+			username: ''
+		};
+		$scope.messages = {
+			success: MessageModel.create('alert', 'success', {body: 'Check your inbox!'}),
+			error: MessageModel.create('alert', 'error')
+		};
+		$scope.invoke = invoke;
+
+	}
+]);
 /*
  * LoginController
  * @namespace
  */
 
-PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel', 'MessageModel',
+PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'invoke', 'UserModel', 'MessageModel',
 
-	function($scope, $stateParams, UserModel, MessageModel) {
+	function($scope, $stateParams, invoke, UserModel, MessageModel) {
 
 
 		$scope.UserModel = UserModel;
 
 		$scope.messages = {
-			success: MessageModel.create('panel'),
-			error: MessageModel.create('panel')
+			success: MessageModel.create('alert', 'success', {body: 'Password successfully reset.'}),
+			error: MessageModel.create('alert', 'error')
 		};
 
-		/** User Input **/
+		$scope.invoke = invoke;
+
 
 		$scope.input = {
 			password: '',

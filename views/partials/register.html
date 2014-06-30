@@ -49,7 +49,10 @@
                    required/>
         </div>
 
-        <button class="primary" ng-click="UserModel.registerNewAccount(input, messages, accountRegistered)">Create</button>
+        <button class="primary"
+                ng-click="invoke(UserModel, 'registerNewAccount', {input: input, messages: messages})">
+                Create
+        </button>
 
     </form>
 

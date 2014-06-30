@@ -197,6 +197,18 @@
 					meta: {availability: 'public'}
 				})
 
+				.state('account.requestPasswordReset', {
+					url: '/account/request_password_reset',
+					views: {
+						'navbar@' : {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
+						'requestPasswordReset@account' : {
+							templateUrl: 'views/partials/request_password_reset',
+							controller: 'RequestPasswordResetController'
+							}
+					},
+					meta: {availability: 'public'}
+				})
+
 				.state('account.resetPassword', {
 					url: '/account/reset_password?user_id&password_reset_token',
 					views: {
@@ -418,6 +430,11 @@ PApiClient.factory('ApiClientConfig', function() {
 					httpMethod: 'POST',
 					url : 'users/reset_password',
 					requiresUserContext: false
+				},
+				requestPasswordReset : {
+					httpMethod: 'POST',
+					url: 'users/request_password_reset',
+					requiresUserContest: false
 				}
 			},
 
@@ -1030,12 +1047,12 @@ PModels.factory('ProfileModel', function() {
 				 * @param {String} password - The user provided password
 				 */
 
-				login: function(username, password) {
+				login: function(options) {
 
 					var userContext = UserContextManager.getActiveUserContext();
 
 					if (!userContext) {
-						UserContextManager.createNewUserContext(username, password)
+						UserContextManager.createNewUserContext(options.input.username, options.input.password)
 							.then(function () {
 								$rootScope.$broadcast('_newUserLoggedIn');
 								$state.go('home.default');
@@ -1207,19 +1224,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					 */
 
 					User.prototype.update = function(options) {
-
-							if (options.input.email == this.profile.email) {
-								delete options.input.email;
-							}
-
-							ApiManager.users('update', userContext, options.input)
-								.then(function() {
-									options.messages.error.clear();
-									options.messages.success.show({body: 'Profile successfully updated!'});
-								})
-								.catch(function(apiResponse) {
-									options.messages.error.show({body: apiResponse.result});
-								});
+						ApiManager.users('update', userContext, options.input)
+							.then(function() {
+								options.messages.error.clear();
+								options.messages.success.show({body: 'Profile successfully updated!'});
+							})
+							.catch(function(apiResponse) {
+								options.messages.error.show({body: apiResponse.result});
+							});
 					};
 
 					return new User(apiUserObject, subjectiveObjectMeta);
@@ -1231,24 +1243,23 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @returns {*}
 				 */
 
-				registerNewAccount : function(input, messages, success) {
+				registerNewAccount : function(options) {
 
 					var params = {
-						username: input.username,
-						email: input.email,
-						password: input.password,
-						invite_id : input.invite_id,
-						invite_user_id: input.invite_id
+						username: options.input.username,
+						email: options.input.email,
+						password: options.input.password,
+						invite_id : options.input.invite_id,
+						invite_user_id: options.input.invite_id
 					};
 
 					ApiManager.users('create', null, params)
 						.then(function() {
-							success = true;
-							messages.error.clear();
-							messages.success.show();
+							options.messages.error.clear();
+							options.messages.success.show();
 						})
 						.catch(function(apiResponse) {
-							messages.error.show({body: apiResponse.result});
+							options.messages.error.show({body: apiResponse.result});
 						});
 
 				},
@@ -1257,14 +1268,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * Sends an email to the provided user email
 				 */
 
-				requestPasswordReset : function(input, messages) {
-					ApiManager.users('requestPasswordReset', null, input)
+				requestPasswordReset : function(options) {
+					ApiManager.users('requestPasswordReset', null, options.input)
 						.then(function(apiResponse) {
-							messages.error.clear();
-							messages.success.show({body: 'Please check your email for reset link.'});
+							options.messages.error.clear();
+							options.messages.success.show({body: 'Please check your email for reset link.'});
 						})
 						.catch(function(apiResposne) {
-							messages.error.show({body: apiResposne.result});
+							options.messages.error.show({body: apiResposne.result});
 						});
 				},
 
@@ -1272,14 +1283,14 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * Resets the account password
 				 */
 
-				resetAccountPassword : function(input, messages) {
-					ApiManager.users('resetPassword', userContext, input)
+				resetAccountPassword : function(options) {
+					ApiManager.users('resetPassword', userContext, options.input)
 						.then(function() {
-							messages.error.clear();
-							messages.success.show({body: 'Password successfully reset.'});
+							options.messages.error.clear();
+							options.messages.success.show({body: 'Password successfully reset.'});
 						})
 						.catch(function(apiResponse) {
-							messages.error.show({body: apiResponse.result});
+							options.messages.error.show({body: apiResponse.result});
 						});
 				}
 
@@ -1794,9 +1805,9 @@ PManagers.factory('UserContextManager', ['$q', 'localStorageService', 'logger', 
  * @namespace
  */
 
-PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'User', 'UserContextManager',
+PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageModel', 'UserContextManager', 'User',
 
-	function($scope, invoke, MessageModel, User, UserContextManager) {
+	function($scope, invoke, MessageModel, UserContextManager, User) {
 
 		/** Initializes a new User instance on the Controller $scope **/
 		$scope.user = User;
@@ -1812,8 +1823,8 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		};
 
 		$scope.messages = {
-			success: MessageModel.create('panel', 'success', {body: 'Saved!'})    ,
-			error: MessageModel.create('panel', 'error')
+			success: MessageModel.create('alert', 'success', {body: 'Saved!'})    ,
+			error: MessageModel.create('alert', 'error')
 		};
 
 		$scope.genders = ['Male', 'Female'];
@@ -1823,7 +1834,7 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		function validateInput(input, error, msg) {
 			if(input.$dirty && input.$error[error]) {
 				$scope.messages.success.clear();
-				$scope.messages[input.$name + '_' + error] = MessageModel.create('panel', 'error', {body: msg}, true);
+				$scope.messages[input.$name + '_' + error] = MessageModel.create('alert', 'error', {body: msg}, true);
 			} else if($scope.messages[input.$name + '_' + error] && !input.$error[error]) {
 				$scope.messages[input.$name + '_' + error].clear();
 			}
@@ -1882,14 +1893,17 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
  * @namespace
  */
 
-  PControllers.controller('LoginController', ['$scope',
+  PControllers.controller('LoginController', ['$scope', 'invoke', 'SessionModel',
 
-		function($scope) {
+		function($scope, invoke, SessionModel) {
 
 			$scope.input = {
 				username : '',
 				password : ''
 			};
+
+			$scope.invoke = invoke;
+			$scope.SessionModel = SessionModel;
 
   	}
 
@@ -1955,9 +1969,9 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
  * @namespace
  */
 
-	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'MessageModel', 'UserModel', 'UserContextManager',
+	PControllers.controller('RegisterController', ['$scope', '$stateParams', 'invoke', 'MessageModel', 'UserModel', 'UserContextManager',
 
-			function($scope, $stateParams, MessageModel, UserModel, UserContextManager) {
+			function($scope, $stateParams, invoke, MessageModel, UserModel, UserContextManager) {
 
 				/** Initialize the UserModel on the Controller $scope **/
 				$scope.UserModel = UserModel;
@@ -1992,7 +2006,7 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 				};
 
-				$scope.accountRegistered = false;
+				$scope.invoke = invoke;
 
 
 				function validateInput(input, error, msg) {
@@ -2032,24 +2046,45 @@ PControllers.controller('NavbarController', ['$scope', '$state', 'logger', 'User
 
 	]);
 
+/**
+ * RequestPasswordResetController
+ * @class
+ */
+
+PControllers.controller('RequestPasswordResetController', [ '$scope', 'invoke', 'UserModel', 'MessageModel',
+	function($scope, invoke, UserModel, MessageModel) {
+
+		$scope.UserModel = UserModel;
+		$scope.input = {
+			username: ''
+		};
+		$scope.messages = {
+			success: MessageModel.create('alert', 'success', {body: 'Check your inbox!'}),
+			error: MessageModel.create('alert', 'error')
+		};
+		$scope.invoke = invoke;
+
+	}
+]);
 /*
  * LoginController
  * @namespace
  */
 
-PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'UserModel', 'MessageModel',
+PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'invoke', 'UserModel', 'MessageModel',
 
-	function($scope, $stateParams, UserModel, MessageModel) {
+	function($scope, $stateParams, invoke, UserModel, MessageModel) {
 
 
 		$scope.UserModel = UserModel;
 
 		$scope.messages = {
-			success: MessageModel.create('panel'),
-			error: MessageModel.create('panel')
+			success: MessageModel.create('alert', 'success', {body: 'Password successfully reset.'}),
+			error: MessageModel.create('alert', 'error')
 		};
 
-		/** User Input **/
+		$scope.invoke = invoke;
+
 
 		$scope.input = {
 			password: '',

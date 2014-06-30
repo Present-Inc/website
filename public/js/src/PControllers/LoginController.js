@@ -3,14 +3,17 @@
  * @namespace
  */
 
-  PControllers.controller('LoginController', ['$scope',
+  PControllers.controller('LoginController', ['$scope', 'invoke', 'SessionModel',
 
-		function($scope) {
+		function($scope, invoke, SessionModel) {
 
 			$scope.input = {
 				username : '',
 				password : ''
 			};
+
+			$scope.invoke = invoke;
+			$scope.SessionModel = SessionModel;
 
   	}
 

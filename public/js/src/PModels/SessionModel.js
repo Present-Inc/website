@@ -29,16 +29,15 @@
 
 				/**
 				 * Handles user context creation, sets the activeUser property and changes the state to home.default
-				 * @param {String} username - The user provided username
-				 * @param {String} password - The user provided password
+				 * @param {Object} options
 				 */
 
-				login: function(username, password) {
+				login: function(options) {
 
 					var userContext = UserContextManager.getActiveUserContext();
 
 					if (!userContext) {
-						UserContextManager.createNewUserContext(username, password)
+						UserContextManager.createNewUserContext(options.input.username, options.input.password)
 							.then(function () {
 								$rootScope.$broadcast('_newUserLoggedIn');
 								$state.go('home.default');
