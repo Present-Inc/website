@@ -37,6 +37,7 @@
 
 	}]);
 
+
 /**
  * Loads a new Profile Model which will be resolved, and injected into a controller
  * @param {Angular} $q
@@ -45,29 +46,31 @@
  * @param {PManagers} UserContextManager
  */
 
-PLoaders.factory('UserLoader', ['$q', 'logger', 'ApiManager', 'UserModel', 'UserContextManager',
+PLoaders.factory('UserLoader', ['$q', '$state', 'logger', 'ApiManager', 'UserModel', 'UserContextManager',
 
-	function($q, logger, ApiManager, UserModel, UserContextManager) {
+	function($q, $state, logger, ApiManager, UserModel, UserContextManager) {
 
 		return {
 
-			preLoad : function(method, requiresUserContext, username) {
+			preLoad : function(username) {
 
-				var loadingUser = $q.defer();
-				var userContext = UserContextManager.getActiveUserContext();
+				var loadingUser = $q.defer(),
+						userContext = UserContextManager.getActiveUserContext(),
+						isActiveUser = false;
 
-				if(requiresUserContext && !userContext) {
-					$state.go('login');
-				} else {
-					ApiManager.users(method, userContext, {username: username})
-						.then(function(apiResponse) {
-							var User = UserModel.construct(apiResponse.result.object, apiResponse.result.subjectiveObjectMeta);
-							loadingUser.resolve(User);
-						})
-						.catch(function() {
-							loadingUser.reject();
-						});
-				}
+				if(username == 'activeUser') isActiveUser = true;
+				else if(username == userContext.profile.username) isActiveUser = true;
+
+
+				var user = UserModel.create(isActiveUser);
+
+				user.load({username: username})
+					.then(function() {
+						loadingUser.resolve(user);
+					})
+					.catch(function() {
+						$state.go('splash');
+					});
 
 				return loadingUser.promise;
 

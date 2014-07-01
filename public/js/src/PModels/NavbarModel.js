@@ -34,7 +34,7 @@ PModels.factory('NavbarModel', ['$q',
 				 * @property {Object} mode
 				 * @property {Boolean} isEnabled - Indicates whether the current view has the navbar enabled (visible)
 				 * @property {Object} hub - Contains the profile information of the active user
-				 * @property {Object search - Contains the properties and results of the search bar
+				 * @property {Object} search - Contains the properties and results of the search bar
 				 */
 
 				function Navbar() {
@@ -75,10 +75,10 @@ PModels.factory('NavbarModel', ['$q',
 				Navbar.prototype.sendSearchQuery = function(query) {
 
 					var sendingVideosSearch = $q.defer(),
-						 sendingUsersSearch = $q.defer(),
-						 videosSearchResults = this.search.results.videos,
-						 usersSearchResults = this.search.results.users,
-						 userContext = UserContextManager.getActiveUserContext();
+							sendingUsersSearch = $q.defer(),
+							videosSearchResults = this.search.results.videos,
+							usersSearchResults = this.search.results.users,
+							userContext = UserContextManager.getActiveUserContext();
 
 					var promises  = [sendingVideosSearch, sendingUsersSearch];
 
@@ -128,6 +128,7 @@ PModels.factory('NavbarModel', ['$q',
 				return new Navbar();
 
 			}
+
 		};
 
 	}

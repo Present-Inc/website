@@ -139,6 +139,22 @@
 						return resourceMethod;
 					};
 
+          var mapSourceUser = function(username, videoCells) {
+            var mappingSourceUser = $q.defer(),
+                _this = this;
+            ApiManager.users('show', false, {username: username})
+              .then(function(apiResponse) {
+                videoCells.map(function(videoCell) {
+                  videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
+                });
+                mappingSourceUser.resolve();
+              })
+              .catch(function() {
+                mappingSourceUser.reject();
+              });
+            return mappingSourceUser.promise;
+          };
+
  					/**
 					 * Loads a segment of a video feed
 					 * @returns {*}
@@ -168,7 +184,8 @@
 																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
-									if(_this.type == 'user') _this.mapSourceUser().then(loadingFeed.resolve());
+									if(_this.type == 'user') mapSourceUser(_this.username, _this.videoCells)
+                                            .then(loadingFeed.resolve());
 									else loadingFeed.resolve();
 								})
 								.catch(function() {
@@ -178,22 +195,6 @@
 
 						return loadingFeed.promise;
 
-					};
-
-					Feed.prototype.mapSourceUser = function() {
-						var mappingSourceUser = $q.defer(),
-								_this = this;
-						ApiManager.users('show', false, {username: this.username})
-							.then(function(apiResponse) {
-								_this.videoCells.map(function(videoCell) {
-									videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
-								});
-								mappingSourceUser.resolve();
-							})
-							.catch(function() {
-								mappingSourceUser.reject();
-							});
-						return mappingSourceUser.promise;
 					};
 
           return new Feed(type, requireUserContext, username);
@@ -364,7 +365,7 @@ PModels.factory('NavbarModel', ['$q',
 				 * @property {Object} mode
 				 * @property {Boolean} isEnabled - Indicates whether the current view has the navbar enabled (visible)
 				 * @property {Object} hub - Contains the profile information of the active user
-				 * @property {Object search - Contains the properties and results of the search bar
+				 * @property {Object} search - Contains the properties and results of the search bar
 				 */
 
 				function Navbar() {
@@ -405,10 +406,10 @@ PModels.factory('NavbarModel', ['$q',
 				Navbar.prototype.sendSearchQuery = function(query) {
 
 					var sendingVideosSearch = $q.defer(),
-						 sendingUsersSearch = $q.defer(),
-						 videosSearchResults = this.search.results.videos,
-						 usersSearchResults = this.search.results.users,
-						 userContext = UserContextManager.getActiveUserContext();
+							sendingUsersSearch = $q.defer(),
+							videosSearchResults = this.search.results.videos,
+							usersSearchResults = this.search.results.users,
+							userContext = UserContextManager.getActiveUserContext();
 
 					var promises  = [sendingVideosSearch, sendingUsersSearch];
 
@@ -458,11 +459,13 @@ PModels.factory('NavbarModel', ['$q',
 				return new Navbar();
 
 			}
+
 		};
 
 	}
 
 ]);
+
 
 PModels.factory('ProfileModel', function() {
 
@@ -542,8 +545,7 @@ PModels.factory('ProfileModel', function() {
 
 				/**
 				 * Handles user context creation, sets the activeUser property and changes the state to home.default
-				 * @param {String} username - The user provided username
-				 * @param {String} password - The user provided password
+				 * @param {Object} options
 				 */
 
 				login: function(options) {
@@ -655,7 +657,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 			 * @returns {Profile}
 			 */
 
-				construct : function(apiUserObject, subjectiveObjectMeta) {
+				create : function(isActiveUser) {
 
 				/**
 				 * @constructor
@@ -663,9 +665,35 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @param {Object} apiProfileObject
 				 */
 
-					function User(apiProfileObject, subjectiveObjectMeta) {
-						this.profile = ProfileModel.construct(apiProfileObject, subjectiveObjectMeta);
-						this.subjectiveMeta = subjectiveObjectMeta;
+					function User(isActiveUser) {
+						this.profile = {};
+						this.subjectiveMeta = {};
+						this.isActiveUser = isActiveUser;
+					}
+
+					User.prototype.load = function(options) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								loadingUser = $q.defer();
+								method = '',
+								_this = this;
+
+						if (this.isActiveUser) method = 'showMe';
+						else method = 'show';
+
+						ApiManager.users(method, userContext, {username: options.username})
+							.then(function(apiResponse) {
+								_this.profile = ProfileModel.construct(apiResponse.result.object);
+								_this.subjectiveMeta = apiResponse.result.subjectiveObjectMeta;
+								loadingUser.resolve();
+
+							})
+							.catch(function(apiResponse) {
+								loadingUser.reject();
+							});
+
+						return loadingUser.promise;
+
 					}
 
 
@@ -675,7 +703,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					User.prototype.follow = function() {
 
-						var userContext = UserContextManager.getActiveUserContext();
+						var userContext = UserContextManager.getActiveUserContext(),
 								params = {
 									user_id : this.profile._id,
 									username : this.profile.username
@@ -733,7 +761,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 							});
 					};
 
-					return new User(apiUserObject, subjectiveObjectMeta);
+					return new User(isActiveUser);
 
 				},
 

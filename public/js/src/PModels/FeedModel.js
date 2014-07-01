@@ -67,6 +67,22 @@
 						return resourceMethod;
 					};
 
+          var mapSourceUser = function(username, videoCells) {
+            var mappingSourceUser = $q.defer(),
+                _this = this;
+            ApiManager.users('show', false, {username: username})
+              .then(function(apiResponse) {
+                videoCells.map(function(videoCell) {
+                  videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
+                });
+                mappingSourceUser.resolve();
+              })
+              .catch(function() {
+                mappingSourceUser.reject();
+              });
+            return mappingSourceUser.promise;
+          };
+
  					/**
 					 * Loads a segment of a video feed
 					 * @returns {*}
@@ -96,7 +112,8 @@
 																			.construct(apiResponse.results[i].object, apiResponse.results[i].subjectiveObjectMeta);
 										_this.videoCells.push(VideoCell);
 									}
-									if(_this.type == 'user') _this.mapSourceUser().then(loadingFeed.resolve());
+									if(_this.type == 'user') mapSourceUser(_this.username, _this.videoCells)
+                                            .then(loadingFeed.resolve());
 									else loadingFeed.resolve();
 								})
 								.catch(function() {
@@ -106,22 +123,6 @@
 
 						return loadingFeed.promise;
 
-					};
-
-					Feed.prototype.mapSourceUser = function() {
-						var mappingSourceUser = $q.defer(),
-								_this = this;
-						ApiManager.users('show', false, {username: this.username})
-							.then(function(apiResponse) {
-								_this.videoCells.map(function(videoCell) {
-									videoCell.video.creator = ProfileModel.construct(apiResponse.result.object);
-								});
-								mappingSourceUser.resolve();
-							})
-							.catch(function() {
-								mappingSourceUser.reject();
-							});
-						return mappingSourceUser.promise;
 					};
 
           return new Feed(type, requireUserContext, username);

@@ -127,25 +127,7 @@
 							return FeedLoader.preLoad('home', true)
 						},
 						User: function(UserLoader) {
-							return UserLoader.preLoad('showMe', true)
-						}
-					},
-					meta: {availability: 'private'}
-				})
-
-				.state('home.group', {
-					url: '/home/:group',
-					views: {
-						'navbar@': {templateUrl: 'views/partials/navbar', controller: 'NavbarController'},
-						'feed@home': {templateUrl: 'views/partials/feed', controller: 'FeedController'},
-						'profile@home': {templateUrl: 'views/partials/home_profile', controller: 'UserProfileController'}
-					},
-					resolve: {
-						Feed: function(FeedLoader) {
-							return FeedLoader.preLoad('home', true)
-						},
-						User: function(UserLoader) {
-							return UserLoader.preLoad('showMe', true)
+							return UserLoader.preLoad('activeUser')
 						}
 					},
 					meta: {availability: 'private'}
@@ -168,7 +150,7 @@
 							return FeedLoader.preLoad('user', false, $stateParams.user)
 						},
 						User: function(UserLoader, $stateParams) {
-							return UserLoader.preLoad('show', false, $stateParams.user)
+							return UserLoader.preLoad($stateParams.user)
 						}
 					},
 					meta: {availability: 'public'}
@@ -226,7 +208,7 @@
 					},
 					resolve: {
 						User : function(UserLoader) {
-							return UserLoader.preLoad('showMe', false);
+							return UserLoader.preLoad('activeUser');
 						}
 					},
 					meta: {availability: 'private'}
@@ -234,4 +216,3 @@
 
 
   }]);
-

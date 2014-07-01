@@ -6,7 +6,6 @@
         <img class="profilePicture" ng-src="{{user.profile.profilePicture}}"/>
         <h2 class="displayName" ng-bind="user.profile.displayName"></h2>
         <h3 class="altName" ng-bind="user.profile.altName"></h3>
-        <label>Profile Picture</label>
         </div>
         <a ui-sref="account.requestPasswordReset"><button class="reset primary">Reset Password</button></a>
         <div ng-repeat="(id, message) in messages" p-message="message"></div>
@@ -77,5 +76,3 @@
      </form>
 
 </div>
-
-

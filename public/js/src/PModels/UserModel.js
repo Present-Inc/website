@@ -16,7 +16,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 			 * @returns {Profile}
 			 */
 
-				construct : function(apiUserObject, subjectiveObjectMeta) {
+				create : function(isActiveUser) {
 
 				/**
 				 * @constructor
@@ -24,9 +24,35 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 				 * @param {Object} apiProfileObject
 				 */
 
-					function User(apiProfileObject, subjectiveObjectMeta) {
-						this.profile = ProfileModel.construct(apiProfileObject, subjectiveObjectMeta);
-						this.subjectiveMeta = subjectiveObjectMeta;
+					function User(isActiveUser) {
+						this.profile = {};
+						this.subjectiveMeta = {};
+						this.isActiveUser = isActiveUser;
+					}
+
+					User.prototype.load = function(options) {
+
+						var userContext = UserContextManager.getActiveUserContext(),
+								loadingUser = $q.defer();
+								method = '',
+								_this = this;
+
+						if (this.isActiveUser) method = 'showMe';
+						else method = 'show';
+
+						ApiManager.users(method, userContext, {username: options.username})
+							.then(function(apiResponse) {
+								_this.profile = ProfileModel.construct(apiResponse.result.object);
+								_this.subjectiveMeta = apiResponse.result.subjectiveObjectMeta;
+								loadingUser.resolve();
+
+							})
+							.catch(function(apiResponse) {
+								loadingUser.reject();
+							});
+
+						return loadingUser.promise;
+
 					}
 
 
@@ -36,7 +62,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					User.prototype.follow = function() {
 
-						var userContext = UserContextManager.getActiveUserContext();
+						var userContext = UserContextManager.getActiveUserContext(),
 								params = {
 									user_id : this.profile._id,
 									username : this.profile.username
@@ -94,7 +120,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 							});
 					};
 
-					return new User(apiUserObject, subjectiveObjectMeta);
+					return new User(isActiveUser);
 
 				},
 
