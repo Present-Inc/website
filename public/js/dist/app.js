@@ -1179,6 +1179,8 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					}
 
 
+					//TODO : Add `exec` method to Profile Controllers and remove User Context Manager from Models
+
 					/**
 					 * Either follows or un-follows the user based on the current relationship
 					 */
@@ -1203,7 +1205,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-				//TODO : Add `exec` method to Profile Controllers and remove User Context Manager from Models
+
 
 					/**
 					 * Demand the user
@@ -1220,7 +1222,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 						if (!userContext) {
 							$state.go('login');
-						} else if (!subjectiveObjectMeta.demand.forward) {
+						} else if (!this.subjectiveMeta.demand.forward) {
 								this.subjectiveMeta.demand.forward = true;
 								ApiManager.demands('create', userContext, params);
 						}
@@ -1543,7 +1545,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
  * @param {PModels} FeedModel
  */
 
-	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
+	PLoaders.factory('FeedLoader', ['$q', '$state', 'FeedModel', function($q, $state, FeedModel) {
 
 		return {
 
@@ -1564,8 +1566,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 						preLoadingFeed.resolve(Feed);
 					})
 					.catch(function() {
-						//TODO : better error handling!
-						preLoadingFeed.reject();
+						$state.go('splash');
 					});
 
 				return preLoadingFeed.promise;
@@ -1871,9 +1872,8 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
 		function($scope, Feed) {
 
 			/** Initializes a new Feed instance on the Controller $scope **/
-			$scope.Feed = Feed;
-			$scope.$watch(Feed);
-
+			$scope.feed = Feed;
+			
     }
 
   ]);
@@ -1888,13 +1888,10 @@ PControllers.controller('EditProfileController', ['$scope', 'invoke', 'MessageMo
     function($scope, Feed, User) {
 
 			/** Initializes a new User instance on the Controller $scope **/
-			$scope.User = User;
+			$scope.user = User;
 
 			/** Initializes a new Feed instance on the Controller $scope **/
-			$scope.Feed = Feed;
-
-			//Potentially useless......
-			$scope.$watch(Feed);
+			$scope.feed = Feed;
 
     }
 
@@ -2136,27 +2133,23 @@ PControllers.controller('ResetPasswordController', ['$scope', '$stateParams', 'i
  * @namespace
  */
 
-PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
+	PControllers.controller('UserProfileController', ['$scope', 'invoke', 'Feed', 'User',
 
-	function($scope, logger, Feed, User) {
+		function($scope, invoke, Feed, User) {
 
-		/** Initialize a new User instance on the Controller scope **/
-		$scope.User = User;
+			/** Initialize a new User instance on the Controller scope **/
+			$scope.user = User;
 
-		$scope.actions = {
-			friendship : '',
-			demand : '',
-			group : 'Invite'
-		};
+			$scope.actions = {
+				friendship : '',
+				demand : '',
+			};
 
-		/** Initialize a new Feed instance on the Controller $scope **/
-		$scope.Feed = Feed;
+			$scope.invoke = invoke;
 
-		$scope.$watch(Feed);
+		}
 
-	}
-
-]);
+	]);
 
 
 
@@ -2210,7 +2203,7 @@ PDirectives.directive('pMessage', function() {
 			restrict: 'EA',
 			link: function(scope, element, attr) {
 
-				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
+				scope.$watch('user.subjectiveMeta.friendship.forward', function(newValue) {
 					if (newValue) {
 						scope.followBtn.css({
 							'background-color': '#8E73FF',
@@ -2228,7 +2221,7 @@ PDirectives.directive('pMessage', function() {
 					}
 				});
 
-				scope.$watch('User.subjectiveMeta.demand.forward', function(newValue) {
+				scope.$watch('user.subjectiveMeta.demand.forward', function(newValue) {
 					if (newValue) {
 						scope.demandBtn.css({
 							'background-color': '#8E73FF',
@@ -2250,6 +2243,7 @@ PDirectives.directive('pMessage', function() {
 		}
 
 	});
+
 /**
  * HTML directive for a video cell element
  */

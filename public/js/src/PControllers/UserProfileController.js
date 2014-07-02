@@ -3,24 +3,20 @@
  * @namespace
  */
 
-PControllers.controller('UserProfileController', ['$scope', 'logger', 'Feed', 'User',
+	PControllers.controller('UserProfileController', ['$scope', 'invoke', 'Feed', 'User',
 
-	function($scope, logger, Feed, User) {
+		function($scope, invoke, Feed, User) {
 
-		/** Initialize a new User instance on the Controller scope **/
-		$scope.User = User;
+			/** Initialize a new User instance on the Controller scope **/
+			$scope.user = User;
 
-		$scope.actions = {
-			friendship : '',
-			demand : '',
-			group : 'Invite'
-		};
+			$scope.actions = {
+				friendship : '',
+				demand : '',
+			};
 
-		/** Initialize a new Feed instance on the Controller $scope **/
-		$scope.Feed = Feed;
+			$scope.invoke = invoke;
 
-		$scope.$watch(Feed);
+		}
 
-	}
-
-]);
+	]);

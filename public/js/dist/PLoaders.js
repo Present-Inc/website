@@ -4,7 +4,7 @@
  * @param {PModels} FeedModel
  */
 
-	PLoaders.factory('FeedLoader', ['$q', 'FeedModel', function($q, FeedModel) {
+	PLoaders.factory('FeedLoader', ['$q', '$state', 'FeedModel', function($q, $state, FeedModel) {
 
 		return {
 
@@ -25,8 +25,7 @@
 						preLoadingFeed.resolve(Feed);
 					})
 					.catch(function() {
-						//TODO : better error handling!
-						preLoadingFeed.reject();
+						$state.go('splash');
 					});
 
 				return preLoadingFeed.promise;

@@ -33,9 +33,14 @@
       padding: 1px;
     }
 
-    .fullName {
+    .displayName {
       font-size: 22px;
       font-weight: bold;
+    }
+
+    .altName {
+      color: $main-blue;
+      font-weight: bold; 
     }
 
 

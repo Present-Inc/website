@@ -9,7 +9,7 @@
 			restrict: 'EA',
 			link: function(scope, element, attr) {
 
-				scope.$watch('User.subjectiveMeta.friendship.forward', function(newValue) {
+				scope.$watch('user.subjectiveMeta.friendship.forward', function(newValue) {
 					if (newValue) {
 						scope.followBtn.css({
 							'background-color': '#8E73FF',
@@ -27,7 +27,7 @@
 					}
 				});
 
-				scope.$watch('User.subjectiveMeta.demand.forward', function(newValue) {
+				scope.$watch('user.subjectiveMeta.demand.forward', function(newValue) {
 					if (newValue) {
 						scope.demandBtn.css({
 							'background-color': '#8E73FF',

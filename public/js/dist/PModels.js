@@ -697,6 +697,8 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 					}
 
 
+					//TODO : Add `exec` method to Profile Controllers and remove User Context Manager from Models
+
 					/**
 					 * Either follows or un-follows the user based on the current relationship
 					 */
@@ -721,7 +723,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 					};
 
-				//TODO : Add `exec` method to Profile Controllers and remove User Context Manager from Models
+
 
 					/**
 					 * Demand the user
@@ -738,7 +740,7 @@ PModels.factory('UserModel', ['$q', 'logger', '$state', 'ProfileModel', 'UserCon
 
 						if (!userContext) {
 							$state.go('login');
-						} else if (!subjectiveObjectMeta.demand.forward) {
+						} else if (!this.subjectiveMeta.demand.forward) {
 								this.subjectiveMeta.demand.forward = true;
 								ApiManager.demands('create', userContext, params);
 						}

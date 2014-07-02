@@ -184,7 +184,8 @@ nav .hub span:hover { cursor: pointer; color: #7bd4eb; }
 
 #user .profile { width: 320px; margin: 0px auto 25px auto; padding: 20px; overflow: auto; font-size: 16px; }
 #user .profile .profilePicture { margin: 0px auto 10px auto; background-color: #FFF; border: solid 1px #CCC; padding: 1px; }
-#user .profile .fullName { font-size: 22px; font-weight: bold; }
+#user .profile .displayName { font-size: 22px; font-weight: bold; }
+#user .profile .altName { color: #7bd4eb; font-weight: bold; }
 #user .profile .actions button { margin: 20px 5px; }
 #user .profile .counts { margin: 10px auto 5px auto; }
 #user .profile .count { margin: 5px; }

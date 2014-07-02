@@ -1,44 +1,44 @@
 
 <div p-user class="profile">
 
-    <img class="profilePicture" ng-src="{{User.profile.profilePicture}}" height="70px" width="70px"/>
+    <img class="profilePicture" ng-src="{{user.profile.profilePicture}}" height="70px" width="70px"/>
 
     <div class="info">
-        <div class="fullName" ng-bind="User.profile.fullName"></div>
-        <div ng-bind="User.profile.username"></div>
+        <div class="displayName" ng-bind="user.profile.displayName"></div>
+        <div class="altName" ng-bind="user.profile.altName"></div>
 
-        <div class="actions">
-            <button class="primary" register-element="followBtn" ng-bind="actions.friendship" ng-click="User.follow()"></button>
-            <button class="primary" register-element="demandBtn" ng-bind="actions.demand" ng-click="User.demand()"></button>
+        <div class="actions" ng-hide="user.isActiveUser">
+            <button class="primary" register-element="followBtn" ng-bind="actions.friendship" ng-click="user.follow()"></button>
+            <button class="primary" register-element="demandBtn" ng-bind="actions.demand" ng-click="user.demand()"></button>
         </div>
 
         <div class="counts">
             <div class="count">
                 <label>Videos</label>
-                <span ng-bind="User.profile.counts.videos"></span>
+                <span ng-bind="user.profile.counts.videos"></span>
             </div>
             <div class="count">
                 <label>Views</label>
-                <span ng-bind="User.profile.counts.views"></span>
+                <span ng-bind="user.profile.counts.views"></span>
             </div>
             <div class="count">
                 <label>Likes</label>
-                <span ng-bind="User.profile.counts.likes"></span>
+                <span ng-bind="user.profile.counts.likes"></span>
             </div>
             <div class="count">
                 <label>Followers</label>
-                <span ng-bind="User.profile.counts.followers"></span>
+                <span ng-bind="user.profile.counts.followers"></span>
             </div>
             <div class="count">
                 <label>Friends</label>
-                <span ng-bind="User.profile.counts.friends"></span>
+                <span ng-bind="user.profile.counts.friends"></span>
             </div>
         </div>
 
-        <div class="description" ng-bind="User.profile.description"></div>
+        <div class="description" ng-bind="user.profile.description"></div>
+        <div class="location" ng-bind="user.profile.location"></div>
+        <div class="website" ng-bind="user.profile.website"></div>
 
     </div>
 
 </div>
-
-
