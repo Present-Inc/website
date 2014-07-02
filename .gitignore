@@ -1,7 +1,2 @@
-.idea/
-.sass-cache/
 node_modules/
-public/dist/
-Dockerfile
-docs/
 .DS_Store
