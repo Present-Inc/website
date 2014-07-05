@@ -1,0 +1,44 @@
+<!doctype html>
+
+<head>
+  <title><%=video.title%></title>
+</head>
+
+
+<!-- videoCell -->
+<div p-video-cell class="videoCell">
+  <!-- videoPlayer -->
+  <div class="videoPlayer">
+    <span class="videoLocation"></span>
+    <img class="still" src="<%=video.media.still%>" />
+    <div class="jwplayer"></div>
+  </div>
+  <!-- end videoPlayer -->
+
+  <!-- videoMetaData -->
+  <div class="videoMetaData">
+
+    <div class="timeAgo"><%=video.timeAgo%></div>
+
+    <!-- creator -->
+    <div class="creator">
+      <img class="profilePicture"src="<%=video.creator.profile.picture.url%>" height="70px" width="70px"/>
+      <div class="displayName"><%=video.creator.profile.fullName%></div>
+      <div class="altName"><%=video.creator.username%></div>
+      <div class="title"><%=video.title%></div>
+    </div>
+    <!-- end creator -->
+
+    <!-- counts -->
+    <div class="counts">
+      <label class="likesLabel">Likes: </label>
+      <div class="likes"><%=video.counts.likes%></div>
+      <label class="commentsLabel">Comments: </label>
+      <div class="comments"><%=video.counts.comments%></div>
+    </div>
+    <!-- end counts -->
+    
+  </div>
+  <!-- end videoMetaData -->
+</div>
+<!-- end videoCell -->

@@ -1,20 +1,30 @@
 
 
+var Present = require('../models/present/index');
+
 module.exports = {
 
   'home': {
     httpMethod: 'GET',
     url: '/',
     endpoint: function(req, res) {
-      res.send('home');
+      res.render('home.ejs');
     }
   },
 
   'present': {
     httpMethod: 'GET',
-    url: '/present/:username/:present',
+    url: '/present/:username/:video',
     endpoint: function(req, res) {
-      res.send('present');
+
+      var username = req.params.username,
+          videoId = req.params.video;
+
+      Present.Video.create(videoId, function (err, video) {
+        if(err) res.send(err); 
+        else res.render('present.ejs', {video: video});
+      });
+
     }
   },
 
