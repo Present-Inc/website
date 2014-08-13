@@ -37,4 +37,4 @@ EXPOSE 80
 # ---------------------------------------------------------
 # Set App as Default Command
 # ---------------------------------------------------------
-CMD node /var/app/server.js
+CMD cd /var/app && node server.js
