@@ -10,7 +10,7 @@ var express = require('express'),
     middleware = require('./server/middleware'),
     twilio = require('./server/twilio'),
 		snapshots = require('./server/snapshots'),
-    httpPort = 8000;
+    httpPort = process.env['APP_PORT'];
 
 var app = express();
 
