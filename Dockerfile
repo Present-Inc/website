@@ -9,7 +9,7 @@ FROM danscan/node
 ENV APP_PORT 80
 
 # Debug (logs)
-ENV DEBUG * -stdloggly
+ENV DEBUG * 
 
 # =========================================================
 # END Configure Application
@@ -27,7 +27,8 @@ ADD . /var/app
 # ---------------------------------------------------------
 # Fetch, Build, and Install Dependencies
 # ---------------------------------------------------------
-RUN cd /var/app && npm install
+WORKDIR /var/app
+RUN npm install
 
 # ---------------------------------------------------------
 # Expose Api App Port
@@ -37,4 +38,4 @@ EXPOSE 80
 # ---------------------------------------------------------
 # Set App as Default Command
 # ---------------------------------------------------------
-CMD cd /var/app && node server.js
+CMD node index.js
